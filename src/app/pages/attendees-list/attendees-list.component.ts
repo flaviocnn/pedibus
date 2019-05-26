@@ -33,6 +33,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   pageEvent: PageEvent;
 
   myBackPassengers: IHash = {};
+  myGoPassengers: IHash = {};
   constructor(private pedibusService: PedibusService) {
   }
 
@@ -40,8 +41,6 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     this.todayDate = new Date();
     this.currentDate = this.todayDate.toLocaleDateString();
-    //console.log(this.todayDate);
-    this.getLines();
     this.getStops();
     this.paginator._pageIndex = 5;
     //this.paginator._changePageSize(this.paginator.pageSize);
@@ -50,14 +49,6 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked() {
     const list = document.getElementsByClassName('mat-paginator-range-label');
-    // if (this.length>1) {
-    //   let index = this.paginator.pageIndex;
-    //   console.log(index);
-    //   if (this.pbLines[index].path[0].date) {
-    //     var cnt = this.pbLines[index].path[0].date.toDateString();
-    //   }
-    //   list[0].innerHTML = cnt;
-    // }
     list[0].innerHTML = this.currentDate;
     console.log("ng after view checked");
   }
@@ -72,13 +63,6 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     this.currentDate = someDate.toLocaleDateString();
     console.log(this.currentDate);
     // Chiamata a GetStops() 
-  }
-
-  getLines(): void {
-    this.pedibusService.getLines()
-      .subscribe(lines => this.pbLines = lines,
-        err => console.error('Observer got an error: ' + err),
-        () => this.length = 10);
   }
 
   getStops() {
@@ -97,10 +81,14 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
       .subscribe((data) => {
         res.stops = data.slice(0, 3);
         this.goReservations.push(res);
-        for (const pass of this.goReservations) {
-          
+        for (let pass of this.goReservations) {
+          for (let stop of pass.stops) {
+            for (let pass of stop.passengers) {
+              this.myGoPassengers[pass.id] = false;
+            }
+          }
         }
-
+        
         bres.stops = data.slice(3,data.length);
         this.backReservations.push(bres);
         for (let pass of this.backReservations) {
@@ -110,14 +98,21 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
             }
           }
         }
+        this.length = 10;
       });
 
   }
 
-  public checkin(id) {
+  public checkin(id, dir) {
     console.log("check in on " + id)
-    this.myBackPassengers[id] = 
+    if (dir=="back") {
+      this.myBackPassengers[id] = 
     !this.myBackPassengers[id];
+    } else {
+      this.myGoPassengers[id] = 
+    !this.myGoPassengers[id];
+    }
+    
   }
 
 }

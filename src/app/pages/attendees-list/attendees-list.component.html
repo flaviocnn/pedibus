@@ -2,49 +2,40 @@
   <button mat-icon-button (click)="openNav.emit()">
     <mat-icon>menu</mat-icon>
   </button>
-  <h1>Pedibus App</h1>
+  <h1>{{title}}</h1>
   <span class="example-spacer"></span>
-  <mat-paginator #paginator [length]="length" [pageSize]="pageSize" hidePageSize=true 
-  (page)="pageEvent = getPaginatorData($event)">
+  <mat-paginator #paginator [length]="length" [pageSize]="pageSize" hidePageSize=true (page)="getPaginatorData($event)">
   </mat-paginator>
 
 </mat-toolbar>
-<div style="text-align:center">
-  <h2>
-    Welcome to {{ title }}!
-  </h2>
-
+<div>
   <mat-card *ngFor="let res of goReservations" class="mycard">
     <mat-list *ngIf="res?.date == currentDate && res?.isGo==true; else loading">
-      <mat-list-item class="myMatList" *ngFor="let stop of res?.stops">
-        <p>{{stop.time + '&#160;' + stop.name + '&#160;'}}</p>
-        <div *ngFor="let pass of stop?.passengers">
-            <p [ngClass]="(pass?.reserved=='true')?'success':'danger'"> {{pass.name + '&#160;'}}</p>
-          </div>
+      <mat-list-item  *ngFor="let stop of res?.stops">
+        <div mat-line><input type="radio"> {{stop.time + '&#160;' + stop.name + '&#160;'}}</div>
+        <div mat-line class="passengers">
+        <p *ngFor="let pass of stop?.passengers" [ngClass]="{'isReserved':pass?.reserved=='true'}"
+          [class.bold]="myGoPassengers[pass?.id]" class="passenger" (click)="checkin(pass?.id,'go')">
+          {{pass.name + '&#160;'}}
+        </p>
+      </div>
       </mat-list-item>
     </mat-list>
   </mat-card>
 
   <mat-card *ngFor="let res of backReservations" class="mycard">
     <mat-list *ngIf="res?.date == currentDate && res?.isGo==false; else loading">
-      <mat-list-item class="myMatList" *ngFor="let stop of res?.stops">
-        <p>{{stop.time + '&#160;' + stop.name + '&#160;'}}</p>
-      <div *ngFor="let pass of stop?.passengers">
-        <p [ngClass]="{'isReserved':pass?.reserved=='true'}"
-        [class.bold] = "myBackPassengers[pass?.id]"
-        (click)="checkin(pass?.id)" > 
-          {{pass.name + '&#160;'}}</p>
-      </div>
-      </mat-list-item>
+        <mat-list-item  *ngFor="let stop of res?.stops">
+            <div mat-line><input type="radio"> {{stop.time + '&#160;' + stop.name + '&#160;'}}</div>
+            <div mat-line class="passengers">
+            <p *ngFor="let pass of stop?.passengers" [ngClass]="{'isReserved':pass?.reserved=='true'}"
+              [class.bold]="myBackPassengers[pass?.id]" class="passenger" (click)="checkin(pass?.id,'back')">
+              {{pass.name + '&#160;'}}
+            </p>
+          </div>
+          </mat-list-item>
     </mat-list>
   </mat-card>
-
-
-  <div style="text-align:center">
-
-    <img width="100" alt="Angular Logo"
-      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-  </div>
 
 </div>
 
