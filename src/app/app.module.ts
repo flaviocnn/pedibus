@@ -20,6 +20,10 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';
 
 import { PedibusService } from './services/pedibus.service';
+import { LoginComponent } from './pages/login/login.component';
+import { FormsModule } from '@angular/forms';
+import { AuthGuard } from './guards/auth.guard';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 const appRoutes: Routes = [
   {
@@ -39,14 +43,16 @@ const appRoutes: Routes = [
     AppComponent,
     AttendeesListComponent,
     MaterialnavigationComponent,
+    LoginComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService),
-    RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
-    ),
+    // HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService),
+    // RouterModule.forRoot(
+    //   appRoutes,
+    //   { enableTracing: true } // <-- debugging purposes only
+    // ),
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -57,9 +63,11 @@ const appRoutes: Routes = [
     MatSidenavModule,
     MatIconModule,
     MatListModule,
+    FormsModule,
   ],
   providers: [
-    PedibusService
+    PedibusService,
+    AuthGuard,
   ],
   bootstrap: [AppComponent]
 })

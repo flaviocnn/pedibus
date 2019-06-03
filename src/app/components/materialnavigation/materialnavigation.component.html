@@ -11,9 +11,10 @@
       
       <a mat-list-item href="#">Availability</a>
       <a mat-list-item href="#">Notifications</a>
+      <a mat-list-item href="#" (onclick)="logout()">Logout</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <router-outlet ></router-outlet>
+  <app-attendees-list> </app-attendees-list>
   </mat-sidenav-content>
 </mat-sidenav-container>
