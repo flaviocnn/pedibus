@@ -1,22 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
+import { Observable, throwError, of } from 'rxjs';
+import { tap, catchError, map, retry } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http';
 import { Line } from '../models/line';
 import { Stop } from '../models/stop';
+import { DailyStop, Reservation } from '../models/daily-stop';
+
+const REST_URL = 'http://localhost:8080/';
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json',
+  })
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedibusService {
-  private headers = new Headers({ 'Content-Type': 'application/json' });
   private linesUrl = 'api/lines';  // URL to web api
   private stopsUrl = 'api/stops';
 
   constructor(private http: HttpClient) { }
 
-  getLines(): Observable<Line[]> {
-    return this.http.get<Line[]>(this.linesUrl)
+  getLines(): Observable<any> {
+    const url = REST_URL + 'lines';
+    return this.http.get<any>(url, httpOptions)
     .pipe(
       tap(data => console.log(data)), // eyeball results in the console
       catchError(this.handleError)
@@ -29,6 +38,45 @@ export class PedibusService {
       tap(data => console.log(data)), // eyeball results in the console
       catchError(this.handleError)
     );
+  }
+
+  getDailyStops(date, isGo): Observable<DailyStop[]> {
+    console.log('getting daily stops');
+    const url = REST_URL + 'reservations/Linea_AAA/' + date + '/' + isGo;
+    console.log(url);
+
+    return this.http.get<DailyStop[]>(url, httpOptions ).pipe(
+      //tap(data => console.log(data)),
+      //retry(3),
+      catchError( this.handleError)
+    );
+  }
+
+  putReservation(id) {
+    const url = REST_URL + 'reservations/' + id;
+    return this.http.put<number>(url, id, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  newReservation(res){
+
+    const url = REST_URL + 'reservations';
+
+    const newRes: Reservation = {
+      date: res.date,
+      isGo: res.isGo,
+      isBooked: false,
+      isConfirmed: true,
+      stop: res.stop_id,
+      user: res.user.id
+    };
+
+    return this.http.post<Reservation>(url, newRes, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: any) {

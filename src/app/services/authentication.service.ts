@@ -32,6 +32,7 @@ export class AuthenticationService {
         .pipe(map(user => {
           if (user && user.token) {
               localStorage.setItem('currentUser', JSON.stringify(user));
+              localStorage.setItem('id_token', user.token);
               this.currentUserSubject.next(user);
           }
           return user;
@@ -40,6 +41,7 @@ export class AuthenticationService {
 
   logout() {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('id_token');
     this.currentUserSubject.next(null);
   }
 }
