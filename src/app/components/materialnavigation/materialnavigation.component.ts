@@ -11,10 +11,11 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 })
 export class MaterialnavigationComponent {
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches)
-    );
+  // TODO remove comment
+  // isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  //   .pipe(
+  //     map(result => result.matches)
+  //   );
 
   constructor(private breakpointObserver: BreakpointObserver, private authenticationService: AuthenticationService) {}
 

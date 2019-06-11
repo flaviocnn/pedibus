@@ -24,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthGuard } from './guards/auth.guard';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { UsersComponent } from './pages/users/users.component';
 
 const appRoutes: Routes = [
   {
@@ -45,6 +46,7 @@ const appRoutes: Routes = [
     MaterialnavigationComponent,
     LoginComponent,
     PageNotFoundComponent,
+    UsersComponent,
   ],
   imports: [
     HttpClientModule,

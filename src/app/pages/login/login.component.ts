@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
     this.password = '';
     this.error = '';
     this.showSpinner = false;
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/attendees';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/app';
   }
 
   login(): void {
