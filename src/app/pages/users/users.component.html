@@ -1,3 +1,14 @@
-<p>
-  users works!
-</p>
+<mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        List
+      </ng-template>
+      <app-list-users></app-list-users>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Invite new user
+      </ng-template>
+      <app-invite-user></app-invite-user>
+    </mat-tab>
+  </mat-tab-group>

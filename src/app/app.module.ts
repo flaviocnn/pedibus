@@ -4,16 +4,12 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { RouterModule, Routes } from '@angular/router';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { DemoMaterialModule } from './material-module';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 
-import { InMemoryDataService } from './services/pedibus';
 import { AttendeesListComponent } from './pages/attendees-list/attendees-list.component';
 import { MaterialnavigationComponent } from './components/materialnavigation/materialnavigation.component';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -25,19 +21,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { UsersComponent } from './pages/users/users.component';
-
-const appRoutes: Routes = [
-  {
-    path: 'attendees',
-    component: AttendeesListComponent,
-    data: { title: 'Presenze' }
-  },
-  {
-    path: '',
-    component: AttendeesListComponent,
-    data: { title: 'Presenze' }
-  }
-];
+import { ListUsersComponent } from './components/list-users/list-users.component';
+import { InviteUserComponent } from './components/invite-user/invite-user.component';
 
 @NgModule({
   declarations: [
@@ -47,14 +32,11 @@ const appRoutes: Routes = [
     LoginComponent,
     PageNotFoundComponent,
     UsersComponent,
+    ListUsersComponent,
+    InviteUserComponent,
   ],
   imports: [
     HttpClientModule,
-    // HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService),
-    // RouterModule.forRoot(
-    //   appRoutes,
-    //   { enableTracing: true } // <-- debugging purposes only
-    // ),
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
