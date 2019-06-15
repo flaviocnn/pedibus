@@ -57,8 +57,8 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
           this.showedRes = this.sort(data);
           // dstop.reservations.forEach(res => this.showedRes.push(res));
         });
+        console.log(this.showedRes);
       });
-    // console.log(this.showedRes);
   }
 
   sort(data): any[] {
@@ -93,12 +93,15 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   }
 
   public checkin(res) {
-    console.log('check in on ' + res.id);
-    if(!res.id){
-      this.pedibusService.newReservation(res);
-    }
-    if (!res.isConfirmed) {
-      this.pedibusService.putReservation(res.id);
+    let myres = res;
+    myres.user.authorities = null;
+    myres.stop.line.admins.forEach(element => {
+      element.authorities = null;
+    });
+    console.log(myres);
+    if (!myres.isConfirmed) {
+      myres.isConfirmed = true;
+      this.pedibusService.putReservation(myres);
     }
   }
 

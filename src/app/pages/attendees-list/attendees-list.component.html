@@ -14,10 +14,10 @@
       <mat-list-item *ngFor="let ds of showedRes">
         <p>
             {{ds?.timeGo + '&#160;' + ds?.name}} <br>
-            <span *ngFor="let res of ds.reservations;last as isLast"
+            <span *ngFor="let res of ds?.reservations;last as isLast"
               [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}"
               (click)="checkin(res)">
-            {{res.user.firstName}} <span *ngIf="!isLast">,</span>
+            {{res?.user.firstName}} <span *ngIf="!isLast">,</span>
             </span>
         </p>
       </mat-list-item>

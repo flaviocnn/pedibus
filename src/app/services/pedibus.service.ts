@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { tap, catchError, map, retry } from 'rxjs/operators';
-import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Line } from '../models/line';
 import { Stop } from '../models/stop';
 import { DailyStop, Reservation } from '../models/daily-stop';
@@ -10,7 +10,7 @@ const REST_URL = 'http://localhost:8080/';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json',
+    'Content-Type': 'application/json',
   })
 };
 
@@ -26,18 +26,18 @@ export class PedibusService {
   getLines(): Observable<any> {
     const url = REST_URL + 'lines';
     return this.http.get<any>(url, httpOptions)
-    .pipe(
-      tap(data => console.log(data)), // eyeball results in the console
-      catchError(this.handleError)
-    );
+      .pipe(
+        tap(data => console.log(data)), // eyeball results in the console
+        catchError(this.handleError)
+      );
   }
 
   getStops(): Observable<Stop[]> {
     return this.http.get<Stop[]>(this.stopsUrl)
-    .pipe(
-      tap(data => console.log(data)), // eyeball results in the console
-      catchError(this.handleError)
-    );
+      .pipe(
+        tap(data => console.log(data)), // eyeball results in the console
+        catchError(this.handleError)
+      );
   }
 
   getDailyStops(date, isGo): Observable<DailyStop[]> {
@@ -45,22 +45,20 @@ export class PedibusService {
     const url = REST_URL + 'reservations/Linea_AAA/' + date + '/' + isGo;
     console.log(url);
 
-    return this.http.get<DailyStop[]>(url, httpOptions ).pipe(
+    return this.http.get<DailyStop[]>(url, httpOptions).pipe(
       //tap(data => console.log(data)),
       //retry(3),
-      catchError( this.handleError)
+      catchError(this.handleError)
     );
   }
 
-  putReservation(id) {
-    const url = REST_URL + 'reservations/' + id;
-    return this.http.put<number>(url, id, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+  putReservation(res){  
+    const url = REST_URL + 'reservations';
+    return this.http.put<Reservation[]>(url, res, httpOptions)
+    .subscribe();
   }
 
-  newReservation(res){
+  newReservation(res) {
 
     const url = REST_URL + 'reservations';
 
