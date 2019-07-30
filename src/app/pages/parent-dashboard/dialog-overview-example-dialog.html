@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Add informations about your child</h1>
+<div mat-dialog-content>
+  <form #childForm="ngForm" (ngSubmit)=onSubmit(childForm)>
+    <mat-form-field appearance="outline">
+      <mat-label>First name</mat-label>
+      <input matInput placeholder="Enter Child's name" type="text" 
+      required
+      [(ngModel)]="firstName" name="name">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Last name</mat-label>
+      <input matInput placeholder="Enter Child's surname" type="text" 
+      required
+      [(ngModel)]="lastName" name="lastname">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" type="submit" [disabled]="!childForm.form.valid" (click) = "onSubmit(childForm)">Add</button>
+    <p class="error" *ngIf="error !== ''">{{error}}</p>
+    <mat-progress-spinner *ngIf="processing === true" class="spinner" color="primary" diameter="30"
+      mode="indeterminate">
+    </mat-progress-spinner>
+    <button mat-button [mat-dialog-close]="newChild">Chiudi</button>
+</div>

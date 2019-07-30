@@ -6,25 +6,27 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { AttendeesListComponent } from './pages/attendees-list/attendees-list.component';
 import { UsersComponent } from './pages/users/users.component';
 import { MaterialnavigationComponent } from './components/materialnavigation/materialnavigation.component';
+import { ParentDashboardComponent } from './pages/parent-dashboard/parent-dashboard.component';
+import { MyChildComponent } from './pages/my-child/my-child.component';
 
 const routes: Routes = [
-  { path : '', component : LoginComponent, pathMatch: 'full' },
+  { path: '', component: LoginComponent, pathMatch: 'full' },
   {
-    path : 'app',
+    path: 'app',
     component: MaterialnavigationComponent,
     children: [
       {
-        path: '',
-        pathMatch: 'full',
+        path: 'children',
+        component: ParentDashboardComponent,
+      },
+      { path: 'child/:id', component: MyChildComponent },
+      {
+        path: 'attendees',
         component: AttendeesListComponent,
       },
       {
-        path : 'attendees',
-        component : AttendeesListComponent,
-      },
-      {
-        path : 'users',
-        component : UsersComponent,
+        path: 'users',
+        component: UsersComponent,
       },
       {
         path: '**',
@@ -32,10 +34,13 @@ const routes: Routes = [
       }
     ]
   },
-  { path : 'login', component : LoginComponent },
   {
-    path : '**',
-    component : PageNotFoundComponent,
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent,
   }
 ];
 

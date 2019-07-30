@@ -6,8 +6,8 @@
   <span class="spacer"></span>
   <mat-paginator #paginator [length]="length" [pageSize]="pageSize" hidePageSize=true (page)="getPaginatorData($event)">
   </mat-paginator>
-
 </mat-toolbar>
+
 <div>
   <mat-card *ngIf="showedRes; else loading" class="mycard">
     <mat-list>
@@ -15,6 +15,7 @@
         <p>
             {{ds?.timeGo + '&#160;' + ds?.name}} <br>
             <span *ngFor="let res of ds?.reservations;last as isLast"
+            class="passenger"
               [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}"
               (click)="checkin(res)">
             {{res?.user.firstName}} <span *ngIf="!isLast">,</span>

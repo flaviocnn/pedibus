@@ -1,0 +1,32 @@
+<mat-toolbar color="primary" role="heading">
+  <button mat-icon-button (click)="openNav.emit()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <h1>{{title}}</h1>
+</mat-toolbar>
+
+<div *ngIf="myChildren; else loading">
+  <mat-card *ngFor="let child of myChildren" class="child-card">
+        <p>
+            {{child?.firstName}} <br>
+        </p>
+        <mat-form-field *ngIf="stopList; else loading">
+          <mat-label>Default Stop</mat-label>
+          <mat-select [(value)]="defaultStops[child?.id]" (selectionChange)="changeStop($event)">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let stop of stopList" [value]="stop?.id">{{stop?.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <a routerLink="../child/{{child?.id}}" mat-fab aria-label="Example icon-button with a heart icon">
+          <mat-icon>face</mat-icon>
+        </a>
+  </mat-card>
+</div>
+
+<button class="add-fab" mat-fab color="primary" (click)="openDialog()"  matTooltip="Add Child"><mat-icon>add</mat-icon></button>
+<button *ngIf="dirty" mat-fab class="save-fab" (click)="updateAllStop()"><mat-icon>done</mat-icon></button>
+
+<ng-template #loading>
+  <div>Loading ...</div>
+</ng-template>

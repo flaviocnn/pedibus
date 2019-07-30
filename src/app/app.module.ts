@@ -14,7 +14,7 @@ import { AttendeesListComponent } from './pages/attendees-list/attendees-list.co
 import { MaterialnavigationComponent } from './components/materialnavigation/materialnavigation.component';
 import { LayoutModule } from '@angular/cdk/layout';
 
-import { PedibusService } from './services/pedibus.service';
+import { ReservationsService } from './services/reservations.service';
 import { LoginComponent } from './pages/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { AuthGuard } from './guards/auth.guard';
@@ -23,6 +23,11 @@ import { AuthInterceptor } from './services/auth.interceptor';
 import { UsersComponent } from './pages/users/users.component';
 import { ListUsersComponent } from './components/list-users/list-users.component';
 import { InviteUserComponent } from './components/invite-user/invite-user.component';
+import { ParentDashboardComponent, DialogOverviewExampleDialog } from './pages/parent-dashboard/parent-dashboard.component';
+import { from } from 'rxjs';
+import { ReservationsListComponent } from './components/reservations-list/reservations-list.component';
+import { MatDialogModule } from '@angular/material';
+import { MyChildComponent } from './pages/my-child/my-child.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +39,10 @@ import { InviteUserComponent } from './components/invite-user/invite-user.compon
     UsersComponent,
     ListUsersComponent,
     InviteUserComponent,
+    ParentDashboardComponent,
+    ReservationsListComponent,
+    DialogOverviewExampleDialog,
+    MyChildComponent
   ],
   imports: [
     HttpClientModule,
@@ -43,10 +52,12 @@ import { InviteUserComponent } from './components/invite-user/invite-user.compon
     DemoMaterialModule,
     LayoutModule,
     FormsModule,
+    MatDialogModule
   ],
+  entryComponents: [ DialogOverviewExampleDialog],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    PedibusService,
+    ReservationsService,
     AuthGuard,
   ],
   bootstrap: [AppComponent]

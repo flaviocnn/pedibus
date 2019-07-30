@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewChecked, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { PageEvent, MatPaginator } from '@angular/material';
 
-import { PedibusService } from '../../services/pedibus.service';
+import { ReservationsService } from '../../services/reservations.service';
 import { DatePipe } from '@angular/common';
 
 export interface IHash {
@@ -29,7 +29,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   // MatPaginator Output
   pageEvent: PageEvent;
 
-  constructor(private pedibusService: PedibusService,
+  constructor(private reservationsService: ReservationsService,
               public datepipe: DatePipe) {
   }
 
@@ -46,11 +46,11 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     this.getReservations(this.todayDate);
   }
 
-  getReservations(date) {
-    let latest_date = this.datepipe.transform(date, 'ddMMyy');
-    console.log(latest_date);
+  getReservations(date: Date) {
+    const latestDate = this.datepipe.transform(date, 'ddMMyy');
+    console.log(latestDate);
 
-    this.pedibusService.getDailyStops(latest_date, 1)
+    this.reservationsService.getDailyStops(latestDate, true)
       .subscribe((data) => {
         data.forEach(dstop => {
           // console.log(dstop.reservations);
@@ -101,7 +101,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     console.log(myres);
     if (!myres.isConfirmed) {
       myres.isConfirmed = true;
-      this.pedibusService.putReservation(myres);
+      this.reservationsService.putReservation(myres);
     }
   }
 

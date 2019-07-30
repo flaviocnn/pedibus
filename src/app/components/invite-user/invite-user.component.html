@@ -1,16 +1,13 @@
 <div class="container">
-  <form #f="ngForm" (ngSubmit)=onSubmit(f) >
-      <mat-form-field>
-          <input matInput type="email" placeholder="Enter your email" [(ngModel)]="emailText" name="email" #email="ngModel" email required>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" [disabled]="f.invalid || email.invalid">Invite</button>
-        <p class="error" *ngIf="error !== ''">{{error}}</p>
-        <mat-progress-spinner
-        *ngIf="processing === true"
-        class="spinner"
-        color="primary"
-        diameter="30"
-        mode="indeterminate" >
+  <form #f="ngForm" (ngSubmit)=onSubmit(f)>
+    <mat-form-field>
+      <input matInput type="email" placeholder="Enter your email" [(ngModel)]="emailText" name="email" #email="ngModel"
+        email required>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" [disabled]="f.invalid || email.invalid">Invite</button>
+    <p class="error" *ngIf="error !== ''">{{error}}</p>
+    <mat-progress-spinner *ngIf="processing === true" class="spinner" color="primary" diameter="30"
+      mode="indeterminate">
     </mat-progress-spinner>
   </form>
   <div class="informations">

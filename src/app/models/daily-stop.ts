@@ -62,17 +62,17 @@ export interface Line2 {
 
 export interface Stop {
     id: number;
-    name: string;
-    latitude: number;
-    longitude: number;
-    timeGo: string;
-    timeBack: string;
-    line: Line2;
-    runs: any[];
-    requestedStartAvailabilities: any[];
-    requestedFinishAvailabilities: any[];
-    assignedStartAvailabilities: any[];
-    assignedFinishAvailabilities: any[];
+    name?: string;
+    latitude?: number;
+    longitude?: number;
+    timeGo?: string;
+    timeBack?: string;
+    line?: Line2;
+    runs?: any[];
+    requestedStartAvailabilities?: any[];
+    requestedFinishAvailabilities?: any[];
+    assignedStartAvailabilities?: any[];
+    assignedFinishAvailabilities?: any[];
 }
 
 export interface Authority3 {
@@ -106,7 +106,7 @@ export interface Reservation {
     isBooked: boolean;
     isConfirmed?: any;
     stop: Stop;
-    user: User;
+    user: Child;
 }
 
 export interface DailyStop {
@@ -125,3 +125,10 @@ export interface DailyStop {
     assignedFinishAvailabilities: any[];
 }
 
+export interface Child {
+    id: number;
+    firstName?: string;
+    lastName?: string;
+    defaultStop?: any;
+    parent?: User;
+}
