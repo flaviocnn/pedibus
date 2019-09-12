@@ -27,7 +27,7 @@ export class ChildrenService {
   }
 
   updateDefaultStop(childId: number, stopId: number) {
-    const url = REST_URL + `/${childId}/${stopId}`;
+    const url = REST_URL + `/child/${childId}/${stopId}`;
     return this.http.put<any>(url, httpOptions)
     .subscribe();
   }
