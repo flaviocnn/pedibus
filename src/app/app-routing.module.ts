@@ -16,10 +16,10 @@ const routes: Routes = [
     component: MaterialnavigationComponent,
     children: [
       {
-        path: 'children',
+        path: 'parent_dashboard',
         component: ParentDashboardComponent,
       },
-      { path: 'child/:id', component: MyChildComponent },
+      { path: 'mychild/:id', component: MyChildComponent },
       {
         path: 'attendees',
         component: AttendeesListComponent,

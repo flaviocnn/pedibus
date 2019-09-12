@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Stop, Child, Reservation } from '../../models/daily-stop';
 import { StopsService } from '../../services/stops.service';
-import { ReservationsService } from 'src/app/services/reservations.service';
+import { ReservationsService } from '../../services/reservations.service';
 
 @Component({
   selector: 'app-reservations-list',
@@ -81,6 +81,6 @@ export class ReservationsListComponent implements OnInit {
   }
 
   sendReservation(day) {
-    this.reservationsService.postReservation()
+    this.reservationsService.postReservation(null);
   }
 }
