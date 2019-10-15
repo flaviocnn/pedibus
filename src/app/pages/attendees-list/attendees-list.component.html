@@ -18,7 +18,7 @@
             class="passenger"
               [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}"
               (click)="checkin(res)">
-            {{res?.user.firstName}} <span *ngIf="!isLast">,</span>
+            {{res?.child.firstName}} <span *ngIf="!isLast">,</span>
             </span>
         </p>
       </mat-list-item>

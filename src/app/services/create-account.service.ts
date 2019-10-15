@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class CreateAccountService {
-  private API_PATH = 'http://localhost:8080/auth/register/';
+  private API_PATH = 'http://localhost:8080/auth/invite/';
   constructor(private httpClient: HttpClient) { }
 
   createAccount(username: string) {

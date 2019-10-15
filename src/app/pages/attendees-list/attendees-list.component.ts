@@ -3,6 +3,7 @@ import { PageEvent, MatPaginator } from '@angular/material';
 
 import { ReservationsService } from '../../services/reservations.service';
 import { DatePipe } from '@angular/common';
+import { Reservation } from 'src/app/models/daily-stop';
 
 export interface IHash {
   [id: string]: boolean;
@@ -64,7 +65,12 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   sort(data): any[] {
     data.sort((a, b) => a.timeGo !== b.timeGo ? a.timeGo < b.timeGo ? -1 : 1 : 0);
     data.forEach(el => {
-      el.reservations.sort((a, b) => a.user.firstName !== b.user.firstName ? a.user.firstName < b.user.firstName ? -1 : 1 : 0);
+      el.reservations.sort((a, b) => {
+        console.log(a);
+        console.log(b);
+        a.child.firstName !== b.child.firstName ? a.child.firstName < b.child.firstName ? -1 : 1 : 0;
+        // return 0;
+      });
     });
     return data;
   }
@@ -72,7 +78,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   ngAfterViewChecked() {
     const list = document.getElementsByClassName('mat-paginator-range-label');
     list[0].innerHTML = this.currentDate;
-    console.log('ng after view checked');
+    //console.log('ng after view checked');
   }
 
   getPaginatorData(event) {
@@ -93,8 +99,9 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   }
 
   public checkin(res) {
-    let myres = res;
-    myres.user.authorities = null;
+    const myres = res;
+    myres.child.authorities = null;
+    myres.child.parent.authorities = null;
     myres.stop.line.admins.forEach(element => {
       element.authorities = null;
     });
