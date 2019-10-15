@@ -28,6 +28,7 @@ import { from } from 'rxjs';
 import { ReservationsListComponent } from './components/reservations-list/reservations-list.component';
 import { MatDialogModule } from '@angular/material';
 import { MyChildComponent } from './pages/my-child/my-child.component';
+import { AvailabilityComponent } from './pages/availability/availability.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { MyChildComponent } from './pages/my-child/my-child.component';
     ParentDashboardComponent,
     ReservationsListComponent,
     DialogOverviewExampleDialog,
-    MyChildComponent
+    MyChildComponent,
+    AvailabilityComponent
   ],
   imports: [
     HttpClientModule,

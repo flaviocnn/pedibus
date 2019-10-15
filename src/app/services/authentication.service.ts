@@ -30,9 +30,10 @@ export class AuthenticationService {
     };
     return this.http.post<any>('http://localhost:8080/auth/login', { username, password }, httpOptions)
         .pipe(map(user => {
-          if (user && user.token) {
+          if (user && user.token && user.id) {
               localStorage.setItem('currentUser', JSON.stringify(user));
               localStorage.setItem('id_token', user.token);
+              localStorage.setItem('user_id', user.id);
               this.currentUserSubject.next(user);
           }
           return user;

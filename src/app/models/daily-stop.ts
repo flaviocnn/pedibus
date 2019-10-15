@@ -132,3 +132,27 @@ export interface Child {
     defaultStop?: any;
     parent?: User;
 }
+
+export interface Availability {
+    id: number;
+    date: string;
+    isConfirmed: boolean;
+    isGo: boolean;
+    user: User;
+    requestedStartStop?: RequestedStartStop;
+    requestedFinishStop?: RequestedStartStop;
+    assignedStartStop?: RequestedStartStop;
+    assignedFinishStop?: RequestedStartStop;
+  }
+
+export  interface RequestedStartStop {
+    id: number;
+    name: string;
+    latitude: number;
+    longitude: number;
+    timeGo: string;
+    timeBack: string;
+    line: Line;
+    reservations?: Reservation[];
+    runs: any[];
+  }

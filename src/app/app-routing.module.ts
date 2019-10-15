@@ -8,6 +8,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { MaterialnavigationComponent } from './components/materialnavigation/materialnavigation.component';
 import { ParentDashboardComponent } from './pages/parent-dashboard/parent-dashboard.component';
 import { MyChildComponent } from './pages/my-child/my-child.component';
+import { AvailabilityComponent } from './pages/availability/availability.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, pathMatch: 'full' },
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'users',
         component: UsersComponent,
+      },
+      {
+        path: 'availabilities',
+        component: AvailabilityComponent,
       },
       {
         path: '**',
