@@ -101,7 +101,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   public checkin(res) {
     const myres = res;
     myres.child.authorities = null;
-    myres.child.parent.authorities = null;
+    myres.child.user.authorities = null;
     myres.stop.line.admins.forEach(element => {
       element.authorities = null;
     });
