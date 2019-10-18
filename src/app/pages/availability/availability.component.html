@@ -4,51 +4,72 @@
   </button>
   <h1>{{title}}</h1>
 </mat-toolbar>
-<mat-card *ngFor="let day of currDays; index as i" class="reservation-item">
-<div class="side-el el">
-  <div class="go-icon">
-    <img src="assets/arrow.png" class="go-svg">
-    <div class="go-text">GO</div>
-  </div>
-
-  <mat-form-field class="selectStop">
-    <mat-label>
-      <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-    </mat-label>
-    <mat-label>Select a stop</mat-label>
-    <mat-select [(value)]="reservationsGo[i].stop.id">
-      <mat-option *ngFor="let stop of stops" [value]="stop?.id">
-        {{stop?.name}}
-      </mat-option>
-    </mat-select>
-
-  </mat-form-field>
-
-  <button mat-button (click)="setDefault(day)">Set default</button>
-  <button *ngIf="!reservationsGo[i].isBooked" mat-flat-button color="primary" (click)="sendReservation(i)">CONFIRM</button>
-  <button *ngIf="reservationsGo[i].isBooked" mat-flat-button>UPDATE</button>
+<button (click)="showa()"></button>
+<div *ngIf="availabilities">
+  <mat-card *ngFor="let av of Object.keys(availabilities); index as i" class="availability-item"
+    [ngClass]="{'confirmed': availabilities[av]?.confirmed == true, 'pending': availabilities[av]?.confirmed == 'false'}">
+    <div class="row">
+      <div class="col s4">
+        <p>
+          {{av}}<br>{{availabilities[av]?.confirmed}}
+          {{availabilities[av]?.go.name}}
+        </p>
+      </div>
+      <div class="col s4">
+          <mat-form-field class="selectStop">
+              <mat-label>
+                <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+              </mat-label>
+              <mat-label>Select a stop</mat-label>
+              <mat-select [(value)]="availabilities[av].go" >
+                <mat-option *ngIf="availabilities[av].go.id != 0" [value]="availabilities[av].go">
+                  {{availabilities[av]?.go.name}}
+                </mat-option>
+                <mat-option *ngFor="let stop of myStops| callback: myfilter : availabilities[av].go.id" [value]="stop">
+                  {{stop?.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+      </div>
+      <div class="col s4">
+          <mat-slide-toggle>Includi Andata</mat-slide-toggle>
+      </div>
+    </div>
+    <mat-divider></mat-divider><br>
+    <div class="row">
+        <div class="col s4">
+          <p>
+            {{av}}<br>{{availabilities[av]?.confirmed}}
+            {{availabilities[av]?.back.name}}
+          </p>
+        </div>
+        <div class="col s4">
+            <mat-form-field class="selectStop">
+                <mat-label>
+                  <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+                </mat-label>
+                <mat-label>Select a stop</mat-label>
+                <mat-select [(value)]="availabilities[av].back" >
+                  <mat-option *ngIf="availabilities[av].back.id != 0" [value]="availabilities[av].back">
+                    {{availabilities[av]?.back.name}}
+                  </mat-option>
+                  <mat-option *ngFor="let stop of myStops| callback: myfilter : availabilities[av].back.id" [value]="stop">
+                    {{stop?.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+        <div class="col s4">
+            <mat-slide-toggle>Includi Ritorno</mat-slide-toggle>
+        </div>
+      </div>
+      <button *ngIf="availabilities[av]?.confirmed != true" mat-fab class="send-avail">
+          <mat-icon *ngIf="availabilities[av]?.confirmed == false; else delete">send</mat-icon>
+      </button>
+  </mat-card>
 </div>
 
-<div class="middle-el el">
-  <div class="reservation-date">{{day}}</div>
-</div>
 
-<div class="side-el el">
-
-  <button mat-button (click)="setDefault(day)">Set default</button>
-  <button mat-flat-button color="primary">CONFIRM</button>
-
-  <div class="back-icon">
-    <img src="assets/arrow.png" class="back-svg">
-    <div class="back-text">BACK</div>
-  </div>
-</div>
-</mat-card>
-
-<ng-template #prenota>
-<button mat-flat-button >PRENOTA</button>
-</ng-template>
-
-<ng-template #prenotato>
-<button mat-flat-button >AGGIORNA PRENOTAZIONE</button>
+<ng-template #delete>
+  <mat-icon mat-fab class="send-avail">delete</mat-icon>
 </ng-template>

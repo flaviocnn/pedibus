@@ -22,12 +22,9 @@ export class AvailabilityService {
 
   getAvailabilities(userId, date): Observable<Availability[]> {
     const url = REST_URL + `${userId}/${date}`;
-
-    // let params = new HttpParams();
-    // params = params.append('user_id', userId);
-    // params = params.append('date', date);
-    return this.http.get<Availability[]>(url, httpOptions)
-    .pipe();
+    return this.http
+      .get<Availability[]>(url, httpOptions)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: any) {

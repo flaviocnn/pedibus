@@ -22,8 +22,8 @@ export class StopsService {
   getStops(): Observable<Stop[]> {
     console.log('getting daily stops');
     const url = REST_URL + 'Linea_AAA';
-
-    return this.http.get<Stop[]>(url, httpOptions).pipe(
+    return this.http.get<Stop[]>(url, httpOptions)
+    .pipe(
       catchError(this.handleError)
     );
   }

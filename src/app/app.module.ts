@@ -29,6 +29,7 @@ import { ReservationsListComponent } from './components/reservations-list/reserv
 import { MatDialogModule } from '@angular/material';
 import { MyChildComponent } from './pages/my-child/my-child.component';
 import { AvailabilityComponent } from './pages/availability/availability.component';
+import { CallbackPipe } from './services/callback.pipe';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { AvailabilityComponent } from './pages/availability/availability.compone
     ReservationsListComponent,
     DialogOverviewExampleDialog,
     MyChildComponent,
-    AvailabilityComponent
+    AvailabilityComponent,
+    CallbackPipe
   ],
   imports: [
     HttpClientModule,

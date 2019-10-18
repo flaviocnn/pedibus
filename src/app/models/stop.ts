@@ -1,8 +1,8 @@
 import { Passenger } from './passenger';
 
 export class Stop {
-    id: string;
+    id: number;
     name: string;
-    time: string;
-    passengers: Passenger[];
+    time?: string;
+    passengers?: Passenger[];
 }
