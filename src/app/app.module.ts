@@ -30,6 +30,7 @@ import { MatDialogModule } from '@angular/material';
 import { MyChildComponent } from './pages/my-child/my-child.component';
 import { AvailabilityComponent } from './pages/availability/availability.component';
 import { CallbackPipe } from './services/callback.pipe';
+import { SchedulingComponent } from './pages/scheduling/scheduling.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { CallbackPipe } from './services/callback.pipe';
     DialogOverviewExampleDialog,
     MyChildComponent,
     AvailabilityComponent,
-    CallbackPipe
+    CallbackPipe,
+    SchedulingComponent
   ],
   imports: [
     HttpClientModule,

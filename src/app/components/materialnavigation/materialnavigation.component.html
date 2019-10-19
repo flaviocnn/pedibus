@@ -6,9 +6,10 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item [routerLink]="['attendees']">Attendees</a>
-      <a mat-list-item [routerLink]="['parent_dashboard']">Parent</a>
-      <a mat-list-item [routerLink]="['users']">Users</a>
       <a mat-list-item [routerLink]="['availabilities']">Availability</a>
+      <a mat-list-item [routerLink]="['parent_dashboard']">Parent</a>
+      <a mat-list-item [routerLink]="['scheduling']">Scheduling</a>
+      <a mat-list-item [routerLink]="['users']">Users</a>
       <a mat-list-item href="#">Notifications</a>
       <a mat-list-item href="#" (onclick)="logout()">Logout</a>
     </mat-nav-list>

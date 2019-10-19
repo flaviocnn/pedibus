@@ -9,6 +9,7 @@ import { MaterialnavigationComponent } from './components/materialnavigation/mat
 import { ParentDashboardComponent } from './pages/parent-dashboard/parent-dashboard.component';
 import { MyChildComponent } from './pages/my-child/my-child.component';
 import { AvailabilityComponent } from './pages/availability/availability.component';
+import { SchedulingComponent } from './pages/scheduling/scheduling.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, pathMatch: 'full' },
@@ -32,6 +33,10 @@ const routes: Routes = [
       {
         path: 'availabilities',
         component: AvailabilityComponent,
+      },
+      {
+        path: 'scheduling',
+        component: SchedulingComponent,
       },
       {
         path: '**',
