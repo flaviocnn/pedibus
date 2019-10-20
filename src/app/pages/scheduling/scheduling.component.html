@@ -19,14 +19,54 @@
 </div>
 
 <h2 class="center">Corsa di andata</h2>
-<mat-card class="mycard mat-elevation-z4">
-  <ul>
-    <li>1 <span>piazza castello</span></li>
-    <li>2<span>piazza s.carlo</span></li>
-    <li class="active">1</li>
-    <li>0</li>
-    <li>5 <span>rocca fiorita</span></li>
-    <li>S</li>
-  </ul>
+<div class="container">
+  <mat-card class="mycard mat-elevation-z4">
+    <div class="row">
+      <div class="col s8 offset-s2">
+        <ul>
+          <li>1 <span>piazza castello</span></li>
+          <li>2<span>piazza s.carlo</span></li>
+          <li>1</li>
+          <li>0</li>
+          <li>5 <span>rocca fiorita</span></li>
+          <li>S</li>
+        </ul>
+      </div>
+    </div>
 
-</mat-card>
+    <mat-divider></mat-divider><br>
+    <div class="row">
+      <div class="col s2">
+        <p class="chaperon">Cyril</p>
+      </div>
+      <div class="col s8">
+        <ul class="availabilities_ul">
+          <li *ngFor="let item of items; index as i;" (click)="toggleClass(i)" [ngClass]="{'active': items[i]}">{{i}}
+          </li>
+        </ul>
+      </div>
+      <div class="col s2">
+        <mat-slide-toggle class="confirm-toggle">Conferma</mat-slide-toggle>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s2">
+        <p class="chaperon">Son Goku</p>
+      </div>
+      <div class="col s8">
+        <ul class="availabilities_ul">
+          <li *ngFor="let item of items; index as i;" (click)="toggleClass(i)" [ngClass]="{'active': items[i]}">{{i}}
+          </li>
+        </ul>
+      </div>
+      <div class="col s2">
+        <mat-slide-toggle class="confirm-toggle">Conferma</mat-slide-toggle>
+
+      </div>
+    </div>
+    <mat-divider></mat-divider><br>
+    
+
+  </mat-card>
+</div>

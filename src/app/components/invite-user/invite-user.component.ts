@@ -5,7 +5,7 @@ import { CreateAccountService } from 'src/app/services/create-account.service';
 @Component({
   selector: 'app-invite-user',
   templateUrl: './invite-user.component.html',
-  styleUrls: ['./invite-user.component.styl'],
+  styleUrls: ['./invite-user.component.scss'],
   providers: [NgModel]
 })
 export class InviteUserComponent implements OnInit {

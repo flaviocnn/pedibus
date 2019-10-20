@@ -12,7 +12,7 @@ export interface IHash {
 @Component({
   selector: 'app-attendees-list',
   templateUrl: './attendees-list.component.html',
-  styleUrls: ['./attendees-list.component.styl'],
+  styleUrls: ['./attendees-list.component.scss'],
   providers: [DatePipe]
 })
 

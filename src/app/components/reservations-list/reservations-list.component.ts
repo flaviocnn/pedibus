@@ -6,7 +6,7 @@ import { ReservationsService } from '../../services/reservations.service';
 @Component({
   selector: 'app-reservations-list',
   templateUrl: './reservations-list.component.html',
-  styleUrls: ['./reservations-list.component.styl']
+  styleUrls: ['./reservations-list.component.scss']
 })
 export class ReservationsListComponent implements OnInit {
 

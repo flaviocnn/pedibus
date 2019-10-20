@@ -19,7 +19,7 @@ export interface MyAv {
 @Component({
   selector: 'app-availability',
   templateUrl: './availability.component.html',
-  styleUrls: ['./availability.component.styl'],
+  styleUrls: ['./availability.component.scss'],
   providers: [DatePipe]
 })
 

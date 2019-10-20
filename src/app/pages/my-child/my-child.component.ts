@@ -7,7 +7,7 @@ import { ReservationsService } from '../../services/reservations.service';
 @Component({
   selector: 'app-my-child',
   templateUrl: './my-child.component.html',
-  styleUrls: ['./my-child.component.styl']
+  styleUrls: ['./my-child.component.scss']
 })
 export class MyChildComponent implements OnInit {
   currentChild: Child;
