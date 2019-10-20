@@ -27,6 +27,13 @@ export class AvailabilityService {
       .pipe(catchError(this.handleError));
   }
 
+  getLinesAvailabilities(line_name, date, is_go: boolean): Observable<Availability[]> {
+    const url = REST_URL + `${line_name}/${date}/${is_go}`;
+    return this.http
+      .get<Availability[]>(url, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: any) {
     console.error(error);
     return throwError(error);

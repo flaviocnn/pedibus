@@ -139,10 +139,10 @@ export interface Availability {
     isConfirmed: boolean;
     isGo: boolean;
     user: User;
-    requestedStartStop?: RequestedStartStop;
-    requestedFinishStop?: RequestedStartStop;
-    assignedStartStop?: RequestedStartStop;
-    assignedFinishStop?: RequestedStartStop;
+    requestedStartStop?: DailyStop;
+    requestedFinishStop?: DailyStop;
+    assignedStartStop?: DailyStop;
+    assignedFinishStop?: DailyStop;
   }
 
 export  interface RequestedStartStop {

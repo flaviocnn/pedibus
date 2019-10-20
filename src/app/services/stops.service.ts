@@ -28,6 +28,15 @@ export class StopsService {
     );
   }
 
+  getLineStops(line: string): Observable<DailyStop[]> {
+    console.log('getting daily stops');
+    const url = REST_URL + line;
+    return this.http.get<DailyStop[]>(url, httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: any) {
     console.error(error);
     return throwError(error);

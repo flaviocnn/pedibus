@@ -31,6 +31,7 @@ import { MyChildComponent } from './pages/my-child/my-child.component';
 import { AvailabilityComponent } from './pages/availability/availability.component';
 import { CallbackPipe } from './services/callback.pipe';
 import { SchedulingComponent } from './pages/scheduling/scheduling.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { SchedulingComponent } from './pages/scheduling/scheduling.component';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ReservationsService,
     AuthGuard,
+    DatePipe,
   ],
   bootstrap: [AppComponent]
 })
