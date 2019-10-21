@@ -32,6 +32,9 @@ import { AvailabilityComponent } from './pages/availability/availability.compone
 import { CallbackPipe } from './services/callback.pipe';
 import { SchedulingComponent } from './pages/scheduling/scheduling.component';
 import { DatePipe } from '@angular/common';
+import { LinebuilderComponent } from './pages/linebuilder/linebuilder.component';
+import { AgmCoreModule,GoogleMapsAPIWrapper } from '@agm/core';
+import { AgmDirectionModule } from 'agm-direction';
 
 @NgModule({
   declarations: [
@@ -49,7 +52,8 @@ import { DatePipe } from '@angular/common';
     MyChildComponent,
     AvailabilityComponent,
     CallbackPipe,
-    SchedulingComponent
+    SchedulingComponent,
+    LinebuilderComponent,
   ],
   imports: [
     HttpClientModule,
@@ -59,7 +63,11 @@ import { DatePipe } from '@angular/common';
     DemoMaterialModule,
     LayoutModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
+    AgmCoreModule.forRoot({ // @agm/core
+      apiKey: 'AIzaSyDFTKbcSXEN22pUx3zfaabEOGyy7oOZtmI',
+    }),
+    AgmDirectionModule,
   ],
   entryComponents: [ DialogOverviewExampleDialog],
   providers: [

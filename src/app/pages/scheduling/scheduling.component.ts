@@ -11,7 +11,6 @@ import { StopsService } from 'src/app/services/stops.service';
   styleUrls: ['./scheduling.component.scss']
 })
 export class SchedulingComponent implements OnInit {
-  items = [false,false,false, false, false, false];
   datesBE = [];
   datesFE = [];
   selectedDate;
@@ -20,7 +19,7 @@ export class SchedulingComponent implements OnInit {
   stops: DailyStop[] = [];
 
 
-  constructor( 
+  constructor(
     private dateservice: DatesService,
     private userservice: UserService,
     private availService: AvailabilityService,
@@ -34,30 +33,38 @@ export class SchedulingComponent implements OnInit {
     // ottenere la linea di competenza
     this.selectedLine = 'Linea_AAA';
     // ottenere le stop(con reservations) della linea
-    this.stopsService.getLineStops(this.selectedLine)
-    .subscribe(data=>{
-      this.stops = data;
-    });
+    this.getStops();
     // ottenere le availabilities di (linea, data) per go e back
     this.selectedDate = this.datesBE[0];
-    this.availService.getLinesAvailabilities(this.selectedLine,this.selectedDate, true)
+    this.getAvailabilities();
+  }
+
+  getStops() {
+    this.stopsService.getLineStops(this.selectedLine)
+    .subscribe(data => {
+      this.stops = data;
+    });
+  }
+  getAvailabilities() {
+    this.availService.getLinesAvailabilities(this.selectedLine, this.selectedDate, true)
     .subscribe( data => {
       this.availabilities = data;
     });
   }
 
-  toggleClass(stop: DailyStop, i, conf: boolean){
-    if(conf){this.availabilities[i].assignedStartStop = stop;}
-    else{
+  toggleClass(stop: DailyStop, i, conf: boolean) {
+    if (conf) {this.availabilities[i].assignedStartStop = stop; } else {
       this.availabilities[i].requestedStartStop = stop;
     }
-    
+
     console.log(this.datesFE);
   }
 
-  selectDay(index){
+  selectDay(index) {
     this.selectedDate = this.datesBE[index];
     console.log(this.selectedDate);
+    this.getStops();
+    this.getAvailabilities();
   }
 
 }

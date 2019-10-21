@@ -1,0 +1,17 @@
+agm-map {
+    height:480px;
+    position: relative;
+}
+.layer{
+    background-color: gray;
+    height: 480px;
+    width: 21.7%;
+    position: absolute;
+}
+.disabled-map{
+    opacity: 0.3;
+    pointer-events: none;
+}
+.container{
+    margin-top: 1em;
+}

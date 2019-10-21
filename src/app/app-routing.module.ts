@@ -10,6 +10,7 @@ import { ParentDashboardComponent } from './pages/parent-dashboard/parent-dashbo
 import { MyChildComponent } from './pages/my-child/my-child.component';
 import { AvailabilityComponent } from './pages/availability/availability.component';
 import { SchedulingComponent } from './pages/scheduling/scheduling.component';
+import { LinebuilderComponent } from './pages/linebuilder/linebuilder.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, pathMatch: 'full' },
@@ -37,6 +38,10 @@ const routes: Routes = [
       {
         path: 'scheduling',
         component: SchedulingComponent,
+      },
+      {
+        path: 'linebuilder',
+        component: LinebuilderComponent,
       },
       {
         path: '**',

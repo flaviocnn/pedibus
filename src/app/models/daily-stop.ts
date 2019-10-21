@@ -156,3 +156,8 @@ export  interface RequestedStartStop {
     reservations?: Reservation[];
     runs: any[];
   }
+
+export interface JSONLine {
+    stops: Stop[];
+    admins: Admin[];
+  }

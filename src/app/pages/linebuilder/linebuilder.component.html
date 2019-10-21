@@ -1,0 +1,62 @@
+<mat-toolbar color="primary" role="heading">
+  <button mat-icon-button (click)="openNav.emit()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <h1>{{title}}</h1>
+</mat-toolbar>
+
+<div class="container">
+
+  <div class="row">
+    <div class="col m8 s12">
+      <div class="row">
+        <mat-card >
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Nome Linea" value="">
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <button color="primary" type="button" mat-raised-button (click)="fileInput.click()">Seleziona File</button>
+              <input hidden (change)="onFileChanged()" #fileInput type="file" id="file">
+            </div>
+            <div class="col">
+              <button mat-raised-button (click)="onUpload()">Carica</button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+        
+      <div class="row">
+          <mat-card >
+              <mat-list>
+                  <h3 mat-subheader>Admin</h3>
+                  <mat-list-item *ngFor="let admin of admins">
+                    <mat-icon mat-list-icon>emoji_people</mat-icon>
+                    <h4 mat-line>{{admin?.username}}</h4>
+                  </mat-list-item>
+                  <mat-divider></mat-divider>
+                  <h3 mat-subheader>Stops</h3>
+                  <mat-list-item *ngFor="let stop of stops">
+                    <mat-icon mat-list-icon>room</mat-icon>
+                    <h4 mat-line>{{stop?.name}}</h4>
+                  </mat-list-item>
+                </mat-list>
+                
+          </mat-card>
+      </div>
+    </div>
+
+    <div class="col m4 s12">
+      <div class="map mat-elevation-z2">
+        <agm-map [ngClass]="{'disabled-map': notReady}" [latitude]="lat" [longitude]="lng">
+            <agm-direction [origin]="origin" [destination]="destination" [waypoints]="waypoints" 
+            [travelMode]="travelMode"></agm-direction>
+          </agm-map>
+      </div>
+        
+    </div>
+  </div>
+
+</div>
