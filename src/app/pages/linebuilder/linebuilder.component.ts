@@ -19,6 +19,7 @@ export class LinebuilderComponent implements OnInit {
   selectedFile: File;
   admins: Admin[] = [];
   stops: Stop[] = [];
+  lineUploaded: JSONLine;
   constructor() { }
 
   ngOnInit() {
@@ -31,9 +32,9 @@ export class LinebuilderComponent implements OnInit {
       const fileReader = new FileReader();
       fileReader.readAsText(this.selectedFile, 'UTF-8');
       fileReader.onload = () => {
-        const lineUploaded = JSON.parse(fileReader.result as string) as JSONLine;
-        this.stops = lineUploaded.stops;
-        this.admins = lineUploaded.admins;
+        this.lineUploaded = JSON.parse(fileReader.result as string) as JSONLine;
+        this.stops = this.lineUploaded.stops;
+        this.admins = this.lineUploaded.admins;
         console.log(this.stops);
         console.log(this.admins);
       };
@@ -60,5 +61,8 @@ export class LinebuilderComponent implements OnInit {
     console.log(this.origin);
     console.log(this.destination);
     console.log(this.waypoints);
+
+    // TO-DO:
+    // postare this.uploadedLine sul server
   }
 }
