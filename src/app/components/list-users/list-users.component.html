@@ -1,3 +1,22 @@
-<p>
-  list-users works!
-</p>
+<div>
+  <div *ngIf="users">
+      <table class="table table-striped">
+          <thead>
+            <tr>          
+                <th><span>First Name</span></th>
+                <th><span>Last Name</span></th>
+                <th><span>Username</span></th>
+                <th><span>Default Stop</span></th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of users">
+              <td>{{user.firstName}}</td>
+              <td>{{user.lastName}}</td>
+              <td>{{user.username}}</td>
+              <td>{{user.defaultStop?.name}}</td>
+          </tr>
+          </tbody>
+      </table>
+  </div>
+</div>
