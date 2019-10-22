@@ -11,6 +11,7 @@ import { MyChildComponent } from './pages/my-child/my-child.component';
 import { AvailabilityComponent } from './pages/availability/availability.component';
 import { SchedulingComponent } from './pages/scheduling/scheduling.component';
 import { LinebuilderComponent } from './pages/linebuilder/linebuilder.component';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, pathMatch: 'full' },
@@ -42,6 +43,10 @@ const routes: Routes = [
       {
         path: 'linebuilder',
         component: LinebuilderComponent,
+      },
+      {
+        path: 'notifications',
+        component: NotificationsComponent,
       },
       {
         path: '**',

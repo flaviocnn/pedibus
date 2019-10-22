@@ -35,6 +35,7 @@ import { DatePipe } from '@angular/common';
 import { LinebuilderComponent } from './pages/linebuilder/linebuilder.component';
 import { AgmCoreModule,GoogleMapsAPIWrapper } from '@agm/core';
 import { AgmDirectionModule } from 'agm-direction';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { AgmDirectionModule } from 'agm-direction';
     CallbackPipe,
     SchedulingComponent,
     LinebuilderComponent,
+    NotificationsComponent,
   ],
   imports: [
     HttpClientModule,

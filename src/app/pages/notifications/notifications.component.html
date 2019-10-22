@@ -1,0 +1,14 @@
+<h1>Demo for Messaging Service</h1>
+<form class="form-inline">
+  <div class="form-group">
+      <label for="connect">WebSocket connection:</label>
+      <button (click)="connect()" class="btn btn-default" type="submit">Connect</button>
+      <button (click)="disconnect()" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+      </button>
+  </div>
+</form>
+<input type="text" [(ngModel)]="name" class="form-control" name="name"> <br>
+<button (click)="sendMessage()">SEND</button>
+
+<h3>History</h3>
+{{ greeting }}

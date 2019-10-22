@@ -3,6 +3,7 @@ import { Observable, throwError, of } from 'rxjs';
 import { tap, catchError, map, retry } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { DailyStop, Reservation, Child } from '../models/daily-stop';
+import { Router } from '@angular/router';
 
 const REST_URL = 'http://localhost:8080/children';
 
@@ -16,7 +17,8 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ChildrenService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private router: Router) { }
 
   postChild(child: Child) {
     const url = REST_URL;
@@ -61,6 +63,10 @@ export class ChildrenService {
   }
 
   private handleError(error: any) {
+    if (error.status == 500) {
+      console.log('errore 500');
+      this.router.navigateByUrl('/login');
+    }
     console.error(error);
     return throwError(error);
   }
