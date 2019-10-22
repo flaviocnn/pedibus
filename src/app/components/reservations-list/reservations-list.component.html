@@ -1,66 +1,82 @@
 <mat-toolbar color="primary" role="heading">
-    <button mat-icon-button (click)="openNav.emit()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <h1>{{title}}</h1>
-  </mat-toolbar>
-<mat-card *ngFor="let day of currDays; index as i" class="reservation-item">
-  <div class="side-el el">
-    <div class="go-icon">
-      <img src="assets/arrow.png" class="go-svg">
-      <div class="go-text">GO</div>
-    </div>
+  <button mat-icon-button (click)="openNav.emit()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <h1>{{title}}</h1>
+</mat-toolbar>
 
-    <mat-form-field class="selectStop">
-      <mat-label>
-        <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-      </mat-label>
-      <mat-label>Select a stop</mat-label>
-      <mat-select [(value)]="reservationsGo[i].stop.id">
-        <mat-option *ngFor="let stop of stops" [value]="stop?.id">
-          {{stop?.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+<mat-card *ngFor="let day of currDays; index as i" class="m-10">
+  <mat-grid-list cols="14" rowHeight="60">
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+      <div class="go-icon">
+        <img src="assets/arrow.png" class="go-svg">
+        <div class="go-text">GO</div>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="3" [rowspan]="2">
+      <mat-form-field>
+        <mat-label>
+          <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+        </mat-label>
+        <mat-label>Select a stop</mat-label>
+        <mat-select [(value)]="reservationsGo[i].stop.id">
+          <mat-option *ngFor="let stop of stops" [value]="stop?.id">
+            {{stop?.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
 
-    <button mat-button (click)="setDefault(day)">Set default</button>
-    <button *ngIf="!reservationsGo[i].isBooked" mat-flat-button color="primary" (click)="sendReservation(i)">CONFIRM</button>
-    <button *ngIf="reservationsGo[i].isBooked" mat-flat-button>UPDATE</button>
-  </div>
+    <mat-grid-tile [colspan]="2" [rowspan]="1">
+      <button mat-button (click)="setDefault(day)">Set default</button>
+    </mat-grid-tile>
 
-  <div class="middle-el el">
-    <div class="reservation-date">{{day}}</div>
-  </div>
+    <mat-grid-tile [colspan]="2" [rowspan]="2">
+      <div class="reservation-date">{{day}}</div>
+    </mat-grid-tile>
 
-  <div class="side-el el">
+    <mat-grid-tile [colspan]="3" [rowspan]="2">
+      <mat-form-field>
+        <mat-label>
+          <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+        </mat-label>
+        <mat-label>Select a stop</mat-label>
+        <mat-select [(value)]="reservationsGo[i].date">
+          <mat-option *ngFor="let stop of stops" [value]="stop?.id">
+            {{stop?.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
 
-    <!-- <mat-form-field class="">
-      <mat-label>
-        <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-      </mat-label>
-      <mat-label>Select a stop</mat-label>
-      <mat-select [(value)]="reservationsGo[i].date">
-        <mat-option *ngFor="let stop of stops" [value]="stop?.id">
-          {{stop?.name}}
-        </mat-option>
-      </mat-select>
+    <mat-grid-tile [colspan]="2" [rowspan]="1">
+      <button mat-button (click)="setDefault(day)">Set default</button>
+    </mat-grid-tile>
 
-    </mat-form-field> -->
+    <mat-grid-tile [colspan]="1" [rowspan]="2">
+      <div class="back-icon">
+        <img src="assets/arrow.png" class="back-svg">
+        <div class="back-text">BACK</div>
+      </div>
+    </mat-grid-tile>
 
-    <button mat-button (click)="setDefault(day)">Set default</button>
-    <button mat-flat-button color="primary">CONFIRM</button>
+    <mat-grid-tile [colspan]="2" [rowspan]="1">
+      <button *ngIf="!reservationsGo[i].isBooked" mat-flat-button color="primary"
+        (click)="sendReservation(i)">CONFIRM</button>
+      <button *ngIf="reservationsGo[i].isBooked" mat-flat-button>UPDATE</button>
+    </mat-grid-tile>
 
-    <div class="back-icon">
-      <img src="assets/arrow.png" class="back-svg">
-      <div class="back-text">BACK</div>
-    </div>
-  </div>
+    <mat-grid-tile [colspan]="2" [rowspan]="1">
+      <button mat-flat-button color="primary">CONFIRM</button>
+    </mat-grid-tile>
+
+
+  </mat-grid-list>
 </mat-card>
-
 <ng-template #prenota>
-  <button mat-flat-button >PRENOTA</button>
+  <button mat-flat-button>PRENOTA</button>
 </ng-template>
 
 <ng-template #prenotato>
-  <button mat-flat-button >AGGIORNA PRENOTAZIONE</button>
+  <button mat-flat-button>AGGIORNA PRENOTAZIONE</button>
 </ng-template>
