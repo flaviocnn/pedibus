@@ -8,23 +8,40 @@
   </mat-paginator>
 </mat-toolbar>
 
-<div>
-  <mat-card *ngIf="showedRes; else loading" class="mycard">
-    <mat-list>
-      <mat-list-item *ngFor="let ds of showedRes">
-        <p>
-            {{ds?.timeGo + '&#160;' + ds?.name}} <br>
-            <span *ngFor="let res of ds?.reservations;last as isLast"
-            class="passenger"
-              [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}"
-              (click)="checkin(res)">
-            {{res?.child.firstName}} <span *ngIf="!isLast">,</span>
-            </span>
-        </p>
-      </mat-list-item>
-    </mat-list>
-  </mat-card>
-</div>
+<mat-tab-group [backgroundColor]="primary" [color]="accent">
+    <mat-tab label="Andata">
+      <ng-template matTabContent>
+          <div class="container">
+              <mat-card *ngIf="showedRes; else loading" class="mycard">
+                <mat-list>
+                  <mat-list-item *ngFor="let ds of showedRes">
+                    <p>
+                        {{ds?.timeGo + '&#160;' + ds?.name}} <br>
+                        <span *ngFor="let res of ds?.reservations;last as isLast"
+                        class="passenger"
+                          [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}"
+                          (click)="checkin(res)">
+                        {{res?.child.firstName}} <span *ngIf="!isLast">,</span>
+                        </span>
+                    </p>
+                  </mat-list-item>
+                </mat-list>
+              </mat-card>
+            </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ritorno">
+      <ng-template matTabContent>
+        <div class="container">
+          <mat-card class="mycard">
+          <p>aaaaaaaaaaa</p>
+        </mat-card>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+
+
 
 <ng-template #loading>
   <div>Loading ...</div>

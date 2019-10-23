@@ -17,7 +17,7 @@
     flex: 1 1 auto
 }
 .mycard{
-    margin: 1em;
+    margin-top: 1em;
     text-align: left;
 }
 .myMatList{
@@ -36,3 +36,10 @@
 }
 .stopname
 {    text-decoration: underline;    }
+.mat-tab-label {
+    width: 50%!important;
+}
+
+.mat-tab {
+    width: 50%;
+}
