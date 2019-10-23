@@ -33,7 +33,7 @@ export class AuthenticationService {
           if (user && user.token && user.user.id) {
               localStorage.setItem('currentUser', JSON.stringify(user));
               localStorage.setItem('id_token', user.token);
-              localStorage.setItem('user_id', user.id);
+              localStorage.setItem('user_id', user.user.id);
               this.currentUserSubject.next(user);
           }
           return user;

@@ -19,6 +19,7 @@ export interface IHash {
 
 export class AttendeesListComponent implements OnInit, AfterViewChecked {
   title = 'Presenze';
+  backgroundColor = 'primary';
   showedRes = [];
   myLine;
   todayDate: Date;
