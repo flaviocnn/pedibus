@@ -36,6 +36,7 @@ import { LinebuilderComponent } from './pages/linebuilder/linebuilder.component'
 import { AgmCoreModule,GoogleMapsAPIWrapper } from '@agm/core';
 import { AgmDirectionModule } from 'agm-direction';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
+import { SocketService } from './services/socket.service';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { NotificationsComponent } from './pages/notifications/notifications.comp
     ReservationsService,
     AuthGuard,
     DatePipe,
+    SocketService
   ],
   bootstrap: [AppComponent]
 })

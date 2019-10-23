@@ -1,37 +1,84 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { map, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/internal/Subject';
-import { WebSocketAPI } from 'src/app/web-socket-api';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
+import { environment } from '../../../environments/environment';
+import { SocketService } from '../../services/socket.service';
+
+export interface Message {
+  message: string,
+  fromId: string,
+  toId: string,
+}
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit {
-  
-  constructor() {
-  }
-  webSocketAPI: WebSocketAPI;
-  greeting: any;
-  name: string;
+  private serverUrl = environment.url + 'socket'
+  isLoaded: boolean = false;
+  isCustomSocketOpened = false;
+  private stompClient;
+  private form: FormGroup;
+  private userForm: FormGroup;
+  messages: Message[] = [];
+  constructor(private socketService: SocketService
+  ) { }
+
   ngOnInit() {
-    this.webSocketAPI = new WebSocketAPI(new NotificationsComponent());
-  }
-  connect(){
-    this.webSocketAPI._connect();
+    this.initializeWebSocketConnection();
   }
 
-  disconnect(){
-    this.webSocketAPI._disconnect();
+  sendMessageUsingSocket() {
+    if (this.form.valid) {
+      let message: Message = { message: this.form.value.message, fromId: this.userForm.value.fromId, toId: this.userForm.value.toId };
+      this.stompClient.send("/socket-subscriber/send/message", {}, JSON.stringify(message));
+    }
   }
 
-  sendMessage(){
-    this.webSocketAPI._send(this.name);
+  sendMessageUsingRest() {
+    if (this.form.valid) {
+      let message: Message = { message: this.form.value.message, fromId: this.userForm.value.fromId, toId: this.userForm.value.toId };
+      this.socketService.post(message).subscribe(res => {
+        console.log(res);
+      })
+    }
   }
 
-  handleMessage(message){
-    this.greeting = message;
+  initializeWebSocketConnection() {
+    let ws = new SockJS(this.serverUrl);
+    this.stompClient = Stomp.over(ws);
+    let that = this;
+    this.stompClient.connect({}, function (frame) {
+      that.isLoaded = true;
+      console.log("first step");
+      that.openGlobalSocket()
+    });
   }
+
+  openGlobalSocket() {
+    this.stompClient.subscribe("/topic/greetings", (message) => {
+      this.handleResult(message);
+    });
+  }
+
+  openSocket() {
+    if (this.isLoaded) {
+      this.isCustomSocketOpened = true;
+      this.stompClient.subscribe("/app/send/message"+this.userForm.value.fromId, (message) => {
+        this.handleResult(message);
+      });
+    }
+  }
+
+  handleResult(message){
+    if (message.body) {
+      let messageResult: Message = JSON.parse(message.body);
+      console.log(messageResult);
+      this.messages.push(messageResult);
+    }
+  }
+
 }
-

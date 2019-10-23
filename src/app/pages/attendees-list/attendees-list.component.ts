@@ -22,7 +22,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
 
   todayDate: Date;
   currentDate: string;
-  @ViewChild(MatPaginator) paginator;
+  @ViewChild('paginator',{static: true}) paginator;
 
   length = 15;
   pageSize = 1;

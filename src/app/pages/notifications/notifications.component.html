@@ -1,14 +1,17 @@
-<h1>Demo for Messaging Service</h1>
-<form class="form-inline">
-  <div class="form-group">
-      <label for="connect">WebSocket connection:</label>
-      <button (click)="connect()" class="btn btn-default" type="submit">Connect</button>
-      <button (click)="disconnect()" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-      </button>
+<form [(submit)="openSocket()" *ngIf="isLoaded">
+  <p>User Information: (if user id(toId) is null the message will be sended to all users) </p>
+  <div style="margin-bottom: 20px;">
+    <input type="text"  name="fromId" placeholder="Your id">
+    <input type="submit value="open socket to recieve custom messages">
   </div>
+  <input type="text" name="toId" placeholder="User id to send the message to">
 </form>
-<input type="text" [(ngModel)]="name" class="form-control" name="name"> <br>
-<button (click)="sendMessage()">SEND</button>
-
-<h3>History</h3>
-{{ greeting }}
+<form (submit)="sendMessageUsingSocket()">
+  <p>Message: </p>
+  <input type="text"  name="message" placeholder="Message">
+  <input type="submit"  value="Send using socket subscription">
+  <input type="button"value="Send using a rest controller" (click)="sendMessageUsingRest()">
+</form>
+<ul>
+  <li *ngFor="let message of messages">From: {{message.fromId}}, To: {{message.toId}}, Message: {{message.message}}</li>
+</ul>
