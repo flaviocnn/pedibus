@@ -65,8 +65,10 @@ export class AvailabilityComponent implements OnInit {
           }
           if (av.isGo) {
             a[av.date].go = o;
+            a[av.date].back = { id: 0 };
           } else {
             a[av.date].back = o;
+            a[av.date].go = { id: 0 };
           }
         });
         this.dateService.getWeekArray(new Date())
