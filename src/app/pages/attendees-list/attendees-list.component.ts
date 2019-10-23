@@ -20,11 +20,12 @@ export interface IHash {
 export class AttendeesListComponent implements OnInit, AfterViewChecked {
   title = 'Presenze';
   backgroundColor = 'primary';
+  color = 'accent';
   showedRes = [];
   myLine;
   todayDate: Date;
   currentDate: string;
-  @ViewChild('paginator',{static: true}) paginator;
+  @ViewChild('paginator', { static: true }) paginator;
 
   length = 15;
   pageSize = 1;
@@ -33,8 +34,8 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   pageEvent: PageEvent;
 
   constructor(private reservationsService: ReservationsService,
-              private userService: UserService,
-              public datepipe: DatePipe) {
+    private userService: UserService,
+    public datepipe: DatePipe) {
   }
 
   @Output() openNav = new EventEmitter();
@@ -69,51 +70,53 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   sort(data): any[] {
     data.sort((a, b) => a.timeGo !== b.timeGo ? a.timeGo < b.timeGo ? -1 : 1 : 0);
     data.forEach(el => {
-      el.reservations.sort((a, b) => {
-        console.log(a);
-        console.log(b);
-        a.child.firstName !== b.child.firstName ? a.child.firstName < b.child.firstName ? -1 : 1 : 0;
-        // return 0;
-      });
+      if (el.reservations) {
+        el.reservations.sort((a, b) => {
+          console.log(a);
+          console.log(b);
+          a.child.firstName !== b.child.firstName ? a.child.firstName < b.child.firstName ? -1 : 1 : 0;
+          // return 0;
+        });
+      }
     });
     return data;
   }
 
-  ngAfterViewChecked() {
-    const list = document.getElementsByClassName('mat-paginator-range-label');
-    list[0].innerHTML = this.currentDate;
-    //console.log('ng after view checked');
-  }
+ngAfterViewChecked() {
+  const list = document.getElementsByClassName('mat-paginator-range-label');
+  list[0].innerHTML = this.currentDate;
+  //console.log('ng after view checked');
+}
 
-  getPaginatorData(event) {
-    console.log('today is ' + this.todayDate);
+getPaginatorData(event) {
+  console.log('today is ' + this.todayDate);
 
-    const newDate = new Date(this.todayDate.valueOf());
-    const numberOfDaysToAdd = parseInt(this.paginator.pageIndex) - 7;
+  const newDate = new Date(this.todayDate.valueOf());
+  const numberOfDaysToAdd = parseInt(this.paginator.pageIndex) - 7;
 
-    console.log(numberOfDaysToAdd);
-    newDate.setDate(this.todayDate.getDate() + numberOfDaysToAdd);
+  console.log(numberOfDaysToAdd);
+  newDate.setDate(this.todayDate.getDate() + numberOfDaysToAdd);
 
-    // showed on paginator
-    this.currentDate = newDate.toLocaleDateString();
-    console.log(this.currentDate);
+  // showed on paginator
+  this.currentDate = newDate.toLocaleDateString();
+  console.log(this.currentDate);
 
-    this.getReservations(newDate);
+  this.getReservations(newDate);
 
-  }
+}
 
   public checkin(res) {
-    const myres = res;
-    myres.child.authorities = null;
-    myres.child.user.authorities = null;
-    myres.stop.line.admins.forEach(element => {
-      element.authorities = null;
-    });
-    console.log(myres);
-    if (!myres.isConfirmed) {
-      myres.isConfirmed = true;
-      this.reservationsService.putReservation(myres);
-    }
+  const myres = res;
+  myres.child.authorities = null;
+  myres.child.user.authorities = null;
+  myres.stop.line.admins.forEach(element => {
+    element.authorities = null;
+  });
+  console.log(myres);
+  if (!myres.isConfirmed) {
+    myres.isConfirmed = true;
+    this.reservationsService.putReservation(myres);
   }
+}
 
 }

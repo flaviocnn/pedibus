@@ -1,4 +1,4 @@
-<div id="container">
+<div id="container" (keydown.enter)="login()">
   <h1>Pedibus</h1>
   <mat-card class="card">
     <mat-card-header>
@@ -10,21 +10,24 @@
           <tr>
             <td>
               <mat-form-field class="example-full-width">
-              <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+                <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
               </mat-form-field>
             </td>
           </tr>
           <tr>
-          <td><mat-form-field class="example-full-width">
-            <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
-          </mat-form-field></td>
-        </tr></table>
+            <td>
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
       </form>
       <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button (click)="login()" color="primary">Login</button>
-    </mat-card-actions>
+    <form (submit)="login()" action="#">
+      <button type="submit" mat-raised-button (keydown.enter)="login()" (click)="login()" color="primary">Login</button>
+    </form>
+
   </mat-card>
 </div>
-

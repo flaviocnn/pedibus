@@ -25,9 +25,12 @@ export interface MyAv {
 
 export class AvailabilityComponent implements OnInit {
   title = 'Disponibilità';
-  availabilities: MyAv;
+  availabilities: MyAv = {};
   Object = Object;
   myStops: Stop[];
+  uid;
+  arrayDate;
+  springDate = [];
 
   constructor(
     private availabilitiesService: AvailabilityService,
@@ -38,49 +41,59 @@ export class AvailabilityComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    const a = {};
+    this.uid = this.userService.getMyId();
+    this.arrayDate = this.dateService.getWeekArray(new Date());
+    this.arrayDate.forEach(mydate => {
+      this.springDate.push(this.datepipe.transform(new Date(mydate), 'ddMMyy'));
+    });
+
+    this.arrayDate.forEach(mydate => {
+      if (!this.availabilities[mydate]) {
+        a[mydate] = { confirmed: false };
+        a[mydate].go = { id: 0 };
+        a[mydate].back = { id: 0 };
+      }
+    });
+    this.availabilities = a;
     this.getAvails();
     this.getStops();
   }
 
   getAvails() {
-    const d = this.datepipe.transform(new Date(), 'ddMMyy');
-    const uid = this.userService.getMyId();
-    this.availabilitiesService.getAvailabilities(uid, d)
-      .subscribe((data) => {
-        const a = {};
-        data.forEach(av => {
-          if (!a[av.date]) { a[av.date] = {}; }
-          a[av.date].confirmed = av.isConfirmed;
-          let o;
-          if (av.isConfirmed) {
-            o = {
-              name: av.assignedStartStop.name,
-              id: av.assignedStartStop.id
-            };
-          } else {
-            o = {
-              name: av.requestedStartStop.name,
-              id: av.requestedStartStop.id
-            };
-          }
-          if (av.isGo) {
-            a[av.date].go = o;
-            a[av.date].back = { id: 0 };
-          } else {
-            a[av.date].back = o;
-            a[av.date].go = { id: 0 };
-          }
-        });
-        this.dateService.getWeekArray(new Date())
-          .forEach(x => {
-            if (!a[x]) {
-              a[x] = { confirmed: false };
-              a[x].go = { id: 0 };
-              a[x].back = { id: 0 };
+    const a = {};
+    this.springDate.forEach(sdate => {
+      this.availabilitiesService.getAvailabilities(this.uid, sdate)
+        .subscribe((data) => {
+          data.forEach(av => {
+            console.log(av);
+            if (!a[av.date]) { a[av.date] = {}; }
+            a[av.date].confirmed = av.isConfirmed;
+            let o;
+            if (av.isConfirmed) {
+              o = {
+                name: av.assignedStartStop.name,
+                id: av.assignedStartStop.id
+              };
+            } else {
+              o = {
+                name: av.requestedStartStop.name,
+                id: av.requestedStartStop.id
+              };
+            }
+            if (av.isGo) {
+              a[av.date].go = o;
+              a[av.date].back = { id: 0 };
+            } else {
+              a[av.date].back = o;
+              a[av.date].go = { id: 0 };
             }
           });
-        this.availabilities = a;
-      });
+          this.Object.keys(a).forEach(data=>{
+            this.availabilities[data] = a[data];
+          });
+        });
+    });
   }
 
   getStops() {
@@ -120,13 +133,13 @@ export class AvailabilityComponent implements OnInit {
         this.availabilities[obj].back = { id: 0 };
       }
     }
-    else if(event.checked && run == 'go'){
-      if(this.availabilities[obj].go.id == 0){
+    else if (event.checked && run == 'go') {
+      if (this.availabilities[obj].go.id == 0) {
         this.availabilities[obj].go = this.myStops[0];
       }
     }
-    else if(event.checked && run == 'back'){
-      if(this.availabilities[obj].back.id == 0){
+    else if (event.checked && run == 'back') {
+      if (this.availabilities[obj].back.id == 0) {
         this.availabilities[obj].back = this.myStops[0];
       }
     }
@@ -147,7 +160,7 @@ export class AvailabilityComponent implements OnInit {
         requestedStartStop: go,
       };
       this.availabilitiesService.postAvailability(avGo)
-      .subscribe(x=>console.log('go done'));
+        .subscribe(x => console.log('go done'));
 
     }
     if (this.availabilities[date].back.id != 0) {
@@ -160,7 +173,7 @@ export class AvailabilityComponent implements OnInit {
         requestedStartStop: back,
       };
       this.availabilitiesService.postAvailability(avBack)
-      .subscribe(x=>console.log('back done'));
+        .subscribe(x => console.log('back done'));
     }
 
 
