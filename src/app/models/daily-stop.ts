@@ -134,11 +134,11 @@ export interface Child {
 }
 
 export interface Availability {
-    id: number;
+    id?: number;
     date: string;
-    isConfirmed: boolean;
+    isConfirmed?: boolean;
     isGo: boolean;
-    user: User;
+    user?: User;
     requestedStartStop?: DailyStop;
     requestedFinishStop?: DailyStop;
     assignedStartStop?: DailyStop;

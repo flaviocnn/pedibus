@@ -34,6 +34,16 @@ export class AvailabilityService {
       .pipe(catchError(this.handleError));
   }
 
+  postAvailability(av: Availability) {
+
+    const url = REST_URL;
+
+    return this.http.post<Availability>(url, av, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     console.error(error);
     return throwError(error);

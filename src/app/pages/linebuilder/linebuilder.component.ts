@@ -8,7 +8,7 @@ import { JSONLine, Admin, Stop } from 'src/app/models/daily-stop';
   styleUrls: ['./linebuilder.component.scss']
 })
 export class LinebuilderComponent implements OnInit {
-
+  title = 'Carica Linea';
   lat = 45.0713;
   lng = 7.6661;
   notReady = true;

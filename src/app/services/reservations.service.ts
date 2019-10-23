@@ -29,6 +29,15 @@ export class ReservationsService {
     );
   }
 
+  getDailyStopsByLine(date: string, isGo: boolean, line: string): Observable<DailyStop[]> {
+    console.log('getting daily stops');
+    const url = REST_URL + `/lines/${line}/${date}/${isGo}`;
+
+    return this.http.get<DailyStop[]>(url, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   putReservation(res: Reservation) {
     const url = REST_URL;
     return this.http.put<Reservation[]>(url, res, httpOptions)

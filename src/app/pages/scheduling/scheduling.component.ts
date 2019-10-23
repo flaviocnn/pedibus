@@ -11,6 +11,7 @@ import { StopsService } from 'src/app/services/stops.service';
   styleUrls: ['./scheduling.component.scss']
 })
 export class SchedulingComponent implements OnInit {
+  title = 'Turni'
   datesBE = [];
   datesFE = [];
   selectedDate;

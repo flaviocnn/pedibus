@@ -20,7 +20,7 @@ export interface DialogData {
   providers: [NgModel],
 })
 export class DialogOverviewExampleDialog {
-
+  title = 'Dashboard Genitore'
   nameText: string;
   error: string;
   success: string;

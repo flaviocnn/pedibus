@@ -4,6 +4,7 @@ import { PageEvent, MatPaginator } from '@angular/material';
 import { ReservationsService } from '../../services/reservations.service';
 import { DatePipe } from '@angular/common';
 import { Reservation } from 'src/app/models/daily-stop';
+import { UserService } from 'src/app/services/user.service';
 
 export interface IHash {
   [id: string]: boolean;
@@ -17,9 +18,9 @@ export interface IHash {
 })
 
 export class AttendeesListComponent implements OnInit, AfterViewChecked {
-  title = 'Attendees';
+  title = 'Presenze';
   showedRes = [];
-
+  myLine;
   todayDate: Date;
   currentDate: string;
   @ViewChild('paginator',{static: true}) paginator;
@@ -31,12 +32,14 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   pageEvent: PageEvent;
 
   constructor(private reservationsService: ReservationsService,
+              private userService: UserService,
               public datepipe: DatePipe) {
   }
 
   @Output() openNav = new EventEmitter();
 
   ngOnInit() {
+    this.myLine = this.userService.getMyLine();
     this.todayDate = new Date();
     // server date format ddMMyy
     this.currentDate = this.todayDate.toLocaleDateString();

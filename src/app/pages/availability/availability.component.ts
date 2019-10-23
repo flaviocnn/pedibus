@@ -6,7 +6,7 @@ import { Stop } from 'src/app/models/daily-stop';
 import { StopsService } from 'src/app/services/stops.service';
 import { DatesService } from 'src/app/services/dates.service';
 import { UserService } from 'src/app/services/user.service';
-import { MatSelectChange, MatOption } from '@angular/material';
+import { MatSelectChange, MatOption, MatSlideToggleChange } from '@angular/material';
 
 
 export interface MyAv {
@@ -24,7 +24,7 @@ export interface MyAv {
 })
 
 export class AvailabilityComponent implements OnInit {
-
+  title = 'Disponibilità';
   availabilities: MyAv;
   Object = Object;
   myStops: Stop[];
@@ -71,10 +71,10 @@ export class AvailabilityComponent implements OnInit {
         });
         this.dateService.getWeekArray(new Date())
           .forEach(x => {
-            if ( !a[x]) {
+            if (!a[x]) {
               a[x] = { confirmed: false };
-              a[x].go = {id: 0};
-              a[x].back = {id: 0};
+              a[x].go = { id: 0 };
+              a[x].back = { id: 0 };
             }
           });
         this.availabilities = a;
@@ -85,7 +85,7 @@ export class AvailabilityComponent implements OnInit {
     this.stopsService.getStops()
       .subscribe(stops => {
         this.myStops = stops;
-        console.log(this.myStops);
+        //console.log(this.myStops);
       });
   }
 
@@ -94,7 +94,7 @@ export class AvailabilityComponent implements OnInit {
     // console.log(optionText);
     const idStop = ev.value;
 
- }
+  }
 
   showa() {
     console.log(this.availabilities);
@@ -103,10 +103,64 @@ export class AvailabilityComponent implements OnInit {
     return i1 && i2 && i1.id === i2.id;
   }
 
-  myfilter(s: Stop, av: any){
-    if(av && s.id){
+  myfilter(s: Stop, av: any) {
+    if (av && s.id) {
       return s.id != av;
     }
     return true;
+  }
+
+  public toggle(event: MatSlideToggleChange, obj, run) {
+    if (!event.checked) {
+      if (run == 'go') {
+        this.availabilities[obj].go = { id: 0 };
+      } else if (run == 'back') {
+        this.availabilities[obj].back = { id: 0 };
+      }
+    }
+    else if(event.checked && run == 'go'){
+      if(this.availabilities[obj].go.id == 0){
+        this.availabilities[obj].go = this.myStops[0];
+      }
+    }
+    else if(event.checked && run == 'back'){
+      if(this.availabilities[obj].back.id == 0){
+        this.availabilities[obj].back = this.myStops[0];
+      }
+    }
+  }
+
+  sendAv(date) {
+    let go;
+    let back;
+    if (this.availabilities[date].go.id != 0) {
+      go = this.availabilities[date].go;
+
+      go.reservations = null;
+      go.line = null;
+
+      const avGo: Availability = {
+        date: date,
+        isGo: true,
+        requestedStartStop: go,
+      };
+      this.availabilitiesService.postAvailability(avGo)
+      .subscribe(x=>console.log('go done'));
+
+    }
+    if (this.availabilities[date].back.id != 0) {
+      back = this.availabilities[date].back;
+      back.reservations = null;
+      back.line = null;
+      const avBack: Availability = {
+        date: date,
+        isGo: false,
+        requestedStartStop: back,
+      };
+      this.availabilitiesService.postAvailability(avBack)
+      .subscribe(x=>console.log('back done'));
+    }
+
+
   }
 }

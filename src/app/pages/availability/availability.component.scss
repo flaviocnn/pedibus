@@ -9,7 +9,16 @@
 }
 .send-avail{
     position: absolute;
-    right: -10px;
-    top: 33%;
+    right: 10px;
+    bottom: 10px;
     background-color: #3f51b5;
+}
+.mat-card{
+    max-width: 800px;
+}
+.mat-icon{
+    position: initial;
+}
+.mat-slide-toggle{
+    padding: 17px;
 }

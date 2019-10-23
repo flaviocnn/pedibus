@@ -24,6 +24,10 @@ export class UserService {
     return id;
   }
 
+  getMyLine(): string{
+    return null//
+  }
+
   getUsers(): Observable<User[]> {
     console.log('getting users');
     const url = REST_URL;
