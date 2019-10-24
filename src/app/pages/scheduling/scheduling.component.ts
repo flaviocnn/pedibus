@@ -4,6 +4,7 @@ import { UserService } from 'src/app/services/user.service';
 import { AvailabilityService } from 'src/app/services/availability.service';
 import { Availability, Stop, DailyStop } from 'src/app/models/daily-stop';
 import { StopsService } from 'src/app/services/stops.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-scheduling',
@@ -25,6 +26,7 @@ export class SchedulingComponent implements OnInit {
     private userservice: UserService,
     private availService: AvailabilityService,
     private stopsService: StopsService,
+    private sidenav: SharedService
     ) { }
 
   ngOnInit() {
@@ -60,7 +62,9 @@ export class SchedulingComponent implements OnInit {
 
     console.log(this.datesFE);
   }
-
+  toggleRightSidenav() {
+    this.sidenav.toggle();
+  }
   selectDay(index) {
     this.selectedDate = this.datesBE[index];
     console.log(this.selectedDate);

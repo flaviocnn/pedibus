@@ -1,16 +1,38 @@
 <div class="container">
-  <form #f="ngForm" (ngSubmit)=onSubmit(f)>
-    <mat-form-field>
-      <input matInput type="email" placeholder="Enter your email" [(ngModel)]="emailText" name="email" #email="ngModel"
-        email required>
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" [disabled]="f.invalid || email.invalid">Invite</button>
-    <p class="error" *ngIf="error !== ''">{{error}}</p>
-    <mat-progress-spinner *ngIf="processing === true" class="spinner" color="primary" diameter="30"
-      mode="indeterminate">
-    </mat-progress-spinner>
-  </form>
-  <div class="informations">
-    The user will receive a confirmation email in order to validate his account.
-  </div>
+  <mat-card>
+    <form #form="ngForm" [formGroup]="userForm" (ngSubmit)="onSubmit(userForm.value)">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Inserisci Nome" formControlName="firstName"
+          >
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Inserisci Cognome" formControlName="surname"
+          >
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="email" placeholder="Inserisci l'indirizzo email" formControlName="email"
+           required #email>
+      </mat-form-field>
+
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList aria-label="Fruit selection">
+          <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable" [removable]="removable"
+            (removed)="remove(fruit)">
+            {{fruit.firstName}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input placeholder="Genitore di..." [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Invita</button>
+      <p class="error" *ngIf="error !== ''">{{error}}</p>
+      <mat-progress-spinner *ngIf="processing === true" class="spinner" color="primary" diameter="30"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </form>
+  </mat-card>
+
 </div>

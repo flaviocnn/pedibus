@@ -2,8 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ChildrenService } from '../../services/children.service';
 import { StopsService } from '../../services/stops.service';
 import { Stop, Child } from '../../models/daily-stop';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, NgModel, NgForm } from '@angular/forms';
+import { SharedService } from 'src/app/services/shared.service';
 
 export interface IHash {
   [id: number]: number;
@@ -30,10 +31,14 @@ export class DialogOverviewExampleDialog {
   newChild: Child;
 
   constructor(
-      public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-      private ngModel: NgModel,
-      private childrenService: ChildrenService) {}
-
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    private ngModel: NgModel,
+    private childrenService: ChildrenService,
+    private sidenav: SharedService) { }
+    
+  toggleRightSidenav() {
+    this.sidenav.toggle();
+  }
   onSubmit(f: NgForm) {
     this.processing = true;
     console.log(f);
@@ -69,8 +74,8 @@ export class DialogOverviewExampleDialog {
 export class ParentDashboardComponent implements OnInit {
 
   constructor(private childrenService: ChildrenService,
-              private stopsService: StopsService,
-              public dialog: MatDialog) { }
+    private stopsService: StopsService,
+    public dialog: MatDialog) { }
 
   stopList: Stop[] = [];
   myChildren: Child[] = [];
@@ -86,21 +91,21 @@ export class ParentDashboardComponent implements OnInit {
 
   getMyChildren() {
     this.childrenService.getMyChildren()
-    .subscribe( (data) => {
-      this.myChildren = data;
-      data.forEach(child => {
-        if (child.defaultStop) {
-          this.defaultStops[child.id] = +child.defaultStop.id;
-        }
+      .subscribe((data) => {
+        this.myChildren = data;
+        data.forEach(child => {
+          if (child.defaultStop) {
+            this.defaultStops[child.id] = +child.defaultStop.id;
+          }
+        });
       });
-    });
   }
 
   getAllStops() {
     this.stopsService.getStops()
-    .subscribe( (data) => {
-      this.stopList = data;
-    });
+      .subscribe((data) => {
+        this.stopList = data;
+      });
   }
 
   addNewChild(child: Child) {
@@ -124,10 +129,10 @@ export class ParentDashboardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       //let newchild: Child = result;
-      if(result){
+      if (result) {
         this.myChildren.push(result);
       }
-      
+
     });
   }
 

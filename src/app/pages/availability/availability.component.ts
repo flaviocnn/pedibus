@@ -7,6 +7,7 @@ import { StopsService } from 'src/app/services/stops.service';
 import { DatesService } from 'src/app/services/dates.service';
 import { UserService } from 'src/app/services/user.service';
 import { MatSelectChange, MatOption, MatSlideToggleChange } from '@angular/material';
+import { SharedService } from 'src/app/services/shared.service';
 
 
 export interface MyAv {
@@ -37,7 +38,8 @@ export class AvailabilityComponent implements OnInit {
     private stopsService: StopsService,
     private dateService: DatesService,
     private userService: UserService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private sidenav: SharedService
   ) { }
 
   ngOnInit() {
@@ -177,5 +179,8 @@ export class AvailabilityComponent implements OnInit {
     }
 
 
+  }
+  toggleRightSidenav() {
+    this.sidenav.toggle();
   }
 }

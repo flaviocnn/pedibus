@@ -5,6 +5,8 @@ import { ReservationsService } from '../../services/reservations.service';
 import { DatePipe } from '@angular/common';
 import { Reservation } from 'src/app/models/daily-stop';
 import { UserService } from 'src/app/services/user.service';
+import { Subscriber } from 'rxjs';
+import { SharedService } from 'src/app/services/shared.service';
 
 export interface IHash {
   [id: string]: boolean;
@@ -35,7 +37,9 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
 
   constructor(private reservationsService: ReservationsService,
     private userService: UserService,
-    public datepipe: DatePipe) {
+    public datepipe: DatePipe,
+    private sidenav: SharedService
+    ) {
   }
 
   @Output() openNav = new EventEmitter();
@@ -119,4 +123,7 @@ getPaginatorData(event) {
   }
 }
 
+toggleRightSidenav() {
+  this.sidenav.toggle();
+}
 }

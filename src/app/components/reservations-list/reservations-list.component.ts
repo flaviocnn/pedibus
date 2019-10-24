@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Stop, Child, Reservation } from '../../models/daily-stop';
 import { StopsService } from '../../services/stops.service';
 import { ReservationsService } from '../../services/reservations.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-reservations-list',
@@ -23,6 +24,7 @@ export class ReservationsListComponent implements OnInit {
   constructor(
     private stopsService: StopsService,
     private reservationsService: ReservationsService,
+    private sidenav: SharedService
     ) { }
 
   ngOnInit() {
@@ -82,5 +84,9 @@ export class ReservationsListComponent implements OnInit {
 
   sendReservation(day) {
     this.reservationsService.postReservation(null);
+  }
+
+  toggleRightSidenav() {
+    this.sidenav.toggle();
   }
 }

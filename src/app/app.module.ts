@@ -16,7 +16,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 
 import { ReservationsService } from './services/reservations.service';
 import { LoginComponent } from './pages/login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './guards/auth.guard';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { AuthInterceptor } from './services/auth.interceptor';
@@ -37,6 +37,7 @@ import { AgmCoreModule,GoogleMapsAPIWrapper } from '@agm/core';
 import { AgmDirectionModule } from 'agm-direction';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { SocketService } from './services/socket.service';
+import { SharedService } from './services/shared.service';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { SocketService } from './services/socket.service';
       apiKey: 'AIzaSyDFTKbcSXEN22pUx3zfaabEOGyy7oOZtmI',
     }),
     AgmDirectionModule,
+    ReactiveFormsModule
   ],
   entryComponents: [ DialogOverviewExampleDialog],
   providers: [
@@ -78,7 +80,8 @@ import { SocketService } from './services/socket.service';
     ReservationsService,
     AuthGuard,
     DatePipe,
-    SocketService
+    SocketService,
+    SharedService
   ],
   bootstrap: [AppComponent]
 })

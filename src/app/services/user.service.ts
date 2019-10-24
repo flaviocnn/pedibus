@@ -4,7 +4,7 @@ import { tap, catchError, map, retry } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { User } from '../models/user';
 
-const REST_URL = 'http://localhost:8080/users/';
+const REST_URL = 'http://localhost:8080/users';
 
 const httpOptions = {
   headers: new HttpHeaders({

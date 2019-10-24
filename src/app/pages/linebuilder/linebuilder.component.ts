@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { JSONLine, Admin, Stop } from 'src/app/models/daily-stop';
+import { SharedService } from 'src/app/services/shared.service';
 
 
 @Component({
@@ -17,14 +18,16 @@ export class LinebuilderComponent implements OnInit {
   waypoints = [];
   public travelMode = 'WALKING';
   selectedFile: File;
-  admins: Admin[] = [];
-  stops: Stop[] = [];
+  admins: Admin[];
+  stops: Stop[];
   lineUploaded: JSONLine;
-  constructor() { }
+  constructor(private sidenav: SharedService) { }
 
   ngOnInit() {
   }
-
+  toggleRightSidenav() {
+    this.sidenav.toggle();
+  }
   onFileChanged(event) {
     const inputNode: any = document.querySelector('#file');
     this.selectedFile = inputNode.files[0];

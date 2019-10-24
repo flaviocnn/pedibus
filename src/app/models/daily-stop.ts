@@ -126,7 +126,7 @@ export interface DailyStop {
 }
 
 export interface Child {
-    id: number;
+    id?: number;
     firstName?: string;
     lastName?: string;
     defaultStop?: any;

@@ -1,5 +1,5 @@
 <mat-toolbar color="primary" role="heading">
-  <button mat-icon-button (click)="openNav.emit()">
+  <button mat-icon-button (click)="toggleRightSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
   <h1>{{title}}</h1>
@@ -28,7 +28,7 @@
         </mat-card>
       </div>
         
-      <div class="row">
+      <div *ngIf="admins?.length || stops?.length"class="row">
           <mat-card >
               <mat-list>
                   <h3 mat-subheader>Admin</h3>
@@ -49,8 +49,8 @@
     </div>
 
     <div class="col m4 s12">
-      <div class="map mat-elevation-z2">
-        <agm-map [ngClass]="{'disabled-map': notReady}" [latitude]="lat" [longitude]="lng">
+      <div [ngClass]="{'disabled-map': notReady}" class="map mat-elevation-z2">
+        <agm-map [latitude]="lat" [longitude]="lng">
             <agm-direction [origin]="origin" [destination]="destination" [waypoints]="waypoints" 
             [travelMode]="travelMode"></agm-direction>
           </agm-map>

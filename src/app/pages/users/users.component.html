@@ -1,14 +1,20 @@
-<mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        List
-      </ng-template>
-      <app-list-users></app-list-users>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Invite new user
-      </ng-template>
-      <app-invite-user></app-invite-user>
-    </mat-tab>
+<mat-toolbar color="primary" role="heading">
+    <button mat-icon-button (click)="toggleRightSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1>{{title}}</h1>
+  </mat-toolbar>
+
+  <mat-tab-group [color]="this.color" [backgroundColor]="this.backgroundColor" mat-stretch-tabs>
+      <mat-tab label="Lista Utenti">
+        <ng-template matTabContent>
+            <app-list-users></app-list-users>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Invita Utenti">
+          <ng-template matTabContent>
+              <app-invite-user></app-invite-user>
+          </ng-template>
+        </mat-tab>
   </mat-tab-group>
