@@ -7,68 +7,71 @@
 <button (click)="showa()">debug</button>
 <div class="container">
   <div *ngIf="availabilities">
-  <mat-card *ngFor="let av of Object.keys(availabilities); index as i" class="availability-item"
-    [ngClass]="{'confirmed': availabilities[av]?.confirmed == true, 'pending': availabilities[av]?.confirmed == 'false'}">
-    <div class="row">
-      <div class="col m4">
-        <p class="date">{{av| date: 'dd/MM/yyyy'}}</p>
-        <p *ngIf="availabilities[av].confirmed; else nonconfermata">Confermata</p>
-        <p *ngIf="availabilities[av]?.go?.id">Andata: {{availabilities[av]?.go.name}}</p>
-        <p *ngIf="availabilities[av]?.back?.id">Ritorno: {{availabilities[av]?.back.name}}</p>
-      </div>
-      <div class="col m8">
-        <div class="row">
-          <div class="col m6">
-            <mat-form-field class="selectStop">
-              <mat-label>
-                <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-              </mat-label>
-              <mat-label>Select a stop</mat-label>
-              <mat-select [(value)]="availabilities[av].go">
-                <mat-option *ngIf="availabilities[av].go?.id != 0" [value]="availabilities[av].go">
-                  {{availabilities[av]?.go.name}}
-                </mat-option>
-                <mat-option *ngFor="let stop of myStops| callback: myfilter : availabilities[av].go.id" [value]="stop">
-                  {{stop?.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+    <mat-card *ngFor="let av of Object.keys(availabilities); index as i" class="availability-item"
+      [ngClass]="{'confirmed': availabilities[av]?.confirmed == true, 'pending': availabilities[av]?.confirmed == 'false'}">
+      <div class="row">
+        <div class="col m4">
+          <p class="date">{{av| date: 'dd/MM/yyyy'}}</p>
+          <p *ngIf="availabilities[av].confirmed; else nonconfermata">Confermata</p>
+          <p *ngIf="availabilities[av]?.go?.id">Andata: {{availabilities[av]?.go.name}}</p>
+          <p *ngIf="availabilities[av]?.back?.id">Ritorno: {{availabilities[av]?.back.name}}</p>
+        </div>
+        <div class="col m8">
+          <div class="row">
+            <div class="col m6">
+              <mat-form-field class="selectStop">
+                <mat-label>
+                  <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+                </mat-label>
+                <mat-label>Select a stop</mat-label>
+                <mat-select [(value)]="availabilities[av].go">
+                  <mat-option *ngIf="availabilities[av].go?.id != 0" [value]="availabilities[av].go">
+                    {{availabilities[av]?.go.name}}
+                  </mat-option>
+                  <mat-option *ngFor="let stop of myStops| callback: myfilter : availabilities[av].go.id"
+                    [value]="stop">
+                    {{stop?.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col m6">
+              <mat-slide-toggle [checked]="availabilities[av].go.id != 0" (change)="toggle($event,av,'go')">Includi
+                Andata</mat-slide-toggle>
+            </div>
           </div>
-          <div class="col m6">
-            <mat-slide-toggle [checked]="availabilities[av].go.id != 0"
-            (change)="toggle($event,av,'go')">Includi Andata</mat-slide-toggle>
+          <div class="row">
+            <div class="col m6">
+              <mat-form-field class="selectStop">
+                <mat-label>
+                  <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+                </mat-label>
+                <mat-label>Select a stop</mat-label>
+                <mat-select [(value)]="availabilities[av].back">
+                  <mat-option *ngIf="availabilities[av].back.id != 0" [value]="availabilities[av].back">
+                    {{availabilities[av]?.back.name}}
+                  </mat-option>
+                  <mat-option *ngFor="let stop of myStops| callback: myfilter : availabilities[av].back.id"
+                    [value]="stop">
+                    {{stop?.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col m6">
+              <mat-slide-toggle [checked]="availabilities[av].back.id != 0" (change)="toggle($event,av,'back')">Includi
+                Ritorno</mat-slide-toggle>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col m6">
-            <mat-form-field class="selectStop">
-              <mat-label>
-                <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-              </mat-label>
-              <mat-label>Select a stop</mat-label>
-              <mat-select [(value)]="availabilities[av].back">
-                <mat-option *ngIf="availabilities[av].back.id != 0" [value]="availabilities[av].back">
-                  {{availabilities[av]?.back.name}}
-                </mat-option>
-                <mat-option *ngFor="let stop of myStops| callback: myfilter : availabilities[av].back.id"
-                  [value]="stop">
-                  {{stop?.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col m6">
-            <mat-slide-toggle [checked]="availabilities[av].back.id != 0"
-            (change)="toggle($event,av,'back')">Includi Ritorno</mat-slide-toggle>
-          </div>
-        </div>
       </div>
-    </div>
-  <button *ngIf="(availabilities[av]?.go.id != 0 || availabilities[av]?.back.id != 0) && availabilities[av]?.confirmed == false" mat-fab class="send-avail">
-    <mat-icon (click)="sendAv(av)">send</mat-icon>
-  </button>
-  </mat-card>
-</div>
+      <button
+        *ngIf="(availabilities[av]?.go.id != 0 || availabilities[av]?.back.id != 0) && availabilities[av]?.confirmed == false"
+        mat-fab class="send-avail">
+        <mat-icon (click)="sendAv(av)">send</mat-icon>
+      </button>
+    </mat-card>
+  </div>
 </div>
 
 
@@ -77,5 +80,5 @@
   <mat-icon mat-fab class="send-avail">delete</mat-icon>
 </ng-template>
 <ng-template #nonconfermata>
-    <p>Non confermata</p>
-  </ng-template>
+  <p>Non confermata</p>
+</ng-template>

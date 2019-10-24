@@ -17,7 +17,7 @@ export interface Message {
   styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit {
-  private serverUrl = environment.url + 'socket'
+  private serverUrl = environment.url + 'ws'
   isLoaded: boolean = false;
   isCustomSocketOpened = false;
   private stompClient;
