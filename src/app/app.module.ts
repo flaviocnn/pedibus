@@ -38,6 +38,7 @@ import { AgmDirectionModule } from 'agm-direction';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { SocketService } from './services/socket.service';
 import { SharedService } from './services/shared.service';
+import { LandpageComponent } from './pages/landpage/landpage.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { SharedService } from './services/shared.service';
     SchedulingComponent,
     LinebuilderComponent,
     NotificationsComponent,
+    LandpageComponent,
   ],
   imports: [
     HttpClientModule,

@@ -18,13 +18,13 @@
           </mat-select>
         </mat-form-field>
 
-        <a routerLink="../mychild/{{child?.id}}" mat-fab aria-label="Example icon-button with a heart icon">
+        <a routerLink="../mychild/{{child?.id}}" class="lighter-theme" mat-fab aria-label="Example icon-button with a heart icon">
           <mat-icon>face</mat-icon>
         </a>
   </mat-card>
 </div>
 
-<button class="add-fab" mat-fab color="primary" (click)="openDialog()"  matTooltip="Add Child"><mat-icon>add</mat-icon></button>
+<button class="add-fab" mat-fab color="accent" (click)="openDialog()"  matTooltip="Add Child"><mat-icon>add</mat-icon></button>
 <button *ngIf="dirty" mat-fab class="save-fab" (click)="updateAllStop()"><mat-icon>done</mat-icon></button>
 
 <ng-template #loading>

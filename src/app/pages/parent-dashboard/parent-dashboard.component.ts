@@ -34,11 +34,8 @@ export class DialogOverviewExampleDialog {
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     private ngModel: NgModel,
     private childrenService: ChildrenService,
-    private sidenav: SharedService) { }
-    
-  toggleRightSidenav() {
-    this.sidenav.toggle();
-  }
+  ) { }
+
   onSubmit(f: NgForm) {
     this.processing = true;
     console.log(f);
@@ -75,8 +72,10 @@ export class ParentDashboardComponent implements OnInit {
 
   constructor(private childrenService: ChildrenService,
     private stopsService: StopsService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private sidenav: SharedService) { }
 
+  title = 'Dashboard Genitori';
   stopList: Stop[] = [];
   myChildren: Child[] = [];
   defaultStops: IHash = {};
@@ -134,6 +133,10 @@ export class ParentDashboardComponent implements OnInit {
       }
 
     });
+  }
+
+  toggleRightSidenav() {
+    this.sidenav.toggle();
   }
 
 }

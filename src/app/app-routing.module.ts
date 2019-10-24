@@ -12,6 +12,7 @@ import { AvailabilityComponent } from './pages/availability/availability.compone
 import { SchedulingComponent } from './pages/scheduling/scheduling.component';
 import { LinebuilderComponent } from './pages/linebuilder/linebuilder.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
+import { LandpageComponent } from './pages/landpage/landpage.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, pathMatch: 'full' },
@@ -47,6 +48,10 @@ const routes: Routes = [
       {
         path: 'notifications',
         component: NotificationsComponent,
+      },
+      {
+        path: '',
+        component: LandpageComponent,
       },
       {
         path: '**',

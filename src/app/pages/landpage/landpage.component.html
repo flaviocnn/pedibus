@@ -1,0 +1,40 @@
+<mat-toolbar color="primary" role="heading">
+    <button mat-icon-button (click)="toggleRightSidenav()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <h1>{{title}}</h1>
+</mat-toolbar>
+
+<div class="wrapper">
+    <div class="in-background">
+        <div class="row">
+            <div class="col m7">
+                <h1>Benvenuto su Pedibus</h1>
+                <p>L'applicazione Web che ti permette di gestire accompagnatori e prenotazioni!</p>
+                <a class="mybtn">Guardalo in azione
+                    </a>
+            </div>
+            <div class="col m5">
+                <img class="wow fadeInUp" [@flyInOut]="in" src="assets/app-mocup2.png" alt=""
+                    style="visibility: visible;">
+            </div>
+        </div>
+
+    </div>
+    <div class="section">
+        <p>
+        </p>
+    </div>
+    <div class="main main-raised">
+        <div class="row">
+            <div class="col xl8 s12">
+                <img class="preview" src="assets/preview.png" alt="">
+            </div>
+            <div class="col xl4 s12" style="padding:3rem;margin-top: 1em;">
+                <h5>Gestisci facilmente le prenotazioni degli studenti</h5>
+                <h5>Aggiungi un nuovo percorso verso la scuola da un semplice file di testo</h5>
+                <h5>Assegna e controlla a colpo d'occhio le disponibilità degli accompagnatori</h5>
+            </div>
+        </div>
+    </div>
+</div>
