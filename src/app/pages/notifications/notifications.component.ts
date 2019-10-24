@@ -34,7 +34,7 @@ export class NotificationsComponent implements OnInit {
   sendMessageUsingSocket() {
     if (this.form.valid) {
       let message: Message = { message: this.form.value.message, fromId: this.userForm.value.fromId, toId: this.userForm.value.toId };
-      this.stompClient.send("/socket-subscriber/send/message", {}, JSON.stringify(message));
+      this.stompClient.send("/user/queue/reply", {}, JSON.stringify(message));
     }
   }
 
@@ -59,7 +59,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   openGlobalSocket() {
-    this.stompClient.subscribe("/topic/greetings", (message) => {
+    this.stompClient.subscribe("/user/queue/reply", (message) => {
       this.handleResult(message);
     });
   }
@@ -67,7 +67,7 @@ export class NotificationsComponent implements OnInit {
   openSocket() {
     if (this.isLoaded) {
       this.isCustomSocketOpened = true;
-      this.stompClient.subscribe("/app/send/message"+this.userForm.value.fromId, (message) => {
+      this.stompClient.subscribe("/user/queue/reply"+this.userForm.value.fromId, (message) => {
         this.handleResult(message);
       });
     }

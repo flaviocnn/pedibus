@@ -43,3 +43,56 @@
 .mat-tab {
     width: 50%;
 }
+
+mat-card > ul{
+    margin-top: 2em;
+    margin-left: 4em;
+}
+ul {
+    list-style: none;
+  }
+  
+  p {
+      background: #efefef;
+  }
+  p i:first-child {
+    margin-left: 2em;
+  }
+
+  ul li {
+    padding-bottom: 11px;
+    margin-bottom:29px;
+    position:relative;
+  }
+  
+  ul li span:first-child {
+    border-radius: 50%;
+    padding: 10px 15px;
+    margin-right: 10px;
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0px 0px 4px 0px #0000008c;
+  }
+  ul li span.text {
+    padding-left: 20px;
+  }
+  .verticalLine{
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    border-left: 5px solid #00000036;
+    left: 18px;
+    top: 33px;
+  }
+
+  .time {
+    z-index: 6;
+    position: absolute;
+    background: #673AB7;
+    padding: 5px;
+    border-radius: 8px;
+    color: white;
+    left: -49px;
+    top: 36px;
+    box-shadow: 0px 0px 4px 0px #000000d9;
+}
