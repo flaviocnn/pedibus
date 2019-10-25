@@ -9,7 +9,7 @@
     z-index: 3;
     color: var(--primary-color);
     width: 100%;
-    top: 50vh;
+    top: 55vh;
     margin-left: 1em!important;
     margin-right: 1em!important;
 }
@@ -32,7 +32,7 @@ h5{
 
 .in-background{
     margin: auto 5em;
-    min-height: 50vh;
+    height: 55vh;
 }
 
 .section {
@@ -56,12 +56,14 @@ img.wow.fadeInUp {
         text-align: left;
     }
     .mybtn{
-        display: block;
-        margin-bottom: 100px;
-        text-align: center;
+        visibility: hidden!important;
+        display: contents;
     }
     h5{
         text-align: center;
+    }
+    .preview{
+        margin-top: 1em;
     }
 }
 

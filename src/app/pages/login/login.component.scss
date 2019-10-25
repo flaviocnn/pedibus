@@ -1,19 +1,27 @@
-#container {
-  display: flex;
-  min-height: 100vh;  
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: lightgrey;
-}
 
 .card {
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30% auto;
+    padding: 2em;
 }
 
 h1 {
+  font-family: raleway, sans-serif;
   margin-bottom: 50px; 
+}
+
+mat-spinner{
+  margin: 0 auto;
+  text-align: center;
+}
+
+.mat-drawer-container {
+  height: 93vh;
+  background-image: url(/../../assets/mole_torino.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }

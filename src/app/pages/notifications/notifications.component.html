@@ -1,4 +1,4 @@
-<form [(submit)="openSocket()" *ngIf="isLoaded">
+<form (submit)="openSocket()" *ngIf="isLoaded">
   <p>User Information: (if user id(toId) is null the message will be sended to all users) </p>
   <div style="margin-bottom: 20px;">
     <input type="text"  name="fromId" placeholder="Your id">
