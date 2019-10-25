@@ -34,7 +34,7 @@ export class NotificationsComponent implements OnInit {
   sendMessageUsingSocket() {
     if (this.form.valid) {
       let message: Message = { message: this.form.value.message, fromId: this.userForm.value.fromId, toId: this.userForm.value.toId };
-      this.stompClient.send("/user/queue/reply", {}, JSON.stringify(message));
+      this.stompClient.send("/app/hello", {}, JSON.stringify(message));
     }
   }
 
@@ -53,13 +53,13 @@ export class NotificationsComponent implements OnInit {
     let that = this;
     this.stompClient.connect({}, function (frame) {
       that.isLoaded = true;
-      console.log("first step");
-      that.openGlobalSocket()
+      //console.log("first step");
+      that.openGlobalSocket();
     });
   }
 
   openGlobalSocket() {
-    this.stompClient.subscribe("/user/queue/reply", (message) => {
+    this.stompClient.subscribe("/topic/greetings", (message) => {
       this.handleResult(message);
     });
   }
