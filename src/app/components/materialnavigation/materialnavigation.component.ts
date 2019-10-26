@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { SharedService } from 'src/app/services/shared.service';
@@ -23,7 +23,8 @@ export class MaterialnavigationComponent implements OnInit {
 
   constructor(private breakpointObserver: BreakpointObserver,
     private authenticationService: AuthenticationService,
-    private sidenavService: SharedService
+    private sidenavService: SharedService,
+    //private topicSubscription: Subscription
   ) {
   }
 
@@ -33,6 +34,7 @@ export class MaterialnavigationComponent implements OnInit {
 
   logout() {
     this.authenticationService.logout();
+    //this.topicSubscription.unsubscribe();
   }
 
 }
