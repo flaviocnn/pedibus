@@ -4,12 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ChildrenService } from '../../services/children.service';
 import { ReservationsService } from '../../services/reservations.service';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-my-child',
   templateUrl: './my-child.component.html',
   styleUrls: ['./my-child.component.scss']
 })
 export class MyChildComponent implements OnInit {
+  mychild$ : Observable<Child> = null;
   currentChild: Child;
   constructor(
     private route: ActivatedRoute,
@@ -24,9 +26,8 @@ export class MyChildComponent implements OnInit {
 
   getChild(): void {
     const id = +this.route.snapshot.paramMap.get('id');
-    this.childrenService.getChild(id)
-      .subscribe(c => this.currentChild = c);
-  }
+    this.mychild$ = this.childrenService.getChild(id);
+    }
 
   goBack(): void {
     this.location.back();

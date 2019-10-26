@@ -9,13 +9,11 @@
 }
 
 .go-icon {
-    position: absolute;
     left: 25px;
     top: 25px;
 }
 
 .back-icon {
-    position: absolute;
      right : 25px;
     top: 25px;
 }
@@ -50,7 +48,29 @@
 
 .reservation-date {
 
-    font-size: 1.2em;
-    padding: 4px;
+    font-size: 1em;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    width: 100px;
+    background: var(--accent-color);
+    color: white;
+    text-align: center;
+    z-index: -1;
+    top: -24px;
+    border-radius: 5px 5px 0 0;
+}
 
+.mat-card{
+    max-width: 600px;
+    margin: 0 auto 2.5em auto;
+}
+.primo{
+    margin-top: 2em!important;
+}
+
+mat-form-field{
+    display: block;
 }

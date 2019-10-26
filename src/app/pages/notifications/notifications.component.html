@@ -1,17 +1,7 @@
-<form (submit)="openSocket()" *ngIf="isLoaded">
-  <p>User Information: (if user id(toId) is null the message will be sended to all users) </p>
-  <div style="margin-bottom: 20px;">
-    <input type="text"  name="fromId" placeholder="Your id">
-    <input type="submit value="open socket to recieve custom messages">
-  </div>
-  <input type="text" name="toId" placeholder="User id to send the message to">
-</form>
-<form (submit)="sendMessageUsingSocket()">
-  <p>Message: </p>
-  <input type="text"  name="message" placeholder="Message">
-  <input type="submit"  value="Send using socket subscription">
-  <input type="button"value="Send using a rest controller" (click)="sendMessageUsingRest()">
-</form>
-<ul>
-  <li *ngFor="let message of messages">From: {{message.fromId}}, To: {{message.toId}}, Message: {{message.message}}</li>
-</ul>
+<h2>Received messages</h2>
+    <ol>
+        <!-- we will use Angular binding to populate list of messages -->
+        <li class="message" *ngFor="let message of receivedMessages"></li>
+    </ol>
+
+    <button class="btn btn-primary" (click)="onSendMessage()">Send Message</button>

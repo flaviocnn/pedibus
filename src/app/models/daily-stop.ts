@@ -106,7 +106,7 @@ export interface Reservation {
     isBooked: boolean;
     isConfirmed?: any;
     stop: Stop;
-    user: Child;
+    child: Child;
 }
 
 export interface DailyStop {

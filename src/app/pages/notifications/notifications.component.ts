@@ -1,84 +1,47 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import * as Stomp from 'stompjs';
-import * as SockJS from 'sockjs-client';
-import { environment } from '../../../environments/environment';
-import { SocketService } from '../../services/socket.service';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { Message } from '@stomp/stompjs';
+import { Subscription } from 'rxjs';
+import { User } from 'src/app/models/daily-stop';
+import { MatSnackBar } from '@angular/material';
 
-export interface Message {
-  message: string,
-  fromId: string,
-  toId: string,
-}
+
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
-export class NotificationsComponent implements OnInit {
-  private serverUrl = environment.url + 'ws'
-  isLoaded: boolean = false;
-  isCustomSocketOpened = false;
-  private stompClient;
-  private form: FormGroup;
-  private userForm: FormGroup;
-  messages: Message[] = [];
-  constructor(private socketService: SocketService
-  ) { }
+export class NotificationsComponent implements OnInit,OnDestroy {
+  public receivedMessages: string[] = [];
+  private topicSubscription: Subscription;
+
+  constructor(private rxStompService: RxStompService,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
-    this.initializeWebSocketConnection();
-  }
-
-  sendMessageUsingSocket() {
-    if (this.form.valid) {
-      let message: Message = { message: this.form.value.message, fromId: this.userForm.value.fromId, toId: this.userForm.value.toId };
-      this.stompClient.send("/app/hello", {}, JSON.stringify(message));
-    }
-  }
-
-  sendMessageUsingRest() {
-    if (this.form.valid) {
-      let message: Message = { message: this.form.value.message, fromId: this.userForm.value.fromId, toId: this.userForm.value.toId };
-      this.socketService.post(message).subscribe(res => {
-        console.log(res);
-      })
-    }
-  }
-
-  initializeWebSocketConnection() {
-    let ws = new SockJS(this.serverUrl);
-    this.stompClient = Stomp.over(ws);
-    let that = this;
-    this.stompClient.connect({}, function (frame) {
-      that.isLoaded = true;
-      //console.log("first step");
-      that.openGlobalSocket();
+    const un = localStorage.getItem('username');
+    this.topicSubscription = this.rxStompService.watch(`/user/${un}/queue`)
+    .subscribe((message: Message) => {
+      this.receivedMessages.push(message.body);
+      //console.log(message.body);
+      this.openSnackBar(message.body);
     });
   }
 
-  openGlobalSocket() {
-    this.stompClient.subscribe("/topic/greetings", (message) => {
-      this.handleResult(message);
+  ngOnDestroy() {
+    //this.topicSubscription.unsubscribe();
+  }
+
+  onSendMessage() {
+    const message = `Message generated at ${new Date}`;
+    this.rxStompService.publish({destination: '/app/hello', body: message});
+  }
+
+  openSnackBar(msg) {
+    this._snackBar.open(msg, 'Disse Antonio', {
+      duration: 5000,
     });
-  }
-
-  openSocket() {
-    if (this.isLoaded) {
-      this.isCustomSocketOpened = true;
-      this.stompClient.subscribe("/user/queue/reply"+this.userForm.value.fromId, (message) => {
-        this.handleResult(message);
-      });
-    }
-  }
-
-  handleResult(message){
-    if (message.body) {
-      let messageResult: Message = JSON.parse(message.body);
-      console.log(messageResult);
-      this.messages.push(messageResult);
-    }
   }
 
 }

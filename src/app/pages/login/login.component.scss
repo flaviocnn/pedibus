@@ -1,16 +1,24 @@
 
 .card {
   max-width: 320px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 30% auto;
+    display: block;
     padding: 2em;
+
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    -moz-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
 }
 
+.mat-raised-button{
+    display: block;
+    margin: 0 auto!important;
+}
 h1 {
   font-family: raleway, sans-serif;
-  margin-bottom: 50px; 
+  font-weight: 900;
 }
 
 mat-spinner{
@@ -18,11 +26,13 @@ mat-spinner{
   text-align: center;
 }
 
-.mat-drawer-container {
-  height: 93vh;
-  background-image: url(/../../assets/mole_torino.jpg);
-  background-position-y: -532px;
-  background-repeat: no-repeat;
+.wrapper{
+  background-image: url(/../../assets/escursioni-etna.jpg);
   background-size: cover;
+  height: 100vh;
   width: 100%;
+  margin: 0;
+  position: absolute;
+  top: 0px;
+  z-index: -1;
 }

@@ -8,4 +8,39 @@
     bottom: 18pt;
     right: 18pt}
 .child-card
-{    margin: 20px}
+{      
+    background: white;
+    padding: 1em;
+    border-radius: 11px;
+    color: var(--primary-color);
+    margin: 1em;
+    height: 300px;
+}
+
+.child-card>p{
+    font-size: 300%;
+    font-family: raleway,sans-serif;
+    font-weight: bold;
+}
+ul{
+    display: flex;
+}
+
+.mat-icon{
+    height: 35px;
+    width: 35px;
+}
+
+.material-icons.big{
+    font-size: 35px;
+}
+
+.mat-form-field{
+    display: block;
+}
+
+a.big{
+    line-height: 68px;
+    height: 68px;
+    width: 68px;
+}

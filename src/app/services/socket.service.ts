@@ -1,20 +1,39 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
 import { environment } from '../../environments/environment';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
-export interface Message {
-  message: string,
-  fromId: string,
-  toId: string,
-}
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SocketService {
-  url: string = environment.url + "api/socket";
 
-  constructor(private http: HttpClient) { }
+    private serverUrl = environment.url + 'ws';
+    private isLoaded = false;
+    private stompClient;
 
-  post(data: Message) {
-    return this.http.post(this.url, data)
-      .pipe();
-  }
+    constructor(private authService: AuthenticationService) {
+        this.initializeWebSocketConnection();
+    }
+
+    initializeWebSocketConnection() {
+      const ws = new SockJS(this.serverUrl);
+      this.stompClient = Stomp.over(ws);
+      const that = this;
+      this.stompClient.connect({}, function() {
+        that.isLoaded = true;
+        if (that.authService.username) {
+          that.subscribeOnTopic(that.authService.username);
+        }
+      });
+    }
+
+    public subscribeOnTopic(username: String) {
+        if (this.isLoaded) {
+            this.stompClient.subscribe('/user/' + username + '/queue', function(msgOut) {
+                console.log(msgOut);
+            });
+        }
+    }
 }

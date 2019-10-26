@@ -42,25 +42,25 @@ export class ChildrenService {
     );
   }
 
-  // getChild(id: number): Observable<Child> {
-  //   const url = REST_URL + `/${id}`;
-
-  //   return this.http.get<Child>(url, httpOptions).pipe(
-  //     catchError(this.handleError)
-  //   );
-  // }
-
   getChild(id: number): Observable<Child> {
     const url = REST_URL + `/${id}`;
-    let newChild: Child = {
-      firstName: 'moreno',
-      lastName: 'morello',
-      id: 666,
-      parent: null,
-      defaultStop: 3
-    };
-    return of(newChild);
+
+    return this.http.get<Child>(url, httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
+
+  // getChild(id: number): Observable<Child> {
+  //   const url = REST_URL + `/${id}`;
+  //   let newChild: Child = {
+  //     firstName: 'moreno',
+  //     lastName: 'morello',
+  //     id: 666,
+  //     parent: null,
+  //     defaultStop: 3
+  //   };
+  //   return of(newChild);
+  // }
 
   private handleError(error: any) {
     if (error.status == 500) {

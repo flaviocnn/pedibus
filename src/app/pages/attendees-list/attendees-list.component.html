@@ -3,7 +3,7 @@
     <mat-icon>menu</mat-icon>
   </button>
   <h1>{{title}}</h1>
-  <span class="spacer"></span>
+  <span class="spacer" style="width: inherit;"></span>
   <mat-paginator #paginator [length]="length" [pageSize]="pageSize" hidePageSize=true (page)="getPaginatorData($event)">
   </mat-paginator>
 </mat-toolbar>
@@ -12,23 +12,24 @@
   <mat-tab label="Andata">
     <ng-template matTabContent>
       <div class="container">
-          <mat-card class="mycard">
-              <ul>
-                <li *ngFor="let ds of showedRes;index as i; last as isLast">
-                  <span>{{i+1}}</span>
-                  <span class="text">{{ds?.name}}</span>
-                  <br><div class="time">{{ds?.timeGo}}</div>
-                  <p>
-                    <i *ngFor="let res of ds?.reservations;last as isLast" class="passenger"
-                    [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
-                    {{res?.child.firstName}}
+        <mat-card class="mycard">
+          <ul>
+            <li *ngFor="let ds of showedRes;index as i; last as isLast">
+              <span>{{i+1}}</span>
+              <span class="text">{{ds?.name}}</span>
+              <br>
+              <div class="time">{{ds?.timeGo}}</div>
+              <p>
+                <i *ngFor="let res of ds?.reservations;last as isLast" class="passenger"
+                  [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
+                  {{res?.child.firstName}}
                 </i>
-                  </p>
-                  
-                  <div *ngIf="!isLast" class="verticalLine"></div>
-                </li>
-              </ul>
-            </mat-card>
+              </p>
+
+              <div *ngIf="!isLast" class="verticalLine"></div>
+            </li>
+          </ul>
+        </mat-card>
       </div>
     </ng-template>
   </mat-tab>
@@ -40,14 +41,15 @@
             <li *ngFor="let ds of showedRes;index as i; last as isLast">
               <span>{{i+1}}</span>
               <span class="text">{{ds?.name}}</span>
-              <br><div class="time">{{ds?.timeGo}}</div>
+              <br>
+              <div class="time">{{ds?.timeGo}}</div>
               <p>
                 <i *ngFor="let res of ds?.reservations;last as isLast" class="passenger"
-                [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
-                {{res?.child.firstName}}
-            </i>
+                  [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
+                  {{res?.child.firstName}}
+                </i>
               </p>
-              
+
               <div *ngIf="!isLast" class="verticalLine"></div>
             </li>
           </ul>

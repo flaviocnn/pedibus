@@ -47,34 +47,17 @@ export class ReservationsService {
   postReservation(res: Reservation) {
 
     const url = REST_URL;
-
-    const newRes: Reservation = {
-      date: res.date,
-      isGo: res.isGo,
-      isBooked: false,
-      isConfirmed: true,
-      stop: res.stop,
-      user: res.user
-    };
-
-    return this.http.post<Reservation>(url, newRes, httpOptions)
+    return this.http.post<Reservation>(url, res, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  getReservations(childId: number, rdate: string) {
-    let newres: Reservation = {
-      id: 1,
-      date: rdate,
-      isGo: true,
-      isBooked: true,
-      stop: {id: 3, name: 'fake stop'},
-      user: {id: childId},
-    };
-    // let resArr: Reservation[] = [];
-    // resArr.push(newres);
-    return of(newres);
+  getReservation(childId: number, date: string, isGo: boolean) {
+    const url = REST_URL + `/children/${childId}/${date}/${isGo}`;
+    return this.http.get<Reservation>(url, httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: any) {

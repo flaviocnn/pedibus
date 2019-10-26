@@ -39,6 +39,9 @@ import { NotificationsComponent } from './pages/notifications/notifications.comp
 import { SocketService } from './services/socket.service';
 import { SharedService } from './services/shared.service';
 import { LandpageComponent } from './pages/landpage/landpage.component';
+import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '@stomp/ng2-stompjs';
+import { myRxStompConfig } from './my-rx-stomp.config';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -74,7 +77,8 @@ import { LandpageComponent } from './pages/landpage/landpage.component';
       apiKey: 'AIzaSyDFTKbcSXEN22pUx3zfaabEOGyy7oOZtmI',
     }),
     AgmDirectionModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FlexLayoutModule
   ],
   entryComponents: [ DialogOverviewExampleDialog],
   providers: [
@@ -82,7 +86,15 @@ import { LandpageComponent } from './pages/landpage/landpage.component';
     ReservationsService,
     AuthGuard,
     DatePipe,
-    SocketService,
+    {
+      provide: InjectableRxStompConfig,
+      useValue: myRxStompConfig
+    },
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+      deps: [InjectableRxStompConfig]
+    },
     SharedService
   ],
   bootstrap: [AppComponent]
