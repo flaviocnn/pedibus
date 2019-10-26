@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { WssService } from 'src/app/services/wss.service';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
   error: string;
 
   constructor(private router: Router, private authenticationService: AuthenticationService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute, private wssService: WssService) {
   }
 
   ngOnInit() {
@@ -32,7 +33,8 @@ export class LoginComponent implements OnInit {
   login(): void {
     this.showSpinner = true;
     this.authenticationService.login(this.username, this.password).pipe(first()).subscribe(
-      data => {
+      (user) => {
+        this.wssService.subscribeOnTopic(user.user.username);
         this.router.navigate([this.returnUrl]);
     },
       error => {

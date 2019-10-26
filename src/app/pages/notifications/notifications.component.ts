@@ -31,22 +31,6 @@ export class NotificationsComponent implements OnInit {
     this.initializeWebSocketConnection();
   }
 
-  sendMessageUsingSocket() {
-    if (this.form.valid) {
-      let message: Message = { message: this.form.value.message, fromId: this.userForm.value.fromId, toId: this.userForm.value.toId };
-      this.stompClient.send("/user/queue/reply", {}, JSON.stringify(message));
-    }
-  }
-
-  sendMessageUsingRest() {
-    if (this.form.valid) {
-      let message: Message = { message: this.form.value.message, fromId: this.userForm.value.fromId, toId: this.userForm.value.toId };
-      this.socketService.post(message).subscribe(res => {
-        console.log(res);
-      })
-    }
-  }
-
   initializeWebSocketConnection() {
     let ws = new SockJS(this.serverUrl);
     this.stompClient = Stomp.over(ws);
@@ -59,26 +43,8 @@ export class NotificationsComponent implements OnInit {
   }
 
   openGlobalSocket() {
-    this.stompClient.subscribe("/user/queue/reply", (message) => {
-      this.handleResult(message);
+    this.stompClient.subscribe('/user/' + this.userForm.use + '/queue', function (msgOut) {
+      console.log(msgOut);
     });
   }
-
-  openSocket() {
-    if (this.isLoaded) {
-      this.isCustomSocketOpened = true;
-      this.stompClient.subscribe("/user/queue/reply"+this.userForm.value.fromId, (message) => {
-        this.handleResult(message);
-      });
-    }
-  }
-
-  handleResult(message){
-    if (message.body) {
-      let messageResult: Message = JSON.parse(message.body);
-      console.log(messageResult);
-      this.messages.push(messageResult);
-    }
-  }
-
 }
