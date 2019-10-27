@@ -24,7 +24,6 @@ import { UsersComponent } from './pages/users/users.component';
 import { ListUsersComponent } from './components/list-users/list-users.component';
 import { InviteUserComponent } from './components/invite-user/invite-user.component';
 import { ParentDashboardComponent, DialogOverviewExampleDialog } from './pages/parent-dashboard/parent-dashboard.component';
-import { from } from 'rxjs';
 import { ReservationsListComponent } from './components/reservations-list/reservations-list.component';
 import { MatDialogModule } from '@angular/material';
 import { MyChildComponent } from './pages/my-child/my-child.component';
@@ -36,7 +35,6 @@ import { LinebuilderComponent } from './pages/linebuilder/linebuilder.component'
 import { AgmCoreModule,GoogleMapsAPIWrapper } from '@agm/core';
 import { AgmDirectionModule } from 'agm-direction';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
-import { SocketService } from './services/socket.service';
 import { SharedService } from './services/shared.service';
 import { LandpageComponent } from './pages/landpage/landpage.component';
 import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '@stomp/ng2-stompjs';

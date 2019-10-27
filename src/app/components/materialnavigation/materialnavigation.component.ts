@@ -15,26 +15,26 @@ import { MatSidenav } from '@angular/material';
 export class MaterialnavigationComponent implements OnInit {
 
   // TODO remove comment
-  // isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-  //   .pipe(
-  //     map(result => result.matches)
-  //   );
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+    .pipe(
+      map(result => result.matches)
+    );
   @ViewChild('sidenav', { static: true }) public sidenav: MatSidenav;
 
   constructor(private breakpointObserver: BreakpointObserver,
     private authenticationService: AuthenticationService,
-    private sidenavService: SharedService,
+    private sharedService: SharedService,
     //private topicSubscription: Subscription
   ) {
   }
 
   ngOnInit(): void {
-    this.sidenavService.setSidenav(this.sidenav);
+    this.sharedService.setSidenav(this.sidenav);
   }
 
   logout() {
     this.authenticationService.logout();
-    //this.topicSubscription.unsubscribe();
+    this.sharedService.unsubscribe();
   }
 
 }

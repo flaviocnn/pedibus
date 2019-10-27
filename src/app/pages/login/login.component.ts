@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { first } from 'rxjs/operators';
-import { SocketService } from 'src/app/services/socket.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-login',
@@ -17,10 +17,12 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   error: string;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private authenticationService: AuthenticationService,
-    private route: ActivatedRoute) {
-  }
+    private route: ActivatedRoute,
+    public sharedService: SharedService,
+    ) {}
 
   ngOnInit() {
     this.authenticationService.logout();
@@ -35,7 +37,7 @@ export class LoginComponent implements OnInit {
     this.showSpinner = true;
     this.authenticationService.login(this.username, this.password).pipe(first()).subscribe(
       (user) => {
-        
+        this.sharedService.connectWs();
         this.router.navigate([this.returnUrl]);
       },
       error => {
@@ -45,4 +47,6 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+
+
 }

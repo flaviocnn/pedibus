@@ -1,10 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { RxStompService } from '@stomp/ng2-stompjs';
-import { Message } from '@stomp/stompjs';
-import { Subscription } from 'rxjs';
-import { User } from 'src/app/models/daily-stop';
-import { MatSnackBar } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { SharedService } from 'src/app/services/shared.service';
 
 
 @Component({
@@ -12,36 +7,22 @@ import { MatSnackBar } from '@angular/material';
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
-export class NotificationsComponent implements OnInit,OnDestroy {
+export class NotificationsComponent implements OnInit {
   public receivedMessages: string[] = [];
-  private topicSubscription: Subscription;
+  msgs: string[];
 
-  constructor(private rxStompService: RxStompService,
-    private _snackBar: MatSnackBar) { }
+  constructor( private sharedService: SharedService) { }
 
-  ngOnInit() {
-    const un = localStorage.getItem('username');
-    this.topicSubscription = this.rxStompService.watch(`/user/${un}/queue`)
-    .subscribe((message: Message) => {
-      this.receivedMessages.push(message.body);
-      //console.log(message.body);
-      this.openSnackBar(message.body);
-    });
-  }
-
-  ngOnDestroy() {
-    //this.topicSubscription.unsubscribe();
+  ngOnInit(){
+    this.sharedService.notifications$.subscribe(
+      (data) =>{ this.msgs = data;}
+    );
   }
 
   onSendMessage() {
     const message = `Message generated at ${new Date}`;
-    this.rxStompService.publish({destination: '/app/hello', body: message});
+    //this.rxStompService.publish({destination: '/app/hello', body: message});
   }
 
-  openSnackBar(msg) {
-    this._snackBar.open(msg, 'Disse Antonio', {
-      duration: 5000,
-    });
-  }
 
 }

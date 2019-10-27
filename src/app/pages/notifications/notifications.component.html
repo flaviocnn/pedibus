@@ -1,4 +1,7 @@
 <h2>Received messages</h2>
+<ul *ngIf ="msgs">
+    <li  *ngFor="let message of msgs">{{message}}</li>
+</ul>
     <ol>
         <!-- we will use Angular binding to populate list of messages -->
         <li class="message" *ngFor="let message of receivedMessages"></li>

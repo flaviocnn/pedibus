@@ -11,7 +11,7 @@ export class AuthenticationService {
 
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
-  public username: String;
+  //public username: String;
 
   constructor(private http: HttpClient) {
     //this.username = JSON.parse(localStorage.getItem('currentUser')).user.username;
@@ -32,14 +32,14 @@ export class AuthenticationService {
     };
     return this.http.post<any>('http://localhost:8080/auth/login', { username, password }, httpOptions)
       .pipe(map(user => {
-        if (user && user.token && user.user.id) {
-          this.username = user.user.username;
-          localStorage.setItem('currentUser', JSON.stringify(user));
+        if (user && user.token && user.user) {
+          //this.username = user.user.username;
+          localStorage.setItem('currentUser', JSON.stringify(user.user));
           localStorage.setItem('id_token', user.token);
-          localStorage.setItem('username', user.user.username);
+          //localStorage.setItem('username', user.user.username);
 
-          this.username = user.user.username;
-          localStorage.setItem('user_id', user.user.id);
+          //this.username = user.user.username;
+          //localStorage.setItem('user_id', user.user.id);
           this.currentUserSubject.next(user);
         }
         return user;
@@ -47,8 +47,7 @@ export class AuthenticationService {
   }
 
   logout() {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('id_token');
+    localStorage.clear();
     this.currentUserSubject.next(null);
   }
 }
