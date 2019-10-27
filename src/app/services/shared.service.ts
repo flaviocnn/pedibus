@@ -5,70 +5,77 @@ import { Subscription, BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { Message } from '@stomp/stompjs';
 
 @Injectable({
-    providedIn: 'root'
-  })
+  providedIn: 'root'
+})
 export class SharedService {
 
-    public receivedMessages: string[] = [];
-    private topicSubscription: Subscription;
+  public receivedMessages: string[] = [];
+  private topicSubscription: Subscription;
 
-    public notifications$: Subject<string[]> = new BehaviorSubject([]);
-    public counter$: Subject<number> = new BehaviorSubject(0);
-    private sidenav: MatSidenav;
+  public notifications$: Subject<string[]> = new BehaviorSubject([]);
+  public counter$: Subject<number> = new BehaviorSubject(0);
+  private sidenav: MatSidenav;
 
-    constructor(
+  constructor(
     private rxStompService: RxStompService,
-    private snackBar: MatSnackBar){
-    }
+    private snackBar: MatSnackBar) {
+  }
 
-    public setSidenav(sidenav: MatSidenav) {
-        this.sidenav = sidenav;
-    }
+  public setSidenav(sidenav: MatSidenav) {
+    this.sidenav = sidenav;
+  }
 
-    public open() {
-        return this.sidenav.open();
-    }
+  public open() {
+    return this.sidenav.open();
+  }
 
 
-    public close() {
-        return this.sidenav.close();
-    }
+  public close() {
+    return this.sidenav.close();
+  }
 
-    public toggle(): void {
-        this.sidenav.toggle();
-    }
+  public toggle(): void {
+    this.sidenav.toggle();
+  }
 
-    connectWs() {
-        const un = JSON.parse(localStorage.getItem('currentUser')).username;
+  connectWs() {
+    const un = JSON.parse(localStorage.getItem('currentUser')).username;
 
-        const config: InjectableRxStompConfig = { 
-          brokerURL: 'ws://localhost:8080/ws', 
-          connectHeaders: { "Bearer": localStorage.getItem("id_token") } 
-        };
-        this.rxStompService.configure(config);
-        this.rxStompService.activate();
-        
-        this.topicSubscription = this.rxStompService.watch(`/user/${un}/queue`)
-        .subscribe((message: Message) => {
-          this.receivedMessages.push(message.body);
-          this.counter$.next(this.receivedMessages.length);
-          this.openSnackBar(message.body);
-          this.notifications$.next(this.receivedMessages);
-        });
-      }
-    
-      openSnackBar(msg) {
-        this.snackBar.open(msg, 'Ok', {
-          duration: 5000,
-        });
-      }
+    const config: InjectableRxStompConfig = {
+      brokerURL: 'ws://localhost:8080/ws',
+      connectHeaders: {
+        login: '',
+        passcode: '',
+        Bearer: localStorage.getItem("id_token")
+      },
+      heartbeatIncoming: 0, // Typical value 0 - disabled
+      heartbeatOutgoing: 20000,
+      reconnectDelay: 200,
+    };
+    this.rxStompService.configure(config);
+    this.rxStompService.activate();
 
-      unsubscribe(){
-          this.topicSubscription.unsubscribe();
-      }
-
-      clearNotifications(){
-        this.receivedMessages = [];
+    this.topicSubscription = this.rxStompService.watch(`/user/${un}/queue`)
+      .subscribe((message: Message) => {
+        this.receivedMessages.push(message.body);
         this.counter$.next(this.receivedMessages.length);
-      }
+        this.openSnackBar(message.body);
+        this.notifications$.next(this.receivedMessages);
+      });
+  }
+
+  openSnackBar(msg) {
+    this.snackBar.open(msg, 'Ok', {
+      duration: 5000,
+    });
+  }
+
+  unsubscribe() {
+    this.topicSubscription.unsubscribe();
+  }
+
+  clearNotifications() {
+    this.receivedMessages = [];
+    this.counter$.next(this.receivedMessages.length);
+  }
 }
