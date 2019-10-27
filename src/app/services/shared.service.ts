@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSidenav, MatSnackBar } from '@angular/material';
-import { RxStompService } from '@stomp/ng2-stompjs';
-import { Subscription, BehaviorSubject, Observable, Subject } from 'rxjs';
+import { RxStompService, InjectableRxStompConfig } from '@stomp/ng2-stompjs';
+import { Subscription, BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { Message } from '@stomp/stompjs';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class SharedService {
     private topicSubscription: Subscription;
 
     public notifications$: Subject<string[]> = new BehaviorSubject([]);
-
+    public counter$: Subject<number> = new BehaviorSubject(0);
     private sidenav: MatSidenav;
 
     constructor(
@@ -40,9 +40,18 @@ export class SharedService {
 
     connectWs() {
         const un = JSON.parse(localStorage.getItem('currentUser')).username;
+
+        const config: InjectableRxStompConfig = { 
+          brokerURL: 'ws://localhost:8080/ws', 
+          connectHeaders: { "Bearer": localStorage.getItem("id_token") } 
+        };
+        this.rxStompService.configure(config);
+        this.rxStompService.activate();
+        
         this.topicSubscription = this.rxStompService.watch(`/user/${un}/queue`)
         .subscribe((message: Message) => {
           this.receivedMessages.push(message.body);
+          this.counter$.next(this.receivedMessages.length);
           this.openSnackBar(message.body);
           this.notifications$.next(this.receivedMessages);
         });
@@ -56,5 +65,10 @@ export class SharedService {
 
       unsubscribe(){
           this.topicSubscription.unsubscribe();
+      }
+
+      clearNotifications(){
+        this.receivedMessages = [];
+        this.counter$.next(this.receivedMessages.length);
       }
 }

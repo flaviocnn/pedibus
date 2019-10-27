@@ -84,6 +84,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ReservationsService,
     AuthGuard,
     DatePipe,
+    
     {
       provide: InjectableRxStompConfig,
       useValue: myRxStompConfig

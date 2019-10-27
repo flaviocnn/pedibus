@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SharedService } from 'src/app/services/shared.service';
 
 
@@ -7,16 +7,24 @@ import { SharedService } from 'src/app/services/shared.service';
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
-export class NotificationsComponent implements OnInit {
+export class NotificationsComponent implements OnInit, OnDestroy {
   public receivedMessages: string[] = [];
-  msgs: string[];
+  msgs: Notification[] = [];
 
   constructor( private sharedService: SharedService) { }
 
   ngOnInit(){
     this.sharedService.notifications$.subscribe(
-      (data) =>{ this.msgs = data;}
+      (data) =>{ 
+        data.forEach(msg =>{
+          this.msgs.push(JSON.parse(msg));
+        });
+        }
     );
+  }
+
+  ngOnDestroy(){
+    this.sharedService.clearNotifications();
   }
 
   onSendMessage() {

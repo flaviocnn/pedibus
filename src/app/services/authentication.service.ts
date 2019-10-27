@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { User } from '../models/user';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from '../models/daily-stop';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +40,7 @@ export class AuthenticationService {
 
           //this.username = user.user.username;
           //localStorage.setItem('user_id', user.user.id);
-          this.currentUserSubject.next(user);
+          this.currentUserSubject.next(user.user);
         }
         return user;
       }));

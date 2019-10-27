@@ -1,5 +1,7 @@
 // generated with http://json2ts.com/
 
+export interface Notification { id?: any; date: string; isRead: boolean; text: string; priority: number; }
+
 export interface Authority {
     authority: string;
 }
@@ -143,9 +145,9 @@ export interface Availability {
     requestedFinishStop?: DailyStop;
     assignedStartStop?: DailyStop;
     assignedFinishStop?: DailyStop;
-  }
+}
 
-export  interface RequestedStartStop {
+export interface RequestedStartStop {
     id: number;
     name: string;
     latitude: number;
@@ -155,9 +157,9 @@ export  interface RequestedStartStop {
     line: Line;
     reservations?: Reservation[];
     runs: any[];
-  }
+}
 
 export interface JSONLine {
     stops: Stop[];
     admins: Admin[];
-  }
+}

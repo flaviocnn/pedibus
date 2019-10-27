@@ -1,6 +1,6 @@
 <h2>Received messages</h2>
 <ul *ngIf ="msgs">
-    <li  *ngFor="let message of msgs">{{message}}</li>
+    <li  *ngFor="let message of msgs">{{message?.text}}</li>
 </ul>
     <ol>
         <!-- we will use Angular binding to populate list of messages -->

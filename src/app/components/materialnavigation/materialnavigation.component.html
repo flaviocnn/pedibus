@@ -2,16 +2,23 @@
   <mat-sidenav #sidenav class="sidenav" fixedInViewport="true"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
     opened="true">
-    <mat-toolbar>Menu</mat-toolbar>
+    <mat-toolbar *ngIf = "user"><mat-icon mat-list-icon>person</mat-icon> {{user?.firstName}}</mat-toolbar>
+    <mat-divider></mat-divider>
     <mat-nav-list>
-      <a mat-list-item [routerLink]="['attendees']">Attendees</a>
-      <a mat-list-item [routerLink]="['availabilities']">Availability</a>
-      <a mat-list-item [routerLink]="['linebuilder']">LineBuilder</a>
-      <a mat-list-item [routerLink]="['parent_dashboard']">Parent</a>
-      <a mat-list-item [routerLink]="['scheduling']">Scheduling</a>
-      <a mat-list-item [routerLink]="['users']">Users</a>
-      <a mat-list-item [routerLink]="['notifications']">Notifications</a>
-      <a mat-list-item href="#" (onclick)="logout()">Logout</a>
+      <a mat-list-item [routerLink]="['attendees']">Presenze</a>
+      <a mat-list-item [routerLink]="['availabilities']">Disponibilità</a>
+      <a mat-list-item [routerLink]="['linebuilder']">Nuova Linea</a>
+      <a mat-list-item [routerLink]="['parent_dashboard']">Dashboard genitori</a>
+      <a mat-list-item [routerLink]="['scheduling']">Gestione turni</a>
+      <a mat-list-item [routerLink]="['users']">Utenti</a>
+      <a mat-list-item [routerLink]="['notifications']">
+        <span [matBadge]="count$|async" matBadgeOverlap="false">Notifiche</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div>
+        <a mat-list-item href="#"><mat-icon>phonelink_setup</mat-icon>Impostazioni</a>
+        <a mat-list-item href="#" (onclick)="logout()">Esci</a>
+      </div>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
