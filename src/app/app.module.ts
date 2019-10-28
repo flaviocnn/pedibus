@@ -83,9 +83,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ReservationsService,
     AuthGuard,
     DatePipe,
-    RxStompService,
-    SharedService
-  ],
+    RxStompService
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

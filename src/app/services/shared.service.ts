@@ -4,7 +4,9 @@ import { RxStompService, InjectableRxStompConfig } from '@stomp/ng2-stompjs';
 import { Subscription, BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { Message } from '@stomp/stompjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SharedService {
 
   private init = false;
