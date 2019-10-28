@@ -24,18 +24,18 @@ export class MaterialnavigationComponent implements OnInit {
   user: User;
   count$: Observable<number> = null;
   constructor(private breakpointObserver: BreakpointObserver,
-    private authenticationService: AuthenticationService,
-    private sharedService: SharedService,
-    //private topicSubscription: Subscription
+              private authenticationService: AuthenticationService,
+              private sharedService: SharedService,
+    // private topicSubscription: Subscription
   ) {
   }
 
   ngOnInit(): void {
     this.sharedService.setSidenav(this.sidenav);
     this.authenticationService.currentUser
-    .subscribe(u =>{
-      this.user = u;
-    });
+      .subscribe(u => {
+        this.user = u;
+      });
     this.count$ = this.sharedService.counter$;
   }
 

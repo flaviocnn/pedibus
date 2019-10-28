@@ -76,7 +76,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     }),
     AgmDirectionModule,
     ReactiveFormsModule,
-    FlexLayoutModule
   ],
   entryComponents: [ DialogOverviewExampleDialog],
   providers: [

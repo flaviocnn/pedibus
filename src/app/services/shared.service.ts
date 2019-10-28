@@ -4,11 +4,10 @@ import { RxStompService, InjectableRxStompConfig } from '@stomp/ng2-stompjs';
 import { Subscription, BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { Message } from '@stomp/stompjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SharedService {
 
+  private init = false;
   public receivedMessages: string[] = [];
   private topicSubscription: Subscription;
 
@@ -51,11 +50,15 @@ export class SharedService {
       heartbeatIncoming: 0, // Typical value 0 - disabled
       heartbeatOutgoing: 20000,
       reconnectDelay: 200,
+
+      debug: (msg: string): void => {
+        console.log(new Date(), msg);
+      }
     };
     this.rxStompService.configure(config);
     this.rxStompService.activate();
 
-    this.topicSubscription = this.rxStompService.watch(`/user/${un}/queue`)
+    this.topicSubscription = this.rxStompService.watch(`/user/${un}/queue`, { Bearer: localStorage.getItem("id_token")})
       .subscribe((message: Message) => {
         this.receivedMessages.push(message.body);
         this.counter$.next(this.receivedMessages.length);
