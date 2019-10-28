@@ -13,6 +13,8 @@ import { SchedulingComponent } from './pages/scheduling/scheduling.component';
 import { LinebuilderComponent } from './pages/linebuilder/linebuilder.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { LandpageComponent } from './pages/landpage/landpage.component';
+import { RoleGuardService } from './services/guards/role-guard.service';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, pathMatch: 'full' },
@@ -23,31 +25,52 @@ const routes: Routes = [
       {
         path: 'parent_dashboard',
         component: ParentDashboardComponent,
+        canActivate: [RoleGuardService],
+        data: { role: 'ROLE_USER' }
       },
-      { path: 'mychild/:id', component: MyChildComponent },
+      {
+        path: 'mychild/:id',
+        component: MyChildComponent,
+        canActivate: [RoleGuardService],
+        data: { role: 'ROLE_USER' }
+      },
       {
         path: 'attendees',
         component: AttendeesListComponent,
+        canActivate: [RoleGuardService],
+        data: { role: 'ROLE_USER' }
       },
       {
         path: 'users',
         component: UsersComponent,
+        canActivate: [RoleGuardService],
+        data: { role: 'ROLE_ADMIN' }
       },
       {
         path: 'availabilities',
         component: AvailabilityComponent,
+        canActivate: [RoleGuardService],
+        data: { role: 'ROLE_USER' }
       },
       {
         path: 'scheduling',
         component: SchedulingComponent,
+        canActivate: [RoleGuardService],
+        data: { role: 'ROLE_LINEADMIN' }
       },
       {
         path: 'linebuilder',
         component: LinebuilderComponent,
+        canActivate: [RoleGuardService],
+        data: { role: 'ROLE_ADMIN' }
       },
       {
         path: 'notifications',
         component: NotificationsComponent,
+      },
+      {
+        path: 'settings',
+        component: SettingsComponent,
       },
       {
         path: '',

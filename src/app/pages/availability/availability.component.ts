@@ -44,7 +44,7 @@ export class AvailabilityComponent implements OnInit {
 
   ngOnInit() {
     const a = {};
-    this.uid = this.userService.getMyId();
+    this.uid = JSON.parse(localStorage.getItem("currentUser")).id;
     this.arrayDate = this.dateService.getWeekArray(new Date());
     this.arrayDate.forEach(mydate => {
       this.springDate.push(this.datepipe.transform(new Date(mydate), 'ddMMyy'));

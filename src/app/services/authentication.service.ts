@@ -33,13 +33,13 @@ export class AuthenticationService {
     return this.http.post<any>('http://localhost:8080/auth/login', { username, password }, httpOptions)
       .pipe(map(user => {
         if (user && user.token && user.user) {
-          //this.username = user.user.username;
+          if(user.user.administeredLines){
+            if(user.user.administeredLines.length > 0){
+              user.user.roles.push("ROLE_LINEADMIN");
+            }
+          }
           localStorage.setItem('currentUser', JSON.stringify(user.user));
           localStorage.setItem('id_token', user.token);
-          //localStorage.setItem('username', user.user.username);
-
-          //this.username = user.user.username;
-          //localStorage.setItem('user_id', user.user.id);
           this.currentUserSubject.next(user.user);
         }
         return user;

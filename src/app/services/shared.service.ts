@@ -15,7 +15,7 @@ export class SharedService {
 
   public notifications$: Subject<string[]> = new BehaviorSubject([]);
   public counter$: Subject<number> = new BehaviorSubject(0);
-  private sidenav: MatSidenav;
+  public sidenav: MatSidenav;
 
   constructor(
     private rxStompService: RxStompService,

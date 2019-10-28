@@ -26,7 +26,10 @@
                 </i>
               </p>
 
-              <div *ngIf="!isLast" class="verticalLine"></div>
+              <div class="verticalLine"></div>
+            </li>
+            <li>
+              <span>S</span>
             </li>
           </ul>
         </mat-card>
@@ -38,6 +41,11 @@
       <div class="container">
         <mat-card class="mycard">
           <ul>
+            <li>
+              <span>S</span>
+              <div class="verticalLine"></div>
+            </li>
+
             <li *ngFor="let ds of showedRes;index as i; last as isLast">
               <span>{{i+1}}</span>
               <span class="text">{{ds?.name}}</span>
@@ -49,9 +57,11 @@
                   {{res?.child.firstName}}
                 </i>
               </p>
-
-              <div *ngIf="!isLast" class="verticalLine"></div>
+              <div class="verticalLine"></div>
             </li>
+            <li>
+                <span>F</span>
+              </li>
           </ul>
         </mat-card>
       </div>

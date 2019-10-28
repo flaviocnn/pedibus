@@ -25,7 +25,7 @@ import { ListUsersComponent } from './components/list-users/list-users.component
 import { InviteUserComponent } from './components/invite-user/invite-user.component';
 import { ParentDashboardComponent, DialogOverviewExampleDialog } from './pages/parent-dashboard/parent-dashboard.component';
 import { ReservationsListComponent } from './components/reservations-list/reservations-list.component';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule, MatInputModule, MatFormFieldModule } from '@angular/material';
 import { MyChildComponent } from './pages/my-child/my-child.component';
 import { AvailabilityComponent } from './pages/availability/availability.component';
 import { CallbackPipe } from './services/callback.pipe';
@@ -40,6 +40,7 @@ import { LandpageComponent } from './pages/landpage/landpage.component';
 import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '@stomp/ng2-stompjs';
 import { myRxStompConfig } from './my-rx-stomp.config';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     LinebuilderComponent,
     NotificationsComponent,
     LandpageComponent,
+    SettingsComponent,
   ],
   imports: [
     HttpClientModule,
