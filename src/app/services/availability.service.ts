@@ -20,7 +20,7 @@ export class AvailabilityService {
 
   constructor(private http: HttpClient) { }
 
-  getAvailabilities(userId, date): Observable<Availability[]> {
+  getUserAvailabilities(userId, date): Observable<Availability[]> {
     const url = REST_URL + `${userId}/${date}`;
     return this.http
       .get<Availability[]>(url, httpOptions)

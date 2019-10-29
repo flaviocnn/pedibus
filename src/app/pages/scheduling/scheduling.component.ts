@@ -21,6 +21,7 @@ export class SchedulingComponent implements OnInit {
   backAvailabilities: Availability[] = [];
   stops: DailyStop[] = [];
   backStops: DailyStop[] = [];
+  dirty = false;
 
   constructor(
     private dateservice: DatesService,
@@ -28,7 +29,7 @@ export class SchedulingComponent implements OnInit {
     private availService: AvailabilityService,
     private stopsService: StopsService,
     private sidenav: SharedService
-    ) { }
+  ) { }
 
   ngOnInit() {
     // ottenere le date - da oggi in avanti di 6 giorni
@@ -44,32 +45,29 @@ export class SchedulingComponent implements OnInit {
   }
 
   getStops() {
-    this.stopsService.getSortedLineStops(this.selectedLine,true)
-    .subscribe(data => {
-      this.stops = data;
-    });
-    this.stopsService.getSortedLineStops(this.selectedLine,false)
-    .subscribe(data => {
-      this.backStops = data;
-    });
+    this.stopsService.getSortedLineStops(this.selectedLine, true)
+      .subscribe(data => {
+        this.stops = data;
+      });
+    this.stopsService.getSortedLineStops(this.selectedLine, false)
+      .subscribe(data => {
+        this.backStops = data;
+      });
   }
   getAvailabilities() {
     this.availService.getLinesAvailabilities(this.selectedLine, this.selectedDate, true)
-    .subscribe( data => {
-      this.availabilities = data;
-    });
+      .subscribe(data => {
+        this.availabilities = data;
+      });
     this.availService.getLinesAvailabilities(this.selectedLine, this.selectedDate, false)
-    .subscribe( data => {
-      this.backAvailabilities = data;
-    });
+      .subscribe(data => {
+        this.backAvailabilities = data;
+      });
   }
 
-  toggleClass(stop: DailyStop, i, conf: boolean) {
-    if (conf) {this.availabilities[i].requestedStop = stop; } else {
-      this.availabilities[i].requestedStop = stop;
-    }
-
-    console.log(this.datesFE);
+  toggleClass(stop: DailyStop, i) {
+    this.availabilities[i].requestedStop = stop;
+    console.log(this.availabilities[i]);
   }
   toggleRightSidenav() {
     this.sidenav.toggle();
@@ -80,5 +78,8 @@ export class SchedulingComponent implements OnInit {
     this.getStops();
     this.getAvailabilities();
   }
-
+  enableSaving(){
+    this.dirty = true;
+    console.log(this.dirty);
+  }
 }

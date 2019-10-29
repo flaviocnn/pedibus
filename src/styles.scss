@@ -19,6 +19,13 @@ body{
 .mat-card{
   margin-top: 1em;
 }
+.save-fab{
+  background-color: #4CAF50 !important;
+    position: fixed!important;
+    bottom: 18pt;
+    right: 15pt;
+    z-index: 9999;
+}
 
 @font-face {
   font-family: raleway;

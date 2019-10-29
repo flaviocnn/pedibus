@@ -1,20 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { AvailabilityService } from 'src/app/services/availability.service';
 import { DatePipe } from '@angular/common';
-import { Availability } from 'src/app/models/daily-stop';
+import { Availability, User } from 'src/app/models/daily-stop';
 import { Stop } from 'src/app/models/daily-stop';
 import { StopsService } from 'src/app/services/stops.service';
 import { DatesService } from 'src/app/services/dates.service';
 import { UserService } from 'src/app/services/user.service';
 import { MatSelectChange, MatOption, MatSlideToggleChange } from '@angular/material';
 import { SharedService } from 'src/app/services/shared.service';
+import { post } from 'selenium-webdriver/http';
 
 
-export interface MyAv {
+export interface GUIAvailability {
+  id?: number;
   date?: string;
-  confirmed?: boolean;
-  go?: Stop;
-  back?: Stop;
+  isConfirmed?: boolean;
+  user?: User;
+  isModified?: boolean;
+  goStop?: Stop;
+  backStop?: Stop;
 }
 
 @Component({
@@ -26,11 +30,11 @@ export interface MyAv {
 
 export class AvailabilityComponent implements OnInit {
   title = 'Disponibilità';
-  availabilities: MyAv = {};
+  availabilities: GUIAvailability[] = [];
   Object = Object;
   myStops: Stop[];
   uid;
-  arrayDate;
+  arrayDate = [];
   springDate = [];
 
   constructor(
@@ -44,57 +48,57 @@ export class AvailabilityComponent implements OnInit {
 
   ngOnInit() {
     const a = {};
-    this.uid = JSON.parse(localStorage.getItem("currentUser")).id;
+    this.uid = JSON.parse(localStorage.getItem('currentUser')).id;
     this.arrayDate = this.dateService.getWeekArray(new Date());
     this.arrayDate.forEach(mydate => {
       this.springDate.push(this.datepipe.transform(new Date(mydate), 'ddMMyy'));
     });
 
-    this.arrayDate.forEach(mydate => {
-      if (!this.availabilities[mydate]) {
-        a[mydate] = { confirmed: false };
-        a[mydate].go = { id: 0 };
-        a[mydate].back = { id: 0 };
-      }
-    });
-    this.availabilities = a;
     this.getAvails();
     this.getStops();
   }
 
   getAvails() {
-    const a = {};
+    this.availabilities = [];
     this.springDate.forEach(sdate => {
-      this.availabilitiesService.getAvailabilities(this.uid, sdate)
+      this.availabilitiesService.getUserAvailabilities(this.uid, sdate)
         .subscribe((data) => {
           data.forEach(av => {
-            console.log(av);
-            if (!a[av.date]) { a[av.date] = {}; }
-            a[av.date].confirmed = av.isConfirmed;
-            let o = {
-                name: av.requestedStop.name,
-                id: av.requestedStop.id
-              };
+            const newAv: GUIAvailability = {
+              id: av.id,
+              date: av.date,
+              isConfirmed: av.isConfirmed,
+              user: av.user,
+              isModified: av.isModified,
+              backStop: null,
+              goStop: null
+            };
             if (av.isGo) {
-              a[av.date].go = o;
-              a[av.date].back = { id: 0 };
+              newAv.goStop = av.requestedStop;
             } else {
-              a[av.date].back = o;
-              a[av.date].go = { id: 0 };
+              newAv.backStop = av.requestedStop;
             }
-          });
-          this.Object.keys(a).forEach(data=>{
-            this.availabilities[data] = a[data];
+            this.availabilities.unshift(newAv);
           });
         });
     });
+    const blankAv: GUIAvailability = {
+      id: 0,
+      date: null,
+      isConfirmed: false,
+      user: JSON.parse(localStorage.getItem('currentUser')),
+      isModified: false,
+      backStop: null,
+      goStop: null
+    };
+    this.availabilities.push(blankAv);
   }
 
   getStops() {
     this.stopsService.getStops()
       .subscribe(stops => {
         this.myStops = stops;
-        //console.log(this.myStops);
+        // console.log(this.myStops);
       });
   }
 
@@ -119,63 +123,106 @@ export class AvailabilityComponent implements OnInit {
     return true;
   }
 
-  public toggle(event: MatSlideToggleChange, obj, run) {
+  public toggle(event: MatSlideToggleChange, index, run) {
     if (!event.checked) {
-      if (run == 'go') {
-        this.availabilities[obj].go = { id: 0 };
-      } else if (run == 'back') {
-        this.availabilities[obj].back = { id: 0 };
-      }
+      null;
     }
-    else if (event.checked && run == 'go') {
-      if (this.availabilities[obj].go.id == 0) {
-        this.availabilities[obj].go = this.myStops[0];
+  }
+  // sendAv(date) {
+  //   let go;
+  //   let back;
+  //   if (this.availabilities[date].go.id != 0) {
+  //     go = this.availabilities[date].go;
+
+  //     go.reservations = null;
+  //     go.line = null;
+
+  //     const avGo: Availability = {
+  //       date,
+  //       isGo: true,
+  //       requestedStop: go,
+  //       isConfirmed: false,
+  //       isModified: true
+  //     };
+  //     this.availabilitiesService.postAvailability(avGo)
+  //       .subscribe(x => console.log('go done'));
+
+  //   }
+  //   if (this.availabilities[date].back.id != 0) {
+  //     back = this.availabilities[date].back;
+  //     back.reservations = null;
+  //     back.line = null;
+  //     const avBack: Availability = {
+  //       date,
+  //       isGo: false,
+  //       requestedStop: back,
+  //       isModified: true
+  //     };
+  //     this.availabilitiesService.postAvailability(avBack)
+  //       .subscribe(x => console.log('back done'));
+  //   }
+  // }
+  send(index) {
+    if (index != null && this.availabilities[index]) {
+      console.log(this.availabilities[index]);
+
+      let goStop;
+      let backStop;
+      // c'è una avail di andata
+      if (this.availabilities[index].goStop) {
+        goStop = this.availabilities[index].goStop;
       }
-    }
-    else if (event.checked && run == 'back') {
-      if (this.availabilities[obj].back.id == 0) {
-        this.availabilities[obj].back = this.myStops[0];
+      // c'è una avail di ritorno
+      if (this.availabilities[index].backStop) {
+        backStop = this.availabilities[index].backStop;
+      }
+      const newAv: Availability = {
+        id: this.availabilities[index].id,
+        isConfirmed: this.availabilities[index].isConfirmed,
+        isModified: this.availabilities[index].isModified,
+        user: this.availabilities[index].user,
+        isGo: true,
+        date: this.availabilities[index].date,
+        requestedStop: null,
+      };
+
+      if (this.availabilities[index].id == 0) {
+        // crea
+        if (goStop) {
+          newAv.requestedStop = goStop;
+          this.doPost(newAv);
+        }
+        if (backStop) {
+          newAv.requestedStop = backStop;
+          this.doPost(newAv);
+        }
+      } else {
+        if (goStop) {
+          newAv.requestedStop = goStop;
+          this.doUpdate(newAv);
+        }
+        if (backStop) {
+          newAv.requestedStop = backStop;
+          this.doUpdate(newAv);
+        }
       }
     }
   }
-
-  sendAv(date) {
-    let go;
-    let back;
-    if (this.availabilities[date].go.id != 0) {
-      go = this.availabilities[date].go;
-
-      go.reservations = null;
-      go.line = null;
-
-      const avGo: Availability = {
-        date: date,
-        isGo: true,
-        requestedStop: go,
-        isConfirmed: false,
-        isModified: true
-      };
-      this.availabilitiesService.postAvailability(avGo)
-        .subscribe(x => console.log('go done'));
-
-    }
-    if (this.availabilities[date].back.id != 0) {
-      back = this.availabilities[date].back;
-      back.reservations = null;
-      back.line = null;
-      const avBack: Availability = {
-        date: date,
-        isGo: false,
-        requestedStop: back,
-        isModified: true
-      };
-      this.availabilitiesService.postAvailability(avBack)
-        .subscribe(x => console.log('back done'));
-    }
-
-
+  updateDate(e, index) {
+    this.availabilities[index].date = e.value;
   }
   toggleRightSidenav() {
     this.sidenav.toggle();
+  }
+
+  doPost(av) {
+    console.log('posting...');
+    console.log(av);
+    this.getAvails();
+  }
+
+  doUpdate(av) {
+    console.log('updating...');
+    console.log(av);
   }
 }
