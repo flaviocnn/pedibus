@@ -29,18 +29,18 @@
       <div class="col s2">
         <p class="chaperon">{{av.user.username}}</p>
       </div>
-      <div *ngIf="av.assignedStartStop" class="col s8">
+      <div *ngIf="av.requestedStop" class="col s8">
         <ul class="availabilities_ul" [ngClass]="{'confirmed': av.isConfirmed}">
           <li *ngFor="let stop of stops" (click)="toggleClass(stop, i,av.isConfirmed)"
-            [ngClass]="{'active': av.assignedStartStop.id == stop.id}"> &#10003;
+            [ngClass]="{'active': av.requestedStop.id == stop.id}"> &#10003;
           </li>
           <li matTooltip="Scuola">S</li>
         </ul>
       </div>
-      <div *ngIf="av.assignedStartStop == null" class="col s8">
+      <div *ngIf="av.requestedStop == null" class="col s8">
         <ul class="availabilities_ul">
           <li *ngFor="let stop of stops" (click)="toggleClass(stop, i,av.isConfirmed)"
-            [ngClass]="{'active': av.requestedStartStop.id == stop.id}"> &#10003;
+            [ngClass]="{'active': av.requestedStop.id == stop.id}"> &#10003;
           </li>
           <li matTooltip="Scuola">S</li>
         </ul>
@@ -67,18 +67,18 @@
       <div class="col s2">
         <p class="chaperon">{{av.user.username}}</p>
       </div>
-      <div *ngIf="av.assignedStartStop" class="col s8">
+      <div *ngIf="av.requestedStop" class="col s8">
         <ul class="availabilities_ul" [ngClass]="{'confirmed': av.isConfirmed}">
           <li *ngFor="let stop of backStops" (click)="toggleClass(stop, i,av.isConfirmed)"
-            [ngClass]="{'active': av.assignedStartStop.id == stop.id}"> &#10003;
+            [ngClass]="{'active': av.requestedStop.id == stop.id}"> &#10003;
           </li>
           <li matTooltip="Fine">F</li>
         </ul>
       </div>
-      <div *ngIf="av.assignedStartStop == null" class="col s8">
+      <div *ngIf="av.requestedStop == null" class="col s8">
         <ul class="availabilities_ul">
           <li *ngFor="let stop of backStops" (click)="toggleClass(stop, i,av.isConfirmed)"
-            [ngClass]="{'active': av.requestedStartStop.id == stop.id}"> &#10003;
+            [ngClass]="{'active': av.requestedStop.id == stop.id}"> &#10003;
           </li>
           <li matTooltip="Fine">F</li>
         </ul>
