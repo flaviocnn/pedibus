@@ -152,7 +152,8 @@ export class AvailabilityComponent implements OnInit {
         date: date,
         isGo: true,
         requestedStop: go,
-        isConfirmed: false
+        isConfirmed: false,
+        isModified: true
       };
       this.availabilitiesService.postAvailability(avGo)
         .subscribe(x => console.log('go done'));
@@ -166,6 +167,7 @@ export class AvailabilityComponent implements OnInit {
         date: date,
         isGo: false,
         requestedStop: back,
+        isModified: true
       };
       this.availabilitiesService.postAvailability(avBack)
         .subscribe(x => console.log('back done'));

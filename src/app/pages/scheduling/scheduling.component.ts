@@ -65,8 +65,8 @@ export class SchedulingComponent implements OnInit {
   }
 
   toggleClass(stop: DailyStop, i, conf: boolean) {
-    if (conf) {this.availabilities[i].assignedStartStop = stop; } else {
-      this.availabilities[i].requestedStartStop = stop;
+    if (conf) {this.availabilities[i].requestedStop = stop; } else {
+      this.availabilities[i].requestedStop = stop;
     }
 
     console.log(this.datesFE);

@@ -138,9 +138,9 @@ export interface Child {
 export interface Availability {
     id?: number;
     date?: string;
-    isConfirmed: boolean;
-    isGo: boolean;
-    user: User;
+    isConfirmed?: boolean;
+    isGo?: boolean;
+    user?: User;
     requestedStop: Stop;
     isModified: boolean;
 }
