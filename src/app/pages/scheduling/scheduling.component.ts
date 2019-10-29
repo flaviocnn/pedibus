@@ -18,8 +18,9 @@ export class SchedulingComponent implements OnInit {
   selectedDate;
   selectedLine;
   availabilities: Availability[] = [];
+  backAvailabilities: Availability[] = [];
   stops: DailyStop[] = [];
-
+  backStops: DailyStop[] = [];
 
   constructor(
     private dateservice: DatesService,
@@ -34,7 +35,7 @@ export class SchedulingComponent implements OnInit {
     this.datesBE = this.dateservice.getWeekArrayBE(new Date());
     this.datesFE = this.dateservice.getWeekArrayFE(new Date());
     // ottenere la linea di competenza
-    this.selectedLine = 'Linea_AAA';
+    this.selectedLine = this.userservice.getMyLine();
     // ottenere le stop(con reservations) della linea
     this.getStops();
     // ottenere le availabilities di (linea, data) per go e back
@@ -43,15 +44,23 @@ export class SchedulingComponent implements OnInit {
   }
 
   getStops() {
-    this.stopsService.getLineStops(this.selectedLine)
+    this.stopsService.getSortedLineStops(this.selectedLine,true)
     .subscribe(data => {
       this.stops = data;
+    });
+    this.stopsService.getSortedLineStops(this.selectedLine,false)
+    .subscribe(data => {
+      this.backStops = data;
     });
   }
   getAvailabilities() {
     this.availService.getLinesAvailabilities(this.selectedLine, this.selectedDate, true)
     .subscribe( data => {
       this.availabilities = data;
+    });
+    this.availService.getLinesAvailabilities(this.selectedLine, this.selectedDate, false)
+    .subscribe( data => {
+      this.backAvailabilities = data;
     });
   }
 

@@ -71,18 +71,10 @@ export class AvailabilityComponent implements OnInit {
             console.log(av);
             if (!a[av.date]) { a[av.date] = {}; }
             a[av.date].confirmed = av.isConfirmed;
-            let o;
-            if (av.isConfirmed) {
-              o = {
-                name: av.assignedStartStop.name,
-                id: av.assignedStartStop.id
+            let o = {
+                name: av.requestedStop.name,
+                id: av.requestedStop.id
               };
-            } else {
-              o = {
-                name: av.requestedStartStop.name,
-                id: av.requestedStartStop.id
-              };
-            }
             if (av.isGo) {
               a[av.date].go = o;
               a[av.date].back = { id: 0 };
@@ -159,7 +151,8 @@ export class AvailabilityComponent implements OnInit {
       const avGo: Availability = {
         date: date,
         isGo: true,
-        requestedStartStop: go,
+        requestedStop: go,
+        isConfirmed: false
       };
       this.availabilitiesService.postAvailability(avGo)
         .subscribe(x => console.log('go done'));
@@ -172,7 +165,7 @@ export class AvailabilityComponent implements OnInit {
       const avBack: Availability = {
         date: date,
         isGo: false,
-        requestedStartStop: back,
+        requestedStop: back,
       };
       this.availabilitiesService.postAvailability(avBack)
         .subscribe(x => console.log('back done'));

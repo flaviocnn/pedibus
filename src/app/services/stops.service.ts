@@ -23,22 +23,44 @@ export class StopsService {
     console.log('getting daily stops');
     const url = REST_URL + 'Linea_AAA';
     return this.http.get<Stop[]>(url, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   getLineStops(line: string): Observable<DailyStop[]> {
     console.log('getting daily stops');
     const url = REST_URL + line;
     return this.http.get<DailyStop[]>(url, httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getSortedLineStops(line: string, isGo: boolean): Observable<DailyStop[]> {
+    console.log('getting daily stops');
+    const url = REST_URL + line;
+    return this.http.get<DailyStop[]>(url, httpOptions)
+      .pipe(
+        catchError(this.handleError),
+        map(res => this.sort(res, isGo))
+      );
   }
 
   private handleError(error: any) {
     console.error(error);
     return throwError(error);
+  }
+
+  sort(data, isGo): any[] {
+    if (data) {
+      if (isGo) {
+        data.sort((a, b) => a.timeGo !== b.timeGo ? a.timeGo < b.timeGo ? -1 : 1 : 0);
+      }
+      else {
+        data.sort((a, b) => a.timeBack !== b.timeBack ? a.timeBack < b.timeBack ? -1 : 1 : 0);
+      }
+    }
+    return data;
   }
 }

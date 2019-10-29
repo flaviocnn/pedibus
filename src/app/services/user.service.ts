@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { tap, catchError, map, retry } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { User } from '../models/user';
+import { User } from '../models/daily-stop';
 
 const REST_URL = 'http://localhost:8080/users';
 
@@ -25,7 +25,10 @@ export class UserService {
   }
 
   getMyLine(): string{
-    return null//
+    const u: User = JSON.parse(localStorage.getItem('currentUser'));
+    if(u.defaultStop){return u.defaultStop.line.name};
+    if( u.administeredLines.length>0) return u.administeredLines[0].name; 
+    return null;
   }
 
   getUsers(): Observable<User[]> {

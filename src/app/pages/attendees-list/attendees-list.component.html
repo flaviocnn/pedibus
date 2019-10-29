@@ -13,25 +13,27 @@
     <ng-template matTabContent>
       <div class="container">
         <mat-card class="mycard">
-          <ul>
-            <li *ngFor="let ds of showedRes;index as i; last as isLast">
-              <span>{{i+1}}</span>
-              <span class="text">{{ds?.name}}</span>
-              <br>
-              <div class="time">{{ds?.timeGo}}</div>
-              <p>
-                <i *ngFor="let res of ds?.reservations;last as isLast" class="passenger"
-                  [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
-                  {{res?.child.firstName}}
-                </i>
-              </p>
+          <div *ngIf="goReservations$| async as goReservations; else noRes">
+            <ul >
+              <li *ngFor="let ds of goReservations;index as i; last as isLast">
+                <span>{{i+1}}</span>
+                <span class="text">{{ds?.name}}</span>
+                <br>
+                <div class="time">{{ds?.timeGo}}</div>
+                <p>
+                  <i *ngFor="let res of ds?.reservations;last as isLast" class="passenger"
+                    [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
+                    {{res?.child.firstName}}<div *ngIf="!isLast">,</div>
+                  </i>
+                </p>
+                <div class="verticalLine"></div>
+              </li>
+              <li>
+                <span>S</span>
+              </li>
+            </ul>
+          </div>
 
-              <div class="verticalLine"></div>
-            </li>
-            <li>
-              <span>S</span>
-            </li>
-          </ul>
         </mat-card>
       </div>
     </ng-template>
@@ -40,13 +42,13 @@
     <ng-template matTabContent>
       <div class="container">
         <mat-card class="mycard">
-          <ul>
+          <ul *ngIf="backReservations?.reservations; else noRes">
             <li>
               <span>S</span>
               <div class="verticalLine"></div>
             </li>
 
-            <li *ngFor="let ds of showedRes;index as i; last as isLast">
+            <li *ngFor="let ds of backReservations;index as i; last as isLast">
               <span>{{i+1}}</span>
               <span class="text">{{ds?.name}}</span>
               <br>
@@ -60,8 +62,8 @@
               <div class="verticalLine"></div>
             </li>
             <li>
-                <span>F</span>
-              </li>
+              <span>F</span>
+            </li>
           </ul>
         </mat-card>
       </div>
@@ -73,4 +75,8 @@
 
 <ng-template #loading>
   <div>Loading ...</div>
+</ng-template>
+
+<ng-template #noRes>
+  <h5 class="noRes">Non ci sono prenotazioni per la data selezionata</h5>
 </ng-template>

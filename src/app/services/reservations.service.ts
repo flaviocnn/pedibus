@@ -33,15 +33,16 @@ export class ReservationsService {
     console.log('getting daily stops');
     const url = REST_URL + `/lines/${line}/${date}/${isGo}`;
 
-    return this.http.get<DailyStop[]>(url, httpOptions).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.get<DailyStop[]>(url, httpOptions)
+      .pipe(
+        map(res => this.sort(res))
+      );
   }
 
   putReservation(res: Reservation) {
     const url = REST_URL;
     return this.http.put<Reservation[]>(url, res, httpOptions)
-    .subscribe();
+      .subscribe();
   }
 
   postReservation(res: Reservation) {
@@ -64,5 +65,18 @@ export class ReservationsService {
     console.error(error);
     return throwError(error);
   }
+  sort(data): any[] {
+    if (data) {
+      data.sort((a, b) => a.timeGo !== b.timeGo ? a.timeGo < b.timeGo ? -1 : 1 : 0);
+      data.forEach(el => {
+        if (el.reservations) {
+          el.reservations.sort((a, b) => {
+            a.child.firstName !== b.child.firstName ? a.child.firstName < b.child.firstName ? -1 : 1 : 0;
+          });
+        }
+      });
+    }
 
+    return data;
+  }
 }

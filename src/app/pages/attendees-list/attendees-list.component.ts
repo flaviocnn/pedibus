@@ -3,10 +3,11 @@ import { PageEvent, MatPaginator } from '@angular/material';
 
 import { ReservationsService } from '../../services/reservations.service';
 import { DatePipe } from '@angular/common';
-import { Reservation } from 'src/app/models/daily-stop';
+import { Reservation, DailyStop } from 'src/app/models/daily-stop';
 import { UserService } from 'src/app/services/user.service';
-import { Subscriber } from 'rxjs';
+import { Subscriber, Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
+import { first, share } from 'rxjs/operators';
 
 export interface IHash {
   [id: string]: boolean;
@@ -23,7 +24,8 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   title = 'Presenze';
   backgroundColor = 'primary';
   color = 'accent';
-  showedRes = [];
+  goReservations$: Observable<DailyStop[]>;
+  backReservations = [];
   myLine;
   todayDate: Date;
   currentDate: string;
@@ -36,9 +38,9 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   pageEvent: PageEvent;
 
   constructor(private reservationsService: ReservationsService,
-    private userService: UserService,
-    public datepipe: DatePipe,
-    private sidenav: SharedService
+              private userService: UserService,
+              public datepipe: DatePipe,
+              private sidenav: SharedService
   ) {
   }
 
@@ -53,21 +55,19 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     this.paginator._pageIndex = 7;
     // this.paginator._changePageSize(this.paginator.pageSize);
 
-    this.getReservations(this.todayDate);
+    this.getReservations(this.todayDate, this.myLine);
   }
 
-  getReservations(date: Date) {
+  getReservations(date: Date, line: string) {
     const latestDate = this.datepipe.transform(date, 'ddMMyy');
     console.log(latestDate);
 
-    this.reservationsService.getDailyStops(latestDate, true)
+    this.goReservations$ = this.reservationsService.getDailyStopsByLine(latestDate, true, line)
+    .pipe(share());
+
+    this.reservationsService.getDailyStopsByLine(latestDate, false, line)
       .subscribe((data) => {
-        data.forEach(dstop => {
-          // console.log(dstop.reservations);
-          this.showedRes = this.sort(data);
-          // dstop.reservations.forEach(res => this.showedRes.push(res));
-        });
-        console.log(this.showedRes);
+        this.backReservations = data;
       });
   }
 
@@ -97,7 +97,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     // showed on paginator
     this.currentDate = newDate.toLocaleDateString();
 
-    this.getReservations(newDate);
+    this.getReservations(newDate,this.myLine);
 
   }
 

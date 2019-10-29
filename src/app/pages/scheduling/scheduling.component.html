@@ -4,15 +4,15 @@
   </button>
   <h1>{{title}}</h1>
 </mat-toolbar>
-<div class="row">
-  <div class="example-button-row col s12 center">
-    <button *ngFor="let date of datesFE; index as i;" (click)="selectDay(i)" mat-raised-button
-      class="date-btn">{{date}}</button>
-  </div>
-</div>
-
-<h2 class="center">Corsa di andata</h2>
 <div class="container">
+  <div class="row">
+    <div class="example-button-row col s12 center">
+      <button *ngFor="let date of datesFE; index as i;" (click)="selectDay(i)" mat-raised-button
+        class="date-btn">{{date}}</button>
+    </div>
+  </div>
+
+  <h2 class="center">Corsa di andata</h2>
   <mat-card class="mycard mat-elevation-z4">
     <div class="row">
       <div class="col s8 offset-s2">
@@ -38,13 +38,51 @@
         </ul>
       </div>
       <div *ngIf="av.assignedStartStop == null" class="col s8">
-          <ul class="availabilities_ul">
-            <li *ngFor="let stop of stops" (click)="toggleClass(stop, i,av.isConfirmed)"
-              [ngClass]="{'active': av.requestedStartStop.id == stop.id}"> &#10003;
-            </li>
-            <li matTooltip="Scuola">S</li>
-          </ul>
-        </div>
+        <ul class="availabilities_ul">
+          <li *ngFor="let stop of stops" (click)="toggleClass(stop, i,av.isConfirmed)"
+            [ngClass]="{'active': av.requestedStartStop.id == stop.id}"> &#10003;
+          </li>
+          <li matTooltip="Scuola">S</li>
+        </ul>
+      </div>
+      <div class="col s2">
+        <mat-slide-toggle [(ngModel)]="av.isConfirmed" class="confirm-toggle">Confermata</mat-slide-toggle>
+      </div>
+    </div>
+  </mat-card>
+  <h2 class="center">Corsa di ritorno</h2>
+  <mat-card class="mycard mat-elevation-z4">
+    <div class="row">
+      <div class="col s8 offset-s2">
+        <ul>
+          <li *ngFor="let stop of backStops" matTooltip="Bambini prenotati">
+            {{stop.reservations.length}}<span>{{stop.name}}</span></li>
+          <li matTooltip="Fine">F</li>
+        </ul>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider><br>
+    <div class="row" *ngFor="let av of backAvailabilities; index as i;">
+      <div class="col s2">
+        <p class="chaperon">{{av.user.username}}</p>
+      </div>
+      <div *ngIf="av.assignedStartStop" class="col s8">
+        <ul class="availabilities_ul" [ngClass]="{'confirmed': av.isConfirmed}">
+          <li *ngFor="let stop of backStops" (click)="toggleClass(stop, i,av.isConfirmed)"
+            [ngClass]="{'active': av.assignedStartStop.id == stop.id}"> &#10003;
+          </li>
+          <li matTooltip="Fine">F</li>
+        </ul>
+      </div>
+      <div *ngIf="av.assignedStartStop == null" class="col s8">
+        <ul class="availabilities_ul">
+          <li *ngFor="let stop of backStops" (click)="toggleClass(stop, i,av.isConfirmed)"
+            [ngClass]="{'active': av.requestedStartStop.id == stop.id}"> &#10003;
+          </li>
+          <li matTooltip="Fine">F</li>
+        </ul>
+      </div>
       <div class="col s2">
         <mat-slide-toggle [(ngModel)]="av.isConfirmed" class="confirm-toggle">Confermata</mat-slide-toggle>
       </div>
