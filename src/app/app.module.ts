@@ -41,6 +41,7 @@ import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '
 import { myRxStompConfig } from './my-rx-stomp.config';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { ReservationDialogComponent } from './components/reservation-dialog/reservation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
     NotificationsComponent,
     LandpageComponent,
     SettingsComponent,
+    ReservationDialogComponent,
   ],
   imports: [
     HttpClientModule,
@@ -79,7 +81,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
     AgmDirectionModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [ DialogOverviewExampleDialog],
+  entryComponents: [ DialogOverviewExampleDialog, ReservationDialogComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ReservationsService,

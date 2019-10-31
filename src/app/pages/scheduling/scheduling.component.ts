@@ -36,7 +36,7 @@ export class SchedulingComponent implements OnInit {
     this.datesBE = this.dateservice.getWeekArrayBE(new Date());
     this.datesFE = this.dateservice.getWeekArrayFE(new Date());
     // ottenere la linea di competenza
-    this.selectedLine = this.userservice.getMyLine();
+    this.selectedLine = this.userservice.getMyLine().name;
     // ottenere le stop(con reservations) della linea
     this.getStops();
     // ottenere le availabilities di (linea, data) per go e back

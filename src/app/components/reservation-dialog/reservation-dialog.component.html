@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content>
+    <form #childForm="ngForm" (ngSubmit)=onSubmit(childForm)>
+            <mat-form-field>
+                    <mat-label>Seleziona fermata</mat-label>
+                    <mat-select [(value)]="selectedStop">
+                        <mat-option>None</mat-option>
+                        <mat-option *ngFor="let stop of stops" [value]="stop">{{stop.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+        <mat-form-field>
+            <mat-label>Seleziona passeggero</mat-label>
+            <mat-select [(value)]="selectedChild">
+                <mat-option>None</mat-option>
+                <mat-option *ngFor="let child of children" [value]="child">{{child.firstName}} {{child.lastName}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!childForm.form.valid"
+        (click)="onSubmit(childForm)">Conferma</button>
+    <p class="error" *ngIf="error !== ''">{{error}}</p>
+    <mat-progress-spinner *ngIf="processing === true" class="spinner" color="primary" diameter="30"
+        mode="indeterminate">
+    </mat-progress-spinner>
+    <button mat-button [mat-dialog-close]="newChild">Chiudi</button>
+</div>

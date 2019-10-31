@@ -4,7 +4,7 @@ import { Availability } from '../models/daily-stop';
 import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-const REST_URL = 'http://localhost:8080/availability/';
+const REST_URL = 'http://localhost:8080/availabilities/';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -35,10 +35,16 @@ export class AvailabilityService {
   }
 
   postAvailability(av: Availability) {
-
     const url = REST_URL;
-
     return this.http.post<Availability>(url, av, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  putAvailability(av: Availability) {
+    const url = REST_URL;
+    return this.http.put<Availability>(url, av, httpOptions)
       .pipe(
         catchError(this.handleError)
       );

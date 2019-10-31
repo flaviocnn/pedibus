@@ -1,16 +1,25 @@
 import { Component, OnInit, ViewChild, AfterViewChecked, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { PageEvent, MatPaginator } from '@angular/material';
+import { PageEvent, MatPaginator, MatDialog, MatTabChangeEvent } from '@angular/material';
 
 import { ReservationsService } from '../../services/reservations.service';
 import { DatePipe } from '@angular/common';
-import { Reservation, DailyStop } from 'src/app/models/daily-stop';
+import { Reservation, DailyStop, Child, Stop, Line } from 'src/app/models/daily-stop';
 import { UserService } from 'src/app/services/user.service';
 import { Subscriber, Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 import { first, share } from 'rxjs/operators';
+import { ReservationDialogComponent } from 'src/app/components/reservation-dialog/reservation-dialog.component';
+import { ChildrenService } from 'src/app/services/children.service';
 
 export interface IHash {
   [id: string]: boolean;
+}
+
+export interface DialogDataReservation {
+  date: string;
+  isGo: boolean;
+  allChildren: Child[];
+  allStops: Stop[];
 }
 
 @Component({
@@ -26,9 +35,12 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   color = 'accent';
   goReservations$: Observable<DailyStop[]>;
   backReservations = [];
-  myLine;
+  myLine: Line;
   todayDate: Date;
   currentDate: string;
+  latestDate;
+  newDate;
+  isGoActiveTab = true;
   @ViewChild('paginator', { static: true }) paginator;
 
   length = 15;
@@ -40,7 +52,9 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   constructor(private reservationsService: ReservationsService,
               private userService: UserService,
               public datepipe: DatePipe,
-              private sidenav: SharedService
+              private sidenav: SharedService,
+              public dialog: MatDialog,
+              private childrenService: ChildrenService
   ) {
   }
 
@@ -55,17 +69,17 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     this.paginator._pageIndex = 7;
     // this.paginator._changePageSize(this.paginator.pageSize);
 
-    this.getReservations(this.todayDate, this.myLine);
+    this.getReservations(this.todayDate, this.myLine.name);
   }
 
   getReservations(date: Date, line: string) {
-    const latestDate = this.datepipe.transform(date, 'ddMMyy');
-    console.log(latestDate);
+    this.latestDate = this.datepipe.transform(date, 'ddMMyy');
+    console.log(this.latestDate);
 
-    this.goReservations$ = this.reservationsService.getDailyStopsByLine(latestDate, true, line)
-    .pipe(share());
+    this.goReservations$ = this.reservationsService.getDailyStopsByLine(this.latestDate, true, line)
+      .pipe(share());
 
-    this.reservationsService.getDailyStopsByLine(latestDate, false, line)
+    this.reservationsService.getDailyStopsByLine(this.latestDate, false, line)
       .subscribe((data) => {
         this.backReservations = data;
       });
@@ -89,15 +103,15 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   }
 
   getPaginatorData(event) {
-    const newDate = new Date(this.todayDate.valueOf());
+    this.newDate = new Date(this.todayDate.valueOf());
     const numberOfDaysToAdd = parseInt(this.paginator.pageIndex) - 7;
 
-    newDate.setDate(this.todayDate.getDate() + numberOfDaysToAdd);
+    this.newDate.setDate(this.todayDate.getDate() + numberOfDaysToAdd);
 
     // showed on paginator
-    this.currentDate = newDate.toLocaleDateString();
+    this.currentDate = this.newDate.toLocaleDateString();
 
-    this.getReservations(newDate,this.myLine);
+    this.getReservations(this.newDate, this.myLine.name);
 
   }
 
@@ -116,5 +130,44 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
 
   toggleRightSidenav() {
     this.sidenav.toggle();
+  }
+  public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    console.log(tabChangeEvent);
+    if (tabChangeEvent.index == 0) { this.isGoActiveTab = true; }
+    else {this.isGoActiveTab = false; }
+  }
+  openDialog(): void {
+    if (this.newDate == null) {
+      this.getPaginatorData(null);
+    }
+    const stopsAndChildren: DialogDataReservation = {
+      date: this.newDate.toISOString().slice(0, 10),
+      isGo: this.isGoActiveTab,
+      allStops: null,
+      allChildren: null
+    };
+
+    this.reservationsService
+      .getDailyStopsByLine(this.latestDate, true, this.myLine.name)
+      .subscribe(el => {
+      stopsAndChildren.allStops = el;
+      this.childrenService.getAllChildren(this.myLine.id
+      ).subscribe(c => {
+          stopsAndChildren.allChildren = c;
+
+          const dialogRef = this.dialog.open(ReservationDialogComponent, {
+            width: '250px',
+            data: stopsAndChildren
+          });
+
+          dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+          });
+        });
+      }
+      );
+
+
+
   }
 }

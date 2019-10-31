@@ -34,6 +34,13 @@ export class ChildrenService {
     .subscribe();
   }
 
+  getAllChildren(lineId: number): Observable<Child[]> {
+    const url = REST_URL + `/lines/${lineId}`;
+    return this.http.get<Child[]>(url, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getMyChildren(): Observable<Child[]> {
     const url = REST_URL;
 
@@ -49,18 +56,6 @@ export class ChildrenService {
       catchError(this.handleError)
     );
   }
-
-  // getChild(id: number): Observable<Child> {
-  //   const url = REST_URL + `/${id}`;
-  //   let newChild: Child = {
-  //     firstName: 'moreno',
-  //     lastName: 'morello',
-  //     id: 666,
-  //     parent: null,
-  //     defaultStop: 3
-  //   };
-  //   return of(newChild);
-  // }
 
   private handleError(error: any) {
     if (error.status == 500) {

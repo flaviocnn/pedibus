@@ -8,13 +8,13 @@
   </mat-paginator>
 </mat-toolbar>
 
-<mat-tab-group [color]="this.color" [backgroundColor]="this.backgroundColor" mat-stretch-tabs>
+<mat-tab-group [color]="this.color" [backgroundColor]="this.backgroundColor" (selectedTabChange)="tabChanged($event)" mat-stretch-tabs>
   <mat-tab label="Andata">
     <ng-template matTabContent>
       <div class="container">
         <mat-card class="mycard">
           <div *ngIf="goReservations$| async as goReservations; else noRes">
-            <ul >
+            <ul>
               <li *ngFor="let ds of goReservations;index as i; last as isLast">
                 <span>{{i+1}}</span>
                 <span class="text">{{ds?.name}}</span>
@@ -36,9 +36,12 @@
 
         </mat-card>
       </div>
+      <button class="add-fab" mat-fab color="accent" (click)="openDialog()" matTooltip="Inserisci prenotazione">
+        <mat-icon>add</mat-icon>
+      </button>
     </ng-template>
   </mat-tab>
-  <mat-tab label="Ritorno">
+  <mat-tab label="Ritorno" >
     <ng-template matTabContent>
       <div class="container">
         <mat-card class="mycard">

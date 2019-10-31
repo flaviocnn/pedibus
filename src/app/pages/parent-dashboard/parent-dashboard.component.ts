@@ -21,7 +21,7 @@ export interface DialogData {
   providers: [NgModel],
 })
 export class DialogOverviewExampleDialog {
-  title = 'Dashboard Genitore'
+  title = 'Dashboard Genitore';
   nameText: string;
   error: string;
   success: string;
@@ -40,8 +40,8 @@ export class DialogOverviewExampleDialog {
     this.processing = true;
     console.log(f);
     this.newChild = {
-      firstName: f.value['name'],
-      lastName: f.value['lastname'],
+      firstName: f.value.name,
+      lastName: f.value.lastname,
       id: null,
       parent: null,
     };
@@ -71,9 +71,9 @@ export class DialogOverviewExampleDialog {
 export class ParentDashboardComponent implements OnInit {
 
   constructor(private childrenService: ChildrenService,
-    private stopsService: StopsService,
-    public dialog: MatDialog,
-    private sidenav: SharedService) { }
+              private stopsService: StopsService,
+              public dialog: MatDialog,
+              private sidenav: SharedService) { }
 
   title = 'Dashboard Genitori';
   stopList: Stop[] = [];
@@ -127,7 +127,7 @@ export class ParentDashboardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      //let newchild: Child = result;
+      // let newchild: Child = result;
       if (result) {
         this.myChildren.push(result);
       }

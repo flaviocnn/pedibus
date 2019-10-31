@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { tap, catchError, map, retry } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { User } from '../models/daily-stop';
+import { User, Line, Stop } from '../models/daily-stop';
 
 const REST_URL = 'http://localhost:8080/users';
 
@@ -17,17 +17,26 @@ const httpOptions = {
 })
 export class UserService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { this.mySelf = JSON.parse(localStorage.getItem('currentUser')); }
 
-  getMyId(): string {
-    const id = localStorage.getItem('user_id');
-    return id;
+  public mySelf: User;
+
+  getMyId(): number {
+    return this.mySelf.id;
   }
 
-  getMyLine(): string{
+  getMyDefaultStop(): Stop{
+    const u: User = this.mySelf;
+    if(u.defaultStop){return u.defaultStop};
+    if( u.children.length>0) return u.children[0].defaultStop; 
+    return null;
+  }
+
+
+  getMyLine(): Line{
     const u: User = JSON.parse(localStorage.getItem('currentUser'));
-    if(u.defaultStop){return u.defaultStop.line.name};
-    if( u.administeredLines.length>0) return u.administeredLines[0].name; 
+    if(u.defaultStop){return u.defaultStop.line};
+    if( u.administeredLines.length>0) return u.administeredLines[0]; 
     return null;
   }
 

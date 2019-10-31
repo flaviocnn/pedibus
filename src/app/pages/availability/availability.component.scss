@@ -2,17 +2,22 @@
     margin: 1em auto;
 }
 .confirmed{
-    background-color: #C5E1A5;
     pointer-events: none;
 }
+.confirmedColor{
+    // background-color: #C5E1A5;
+}
 .pending{
-    background-color: #FFF59D;
+    pointer-events: none;
+}
+.pendingColor{
+    // background-color: #FFF59D;
 }
 .send-avail{
     position: absolute;
     right: 10px;
     bottom: 10px;
-    background-color: #3f51b5;
+    z-index: 4;
 }
 .mat-card{
     max-width: 800px;
@@ -25,13 +30,40 @@
 }
 
 p.date {
-    background: #3f51b5;
+    background: var(--accent-color);
     color: white;
     padding: 5px 6px 5px 10px;
     position: relative;
-    left: -40px;
+    left: -25px;
     text-align: center;
     border-radius: 12px 1px 6px 1px;
     display: inline;
+    z-index: 4;
+    bottom: 0px;
     box-shadow: 0px 0px 4px 1px #00000038;
+}
+
+p.status {
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 0px 0px 5px #0000006b;
+    display: inline-block;
+    padding: 5px 10px;
+    font-family: raleway,sans-serif;
+    font-weight: 600;
+    font-size: 1em;
+    transition: upp;
+    border-radius: 4px;
+    box-shadow: 0px 0px 3px 1px #00000042;
+    background: var(--accent-color);
+}
+
+p.status.pending{
+    background: red;
+}
+p.status.confirmed{
+    background: #009688;
+}
+p.status.waiting{
+    background: #FFC107;
 }

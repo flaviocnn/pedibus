@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AvailabilityService } from 'src/app/services/availability.service';
 import { DatePipe } from '@angular/common';
 import { Availability, User } from 'src/app/models/daily-stop';
@@ -34,8 +34,11 @@ export class AvailabilityComponent implements OnInit {
   Object = Object;
   myStops: Stop[];
   uid;
+  myDefaultStop;
   arrayDate = [];
   springDate = [];
+
+  blankAv: GUIAvailability;
 
   constructor(
     private availabilitiesService: AvailabilityService,
@@ -48,7 +51,9 @@ export class AvailabilityComponent implements OnInit {
 
   ngOnInit() {
     const a = {};
-    this.uid = JSON.parse(localStorage.getItem('currentUser')).id;
+    this.initBlankAv();
+    this.uid = this.userService.getMyId();
+    this.myDefaultStop = this.userService.getMyDefaultStop();
     this.arrayDate = this.dateService.getWeekArray(new Date());
     this.arrayDate.forEach(mydate => {
       this.springDate.push(this.datepipe.transform(new Date(mydate), 'ddMMyy'));
@@ -62,7 +67,8 @@ export class AvailabilityComponent implements OnInit {
     this.availabilities = [];
     this.springDate.forEach(sdate => {
       this.availabilitiesService.getUserAvailabilities(this.uid, sdate)
-        .subscribe((data) => {
+        .subscribe(
+          (data) => {
           data.forEach(av => {
             const newAv: GUIAvailability = {
               id: av.id,
@@ -78,20 +84,17 @@ export class AvailabilityComponent implements OnInit {
             } else {
               newAv.backStop = av.requestedStop;
             }
-            this.availabilities.unshift(newAv);
-          });
-        });
+            if (av.isModified && !av.isConfirmed) {
+              this.availabilities.unshift(newAv);
+            } else {
+              this.availabilities.push(newAv);
+            }
+          }); },
+          () => {
+            this.availabilities.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+          }
+        );
     });
-    const blankAv: GUIAvailability = {
-      id: 0,
-      date: null,
-      isConfirmed: false,
-      user: JSON.parse(localStorage.getItem('currentUser')),
-      isModified: false,
-      backStop: null,
-      goStop: null
-    };
-    this.availabilities.push(blankAv);
   }
 
   getStops() {
@@ -123,9 +126,43 @@ export class AvailabilityComponent implements OnInit {
     return true;
   }
 
-  public toggle(event: MatSlideToggleChange, index, run) {
+  public toggleChanged(event: MatSlideToggleChange, index, run) {
+    // deseleziono il toggle
     if (!event.checked) {
-      null;
+      if (run == 'go') {
+        if(index == -1){
+          this.blankAv.goStop = null;
+          return;
+        }
+        this.availabilities[index].goStop = null;
+      } else {
+        if(index == -1){
+          this.blankAv.backStop = null;
+          return;
+        }
+        this.availabilities[index].backStop = null;
+      }
+    } else if (event.checked) { // sto attivando il toggle
+      let selectedStop: Stop;
+      if (this.myDefaultStop) {
+        selectedStop = this.myDefaultStop;
+      } else {
+        selectedStop = this.myStops[0];
+      }
+
+      if (run == 'go') {
+        if(index == -1){
+          this.blankAv.goStop = selectedStop;
+          return;
+        }
+        this.availabilities[index].goStop = selectedStop;
+      } else if (run == 'back') {
+        if(index == -1){
+          this.blankAv.backStop = selectedStop;
+          return;
+        }
+        this.availabilities[index].backStop = selectedStop;
+      }
     }
   }
   // sendAv(date) {
@@ -163,6 +200,10 @@ export class AvailabilityComponent implements OnInit {
   //   }
   // }
   send(index) {
+    if(index == null){
+      index = this.availabilities.length;
+      this.availabilities.push(this.blankAv);
+    }
     if (index != null && this.availabilities[index]) {
       console.log(this.availabilities[index]);
 
@@ -181,7 +222,7 @@ export class AvailabilityComponent implements OnInit {
         isConfirmed: this.availabilities[index].isConfirmed,
         isModified: this.availabilities[index].isModified,
         user: this.availabilities[index].user,
-        isGo: true,
+        isGo: null,
         date: this.availabilities[index].date,
         requestedStop: null,
       };
@@ -190,19 +231,23 @@ export class AvailabilityComponent implements OnInit {
         // crea
         if (goStop) {
           newAv.requestedStop = goStop;
+          newAv.isGo = true;
           this.doPost(newAv);
         }
         if (backStop) {
           newAv.requestedStop = backStop;
+          newAv.isGo = false;
           this.doPost(newAv);
         }
       } else {
         if (goStop) {
           newAv.requestedStop = goStop;
+          newAv.isGo = true;
           this.doUpdate(newAv);
         }
         if (backStop) {
           newAv.requestedStop = backStop;
+          newAv.isGo = false;
           this.doUpdate(newAv);
         }
       }
@@ -218,11 +263,25 @@ export class AvailabilityComponent implements OnInit {
   doPost(av) {
     console.log('posting...');
     console.log(av);
+    this.availabilitiesService.postAvailability(av).subscribe();
+    this.availabilities = [];
+    this.initBlankAv();
     this.getAvails();
   }
-
+  initBlankAv() {
+    this.blankAv = {
+      id: 0,
+      date: null,
+      isConfirmed: false,
+      user: this.userService.mySelf,
+      isModified: false,
+      backStop: null,
+      goStop: null
+    };
+  }
   doUpdate(av) {
     console.log('updating...');
     console.log(av);
+    this.availabilitiesService.putAvailability(av).subscribe();
   }
 }
