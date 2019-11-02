@@ -263,6 +263,7 @@ export class AvailabilityComponent implements OnInit {
   doPost(av) {
     console.log('posting...');
     console.log(av);
+    av.id = null;
     this.availabilitiesService.postAvailability(av).subscribe();
     this.availabilities = [];
     this.initBlankAv();
@@ -282,6 +283,7 @@ export class AvailabilityComponent implements OnInit {
   doUpdate(av) {
     console.log('updating...');
     console.log(av);
+    av.isConfirmed = true;
     this.availabilitiesService.putAvailability(av).subscribe();
   }
 }

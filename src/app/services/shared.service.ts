@@ -64,7 +64,7 @@ export class SharedService {
       .subscribe((message: Message) => {
         this.receivedMessages.push(message.body);
         this.counter$.next(this.receivedMessages.length);
-        this.openSnackBar(message.body);
+        this.openSnackBar(JSON.parse(message.body).text);
         this.notifications$.next(this.receivedMessages);
       });
   }

@@ -14,9 +14,9 @@
                         <p>Il tuo nome: </p>
                     </div>
                     <div class="col m6">
-                        <p contenteditable="true">
-                            {{user.firstName}}
-                        </p>
+                        <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Il tuo nome" [(value)]="user.firstName">
+                        </mat-form-field>
                     </div>
                     <div class="col m6">
                         <p>La tua linea: </p>
