@@ -43,8 +43,9 @@ export class ChildrenService {
 
   getMyChildren(): Observable<Child[]> {
     const url = REST_URL;
-
-    return this.http.get<Child[]>(url, httpOptions).pipe(
+    return this.http
+    .get<Child[]>(url, httpOptions)
+    .pipe(
       catchError(this.handleError)
     );
   }

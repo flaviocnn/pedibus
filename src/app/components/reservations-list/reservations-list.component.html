@@ -5,7 +5,7 @@
   <h1 *ngIf="mychild$ | async as child">{{child?.firstName}}</h1>
 </mat-toolbar>
 
-<div class="container">
+<div class="container" *ngIf="mychild$ | async as child">
   <button (click)="loggo()">
     andata
   </button>
@@ -30,9 +30,8 @@
                 <mat-icon>room</mat-icon> <b> Stop &#160;</b>
               </mat-label>
               <mat-label>Scegli fermata</mat-label>
-              <mat-select [(ngModel)]="products">
-                  <option [ngValue]="products">-- Select product --</option>
-
+              <mat-select [(ngModel)]="weekReservations[day].goReservation.stop" [compareWith]="compareFn" >
+                <mat-option *ngIf="weekReservations[day].goReservation.stop" [value]="weekReservations[day].goReservation.stop" selected>{{weekReservations[day].goReservation.stop?.name}}</mat-option>
                 <mat-option *ngFor="let stop of stops" [value]="stop">
                   {{stop?.name}}
                 </mat-option>
@@ -40,7 +39,7 @@
             </mat-form-field>
           </div>
           <div class="col m12 s12">
-            <mat-slide-toggle [checked]="reservationsGo[i]?.stop" (change)="toggle($event,i,'go',day)">
+            <mat-slide-toggle [checked]="weekReservations[day].goReservation.stop" (change)="toggle($event,'go',day)">
               Andata</mat-slide-toggle>
           </div>
         </div>
@@ -58,15 +57,16 @@
                 <mat-icon>room</mat-icon> <b> Stop &#160;</b>
               </mat-label>
               <mat-label>Scegli fermata</mat-label>
-              <mat-select [(value)]="reservationsBack[i]?.stop.id">
-                <mat-option *ngFor="let stop of stops" [value]="stop?.id">
+              <mat-select [(ngModel)]="weekReservations[day].backReservation.stop" [compareWith]="compareFn">
+                <mat-option *ngIf="weekReservations[day].backReservation.stop" [(value)]="weekReservations[day].backReservation.stop" selected>{{weekReservations[day].backReservation.stop?.name}}</mat-option>
+                <mat-option *ngFor="let stop of stops" [value]="stop">
                   {{stop?.name}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col m12 s12">
-            <mat-slide-toggle>
+            <mat-slide-toggle [checked]="weekReservations[day].backReservation.stop" (change)="toggle($event,'back',day)">
               Ritorno</mat-slide-toggle>
           </div>
         </div>
@@ -79,4 +79,7 @@
       </div>
     </div>
   </mat-card>
+  <button *ngIf="dirty" mat-fab class="save-fab" (click)="updateAllStop()" matTooltip="Aggiorna tutto">
+    <mat-icon>done</mat-icon>
+  </button>
 </div>

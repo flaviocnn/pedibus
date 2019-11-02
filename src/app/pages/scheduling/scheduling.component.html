@@ -25,22 +25,25 @@
     </div>
 
     <mat-divider></mat-divider><br>
-    <div class="row" *ngFor="let av of availabilities; index as i;">
+    <div *ngFor="let av of availabilities; index as i;" [matTooltip]="tipFor(av)">
+    <div class="row" 
+    [ngClass]="{'confirmed': av.isConfirmed, 'modified': av.isModified}" >
       <div class="col s2">
         <p class="chaperon">{{av.user.username}}</p>
       </div>
       <div *ngIf="av.requestedStop" class="col s8">
         <ul class="availabilities_ul">
           <li *ngFor="let stop of stops" (click)="toggleClass(stop, i)"
-            [ngClass]="{'active': av.requestedStop.id == stop.id}" [ngClass]="{'confirmed': av.isConfirmed}"> &#10003;
+            [ngClass]="{'active': av.requestedStop.id == stop.id}" > &#10140;
           </li>
           <li matTooltip="Scuola">S</li>
         </ul>
       </div>
       <div class="col s2">
-        <mat-slide-toggle [(ngModel)]="av.isModified" (change)="enableSaving()" class="confirm-toggle">Confermata</mat-slide-toggle>
+        <mat-slide-toggle [(ngModel)]="av.isModified" (change)="enableSaving()" class="confirm-toggle">Richiesta</mat-slide-toggle>
       </div>
     </div>
+  </div>
   </mat-card>
 
   <h2 class="center">Corsa di ritorno</h2>
@@ -56,20 +59,21 @@
     </div>
 
     <mat-divider></mat-divider><br>
-    <div class="row" *ngFor="let av of backAvailabilities; index as i;">
+    <div class="row" *ngFor="let av of backAvailabilities; index as i;"
+    [ngClass]="{'confirmed': av.isConfirmed, 'modified': av.isModified}">
       <div class="col s2">
         <p class="chaperon">{{av.user.username}}</p>
       </div>
       <div *ngIf="av.requestedStop" class="col s8">
         <ul class="availabilities_ul">
           <li *ngFor="let stop of backStops" (click)="toggleClass(stop, i)"
-            [ngClass]="{'active': av.requestedStop.id == stop.id}" [ngClass]="{'confirmed': av.isConfirmed}"> &#10003;
+            [ngClass]="{'active': av.requestedStop.id == stop.id}" > &#10140;
           </li>
           <li matTooltip="Fine">F</li>
         </ul>
       </div>
       <div class="col s2">
-        <mat-slide-toggle [(ngModel)]="av.isModified" (change)="enableSaving()" class="confirm-toggle">Confermata
+        <mat-slide-toggle [(ngModel)]="av.isModified" (change)="enableSaving()" class="confirm-toggle">Richiesta
         </mat-slide-toggle>
       </div>
     </div>

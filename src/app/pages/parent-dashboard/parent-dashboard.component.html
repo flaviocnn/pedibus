@@ -15,9 +15,9 @@
         <div class="col s12">
           <mat-form-field *ngIf="stopList; else loading">
         <mat-label>Fermata predefinita</mat-label>
-        <mat-select [(value)]="defaultStops[child?.id]" (selectionChange)="changeStop($event)">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor="let stop of stopList" [value]="stop?.id">{{stop?.name}}</mat-option>
+        <mat-select [(value)]="child.defaultStop" (selectionChange)="changeStop($event)">
+          <mat-option [(value)]="child.defaultStop" >{{child?.defaultStop?.name}}</mat-option>
+          <mat-option *ngFor="let stop of stopList" [value]="stop">{{stop?.name}}</mat-option>
         </mat-select>
       </mat-form-field>
         </div>
@@ -37,10 +37,10 @@
   </div>
 </div>
 
-<button class="add-fab" mat-fab color="accent" (click)="openDialog()" matTooltip="Add Child">
+<button *ngIf="addBtn" class="add-fab" mat-fab color="accent" (click)="openDialog()" matTooltip="Aggiungi studente">
   <mat-icon>add</mat-icon>
 </button>
-<button *ngIf="dirty" mat-fab class="save-fab" (click)="updateAllStop()">
+<button *ngIf="dirty" mat-fab class="save-fab" (click)="updateAllStop()" matTooltip="Aggiorna tutto">
   <mat-icon>done</mat-icon>
 </button>
 

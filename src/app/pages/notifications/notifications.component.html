@@ -1,10 +1,14 @@
-<h2>Received messages</h2>
-<ul *ngIf ="msgs">
-    <li  *ngFor="let message of msgs">{{message?.text}}</li>
-</ul>
-    <ol>
-        <!-- we will use Angular binding to populate list of messages -->
-        <li class="message" *ngFor="let message of receivedMessages"></li>
-    </ol>
-
-    <button class="btn btn-primary" (click)="onSendMessage()">Send Message</button>
+<mat-toolbar color="primary" role="heading">
+    <button mat-icon-button (click)="toggleRightSidenav()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <h1>{{title}}</h1>
+</mat-toolbar>
+<div class="container">
+    <mat-card>
+        <p *ngIf="msgs.isEmpty">Non ci sono nuove notifiche</p>
+        <mat-list *ngIf="msgs">
+            <mat-list-item *ngFor="let message of msgs"> {{message?.text}} </mat-list-item>
+        </mat-list>
+    </mat-card>
+</div>

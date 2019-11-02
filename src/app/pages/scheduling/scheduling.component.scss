@@ -1,3 +1,51 @@
+.confirmed{
+  pointer-events: none;
+}
+.modified{
+  pointer-events: none;
+}
+
+
+.modified .availabilities_ul>li{
+  background: #E1F5FE;
+  border: none;
+  color: white;
+}
+
+.modified .availabilities_ul>li.active {
+  background: #03A9F4;
+  color: white;
+}
+
+.modified .active ~ li {
+  background: #03A9F4;
+  color: white;
+}
+.modified .availabilities_ul>li.active ~ li {
+  background: #03A9F4;
+  color: white;
+}
+
+.confirmed .availabilities_ul>li{
+  background: #E0F2F1;
+  border: none;
+  color: white;
+}
+
+.confirmed .availabilities_ul>li.active {
+  background: #009688;
+  color: white;
+}
+
+.confirmed .active ~ li {
+  background: #009688;
+  color: white;
+}
+.confirmed .availabilities_ul>li.active ~ li {
+  background: #009688;
+  color: white;
+}
+
 .date-btn{
     margin: 5px;
 }
@@ -51,12 +99,12 @@ li:first-child::before {
   color: #3f51b5;
 }
 
-.active {
-  background:  #3f51b5!important;
-  color: white!important;
+.availabilities_ul>li.active {
+  background:  #3f51b5;
+  color: white;
 }
 
-.active ~ li {
+.availabilities_ul>li.active ~ li {
   background: #3f51b5;
   color: white;
 }
@@ -88,6 +136,17 @@ p.chaperon {
   color: #3f51b5;
   text-align: center;
   font-weight: 500;
+  text-transform: capitalize;
+}
+
+.modified p.chaperon {
+  border: solid 2px #03A9F4;
+  color: #03A9F4;
+}
+
+.confirmed p.chaperon {
+  border: solid 2px #009688;
+  color: #009688;
 }
 
 .confirm-toggle{

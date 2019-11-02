@@ -6,18 +6,27 @@ import { SharedService } from 'src/app/services/shared.service';
 import { Observable } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { MatSlideToggleChange } from '@angular/material';
+import { ReactiveFormsModule } from '@angular/forms';
+
+export interface GUIReservation {
+  goReservation: Reservation;
+  backReservation: Reservation;
+}
+export interface IHash {
+  [date: string]: GUIReservation;
+}
 
 @Component({
   selector: 'app-reservations-list',
   templateUrl: './reservations-list.component.html',
-  styleUrls: ['./reservations-list.component.scss']
+  styleUrls: ['./reservations-list.component.scss'],
 })
 export class ReservationsListComponent implements OnInit {
 
   currDays: string[] = [];
   reservationsGo: Reservation[] = [];
   reservationsBack: Reservation[] = [];
-  stops: Stop[];
+  stops: Stop[] = [];
   labelPosition = 'before';
   disabled = false;
   indeterminate = false;
@@ -25,6 +34,9 @@ export class ReservationsListComponent implements OnInit {
   @Output() messageToEmit = new EventEmitter<Reservation[]>();
   @Input() mychild$: Observable<Child>;
   c: Child;
+  dirty = false;
+
+  weekReservations: IHash = {};
 
   constructor(
     private stopsService: StopsService,
@@ -43,32 +55,61 @@ export class ReservationsListComponent implements OnInit {
       this.currDays.push(newDate.toISOString().slice(0, 10));
     }
 
-    this.getAllStops();
+    //this.getAllStops();
     this.getReservations();
 
   }
 
+  blankRes(d, isGo, stop) {
+    const res: Reservation = {
+      id: 0,
+      date: d,
+      isGo,
+      isBooked: true,
+      stop,
+      child: this.c
+    };
+    return res;
+  }
+  compareFn(c1: Stop, c2: Stop): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+  }
   getReservations() {
     this.mychild$.subscribe(child => {
       this.c = child;
       this.currDays.forEach(d => {
         const day = this.datepipe.transform(d, 'ddMMyy');
+        let GUIRes: GUIReservation = { goReservation: this.blankRes(d, true, null), backReservation: this.blankRes(d, false, null) };
+        this.weekReservations[d] = GUIRes;
         this.reservationsService.getReservation(child.id, day, true)
           .subscribe(res => {
-            this.reservationsGo.push(res);
+            //this.reservationsGo.push(res);
+            // reservation di andata
+            if (res) {
+              this.weekReservations[d].goReservation = res;
+            }
+
           });
         this.reservationsService.getReservation(child.id, day, false)
           .subscribe(res => {
-            this.reservationsBack.push(res);
+            //this.reservationsBack.push(res);
+            // reservation di ritorno
+            if (res) {
+              this.weekReservations[d].backReservation = res;
+            }
+
           });
       });
-    });
+    }, (error) => { },
+      () => this.getAllStops());
   }
 
   getAllStops() {
     this.stopsService.getStops()
       .subscribe((data) => {
-        this.stops = data;
+        data.forEach(el => {
+          this.stops.push(el);
+        })
       });
   }
 
@@ -85,32 +126,70 @@ export class ReservationsListComponent implements OnInit {
   toggleRightSidenav() {
     this.sidenav.toggle();
   }
-  loggo(){
+  loggo() {
     console.log(this.reservationsGo);
+    console.log(this.weekReservations);
   }
-  logback(){
+  logback() {
     console.log(this.reservationsBack);
   }
 
-  public toggle(event: MatSlideToggleChange, index, run, day) {
+  public toggle(event: MatSlideToggleChange, run, day) {
     if (!event.checked) {
       if (run == 'go') {
-        this.reservationsGo[index] = null;
+        this.weekReservations[day].goReservation.stop = null;
       } else if (run == 'back') {
-        this.reservationsBack[index] = null;      }
-    }
-    else if (event.checked && run == 'go') {
-      // creo nuova reservation con default stop
-      const r: Reservation = {
-        date: day,
-        isBooked: true,
-        stop: this.c.defaultStop,
-        child: this.c
+        this.weekReservations[day].backReservation.stop = null;
       }
-      this.reservationsGo[index] = r;
+    } else {
+        this.dirty = true;
+        if (event.checked && run == 'go') {
+          // creo nuova reservation con default stop
+          if (this.c.defaultStop != null) {
+            this.weekReservations[day].goReservation = this.blankRes(day, true, this.c.defaultStop);
+          } else {
+            this.weekReservations[day].goReservation = this.blankRes(day, true, this.stops[0]);
+          }
+        } else if (event.checked && run == 'back') {
+          if (this.c.defaultStop != null) {
+            this.weekReservations[day].backReservation = this.blankRes(day, false, this.c.defaultStop);
+          } else {
+            this.weekReservations[day].backReservation = this.blankRes(day, false, this.stops[0]);
+          }
+        }
     }
-    else if (event.checked && run == 'back') {
-      null;
+
+  }
+
+  updateAllStop() {
+    console.log(Object.keys(this.weekReservations));
+    Object.keys(this.weekReservations).forEach(date => {
+      if (this.weekReservations[date].goReservation && 
+          this.weekReservations[date].goReservation.stop){
+        // c'e' qualcosa
+        if(this.weekReservations[date].goReservation.id){
+          // aggiorna
+          this.reservationsService.putReservation(this.weekReservations[date].goReservation);
+        } else{
+          // crea
+          this.reservationsService.postReservation(this.weekReservations[date].goReservation)
+          .subscribe();
+        }
+      }
+      if (this.weekReservations[date].backReservation && 
+        this.weekReservations[date].backReservation.stop){
+      // c'e' qualcosa
+      if(this.weekReservations[date].backReservation.id){
+        // aggiorna
+        this.reservationsService.putReservation(this.weekReservations[date].backReservation);
+      } else{
+        // crea
+        this.reservationsService.postReservation(this.weekReservations[date].backReservation)
+        .subscribe();
+      }
     }
+    });
+    this.dirty=false;
+    this.getReservations();
   }
 }

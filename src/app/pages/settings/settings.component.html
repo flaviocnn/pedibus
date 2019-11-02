@@ -7,28 +7,26 @@
 
 <div class="container">
     <div class="row">
-        <div class="col offset-l3 l6 s12">
+        <div class="col offset-l2 l8 s12">
             <mat-card>
                 <div class="row">
                     <div class="col m6">
-                        <h5>Il tuo nome: </h5>
+                        <p>Il tuo nome: </p>
                     </div>
                     <div class="col m6">
-                        <h5 contenteditable="true">
+                        <p contenteditable="true">
                             {{user.firstName}}
-                        </h5>
+                        </p>
                     </div>
                     <div class="col m6">
-                        <h5>La tua linea: </h5>
+                        <p>La tua linea: </p>
                     </div>
                     <div class="col m6 s12">
                         <mat-form-field>
                             <mat-label>Linea Predefinita</mat-label>
-                            <mat-select [(value)]="selected">
+                            <mat-select [(value)]="line">
                                 <mat-option>None</mat-option>
-                                <mat-option value="option1">Option 1</mat-option>
-                                <mat-option value="option2">Option 2</mat-option>
-                                <mat-option value="option3">Option 3</mat-option>
+                                <mat-option *ngFor="let line of lines" [value]="line">{{line.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>

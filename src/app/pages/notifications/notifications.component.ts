@@ -10,7 +10,7 @@ import { SharedService } from 'src/app/services/shared.service';
 export class NotificationsComponent implements OnInit, OnDestroy {
   public receivedMessages: string[] = [];
   msgs: Notification[] = [];
-
+  title = 'Notifiche';
   constructor( private sharedService: SharedService) { }
 
   ngOnInit(){
@@ -26,11 +26,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.sharedService.clearNotifications();
   }
-
-  onSendMessage() {
-    const message = `Message generated at ${new Date}`;
-    //this.rxStompService.publish({destination: '/app/hello', body: message});
+  toggleRightSidenav() {
+    this.sharedService.toggle();
   }
-
-
 }

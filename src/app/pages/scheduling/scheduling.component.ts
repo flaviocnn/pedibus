@@ -12,7 +12,7 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./scheduling.component.scss']
 })
 export class SchedulingComponent implements OnInit {
-  title = 'Turni'
+  title = 'Turni';
   datesBE = [];
   datesFE = [];
   selectedDate;
@@ -81,5 +81,31 @@ export class SchedulingComponent implements OnInit {
   enableSaving(){
     this.dirty = true;
     console.log(this.dirty);
+  }
+
+  updateAll(){
+    console.log(this.availabilities);
+    console.log(this.backAvailabilities);
+    this.availabilities.forEach( av =>{
+      if (av.isModified && !av.isConfirmed){
+        // invia
+        console.log(av);
+        this.availService.putAvailability(av).subscribe();
+      }
+    });
+
+    this.backAvailabilities.forEach( av =>{
+      if (av.isModified && !av.isConfirmed){
+        // invia
+        console.log(av);
+        this.availService.putAvailability(av).subscribe();
+      }
+    });
+  }
+
+  tipFor(av): string {
+    if (av.isModified && av.isConfirmed) { return 'Consolidata'; }
+    if (av.isModified) { return 'In attesa di conferma'; }
+    return null;
   }
 }

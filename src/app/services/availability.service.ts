@@ -21,14 +21,14 @@ export class AvailabilityService {
   constructor(private http: HttpClient) { }
 
   getUserAvailabilities(userId, date): Observable<Availability[]> {
-    const url = REST_URL + `${userId}/${date}`;
+    const url = REST_URL + `users/${userId}/${date}`;
     return this.http
       .get<Availability[]>(url, httpOptions)
       .pipe(catchError(this.handleError));
   }
 
   getLinesAvailabilities(line_name, date, is_go: boolean): Observable<Availability[]> {
-    const url = REST_URL + `${line_name}/${date}/${is_go}`;
+    const url = REST_URL + `lines/${line_name}/${date}/${is_go}`;
     return this.http
       .get<Availability[]>(url, httpOptions)
       .pipe(catchError(this.handleError));

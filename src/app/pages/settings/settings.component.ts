@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/models/daily-stop';
+import { User, Line } from 'src/app/models/daily-stop';
 import { SharedService } from 'src/app/services/shared.service';
+import { UserService } from 'src/app/services/user.service';
+import { LinesService } from 'src/app/services/lines.service';
 
 @Component({
   selector: 'app-settings',
@@ -10,14 +12,21 @@ import { SharedService } from 'src/app/services/shared.service';
 export class SettingsComponent implements OnInit {
   title = 'Impostazioni';
   user: User;
-  constructor(private sidenav: SharedService
+  lines: Line[] = [];
+
+  constructor(private sidenav: SharedService,
+              private userService: UserService,
+              private lineService: LinesService
+
     ) { }
 
   ngOnInit() {
-    this.user = JSON.parse(localStorage.getItem('currentUser'));
+    this.user = this.userService.mySelf;
+    this.lineService.getLines().subscribe( l => {
+      this.lines = l;
+    });
   }
 
-  
   toggleRightSidenav() {
     this.sidenav.toggle();
   }

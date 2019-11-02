@@ -71,17 +71,17 @@ export class DialogOverviewExampleDialog {
 export class ParentDashboardComponent implements OnInit {
 
   constructor(private childrenService: ChildrenService,
-              private stopsService: StopsService,
-              public dialog: MatDialog,
-              private sidenav: SharedService) { }
+    private stopsService: StopsService,
+    public dialog: MatDialog,
+    private sidenav: SharedService) { }
 
   title = 'Dashboard Genitori';
   stopList: Stop[] = [];
   myChildren: Child[] = [];
-  defaultStops: IHash = {};
   name: string;
   surname: string;
   dirty = false;
+  addBtn = true;
 
   ngOnInit() {
     this.getMyChildren();
@@ -90,14 +90,15 @@ export class ParentDashboardComponent implements OnInit {
 
   getMyChildren() {
     this.childrenService.getMyChildren()
-      .subscribe((data) => {
-        this.myChildren = data;
-        data.forEach(child => {
-          if (child.defaultStop) {
-            this.defaultStops[child.id] = +child.defaultStop.id;
-          }
-        });
-      });
+      .subscribe(
+        (data) => {
+          this.myChildren = data;
+        },
+        (error) => {console.log('error')},
+        () => {
+          this.myChildren.sort((a, b) => a.firstName.localeCompare(b.firstName));
+        }
+      );
   }
 
   getAllStops() {
@@ -112,13 +113,13 @@ export class ParentDashboardComponent implements OnInit {
   }
 
   changeStop(event) {
-    console.log(this.defaultStops);
+    this.addBtn = false;
     this.dirty = true;
   }
 
   updateAllStop() {
-    Object.keys(this.defaultStops).forEach((key) => {
-      this.childrenService.updateDefaultStop(+key, this.defaultStops[key]);
+    this.myChildren.forEach(child =>{
+      this.childrenService.updateDefaultStop(child.id, child.defaultStop.id);
     });
   }
 
