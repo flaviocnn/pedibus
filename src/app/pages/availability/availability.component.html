@@ -8,142 +8,129 @@
 <div class="container">
   <div *ngIf="availabilities">
     <mat-card *ngFor="let av of availabilities; index as i" class="availability-item">
-      <div class="row" [ngClass]="{'confirmed': av.isConfirmed == true, 'pending': av.isConfirmed == false && av.isModified == true}">
-        <div class="col m4">
-          
-          <mat-select *ngIf="!av?.date" (selectionChange)="updateDate($event,i)" placeholder="Seleziona data">
-            <mat-option *ngFor="let d of arrayDate" [value]="d">
-              {{d}}
-            </mat-option>
-          </mat-select>
+      <div class="row"
+        [ngClass]="{'confirmed': av.isConfirmed == true, 'pending': (!av.isConfirmed) && (av.isModified), 'waiting': (!av.isConfirmed) && (!av.isModified)}">
+        <div class="col m10">
+          <div class="row">
+            <div class="col m6 offset-m2 info">
+              <mat-form-field *ngIf="(!av.isConfirmed) && (!av.isModified)" class="selectStop full-width">
+                
+                <mat-label>
+                  <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+                </mat-label>
+                <mat-label *ngIf="(av.isGo)">Seleziona fermata di andata</mat-label>
+                <mat-label *ngIf="(!av.isGo)">Seleziona fermata di ritorno</mat-label>
+
+                <mat-select [(value)]="av.requestedStop" [compareWith]="compareFn">
+                  <!-- <mat-option *ngIf="av?.goStop" [value]="av.goStop" selected>
+                    {{av?.goStop.name}}
+                  </mat-option> -->
+                  <mat-option *ngFor="let stop of myStops" [value]="stop">
+                    <span *ngIf="(av.isGo)">Andata: </span><span *ngIf="(!av.isGo)">Ritorno: </span>{{stop?.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div *ngIf="(av.isConfirmed) || (av.isModified)">
+                <p>Prenotazione </p>
+                <p *ngIf="(av.isGo)">corsa di andata dalla fermata </p>
+                <p class="stopName">{{av.requestedStop.name}}</p>
+              </div>
+
+            </div>
+            <div class="col m4">
+              <mat-slide-toggle *ngIf="(!av.isConfirmed) && (!av.isModified)" [checked]="av?.requestedStop"
+                (change)="toggleChanged($event,av)">Includi
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </div>
+        <div class="col m2">
           <p class="status confirmed" *ngIf="(av.isConfirmed)&&(av.isModified)">Confermata</p>
           <p class="status pending" *ngIf="(!av.isConfirmed)&&(av.isModified)">Da confermare</p>
-          <p class="status waiting" *ngIf="(!av.isConfirmed)&&(!av.isModified)&&(av.id)">In attesa</p>
-          <p *ngIf="av?.goStop?.id">Andata: {{av?.goStop.name}}</p>
-          <p *ngIf="av?.backStop?.id">Ritorno: {{av?.backStop.name}}</p>
-        </div>
-        <div class="col m8">
-          <div class="row">
-            <div class="col m6">
-              <mat-form-field class="selectStop">
-                <mat-label>
-                  <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-                </mat-label>
-                <mat-label>Seleziona fermata</mat-label>
-                <mat-select [(value)]="av.goStop">
-                  <mat-option *ngIf="av?.goStop" [value]="av.goStop" selected>
-                    {{av?.goStop.name}}
-                  </mat-option>
-                  <mat-option *ngFor="let stop of myStops" [value]="stop">
-                    {{stop?.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col m6">
-              <mat-slide-toggle [checked]="av?.goStop" (change)="toggleChanged($event,i,'go')">Includi
-                Andata</mat-slide-toggle>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col m6">
-              <mat-form-field class="selectStop">
-                <mat-label>
-                  <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-                </mat-label>
-                <mat-label>Seleziona fermata</mat-label>
-                <mat-select [(value)]="av.backStop">
-                  <mat-option *ngIf="av?.backStop" [value]="av.backStop" selected>
-                    {{av?.backStop.name}}
-                  </mat-option>
-                  <mat-option *ngFor="let stop of myStops" [value]="stop">
-                    {{stop?.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col m6">
-              <mat-slide-toggle [checked]="av?.backStop" (change)="toggleChanged($event,i,'back')">Includi
-                Ritorno</mat-slide-toggle>
-            </div>
-          </div>
+          <p class="status waiting" *ngIf="(!av.isConfirmed)&&(!av.isModified)">In attesa</p>
         </div>
       </div>
-      <p *ngIf="av?.date" class="date"(dblclick)="av.date = null">{{av?.date| date: 'dd/MM/yyyy'}}</p>
-      <button *ngIf="(av.goStop || av.backStop) && (!av.isConfirmed) && (av.date) && (!av.isModified)" mat-fab color="accent" class="send-avail" (click)="send(i)">
-        <mat-icon >send</mat-icon>
+      <p class="date">{{av.date| date: 'dd/MM/yyyy'}}</p>
+      <button *ngIf="(av.requestedStop) && (!av.isConfirmed) && (!av.isModified)" mat-fab color="accent"
+        class="send-avail" (click)="update(av)">
+        <mat-icon>send</mat-icon>
       </button>
-      <button *ngIf="(av.goStop || av.backStop) && (!av.isConfirmed) && (av.isModified)" mat-fab color="accent" class="send-avail" (click)="send(i)">
-        <mat-icon >done</mat-icon>
-      </button>
-    </mat-card>
-
-    <mat-card class="availability-item">
-      <div class="row">
-        <div class="col m4">
-          
-          <mat-select *ngIf="!blankAv?.date" [(value)] = "blankAv.date" placeholder="Seleziona data">
-            <mat-option *ngFor="let d of arrayDate" [value]="d">
-              {{d}}
-            </mat-option>
-          </mat-select>
-          <p [ngClass]="{'status': (blankAv.goStop || blankAv.backStop) && (blankAv.date)}">Da inviare</p>
-          <p *ngIf="blankAv?.goStop?.id">Andata: {{blankAv?.goStop.name}}</p>
-          <p *ngIf="blankAv?.backStop?.id">Ritorno: {{blankAv?.backStop.name}}</p>
-        </div>
-        <div class="col m8">
-          <div class="row">
-            <div class="col m6">
-              <mat-form-field class="selectStop">
-                <mat-label>
-                  <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-                </mat-label>
-                <mat-label>Seleziona fermata</mat-label>
-                <mat-select [(value)]="blankAv.goStop">
-                  <mat-option *ngIf="blankAv?.goStop" [value]="blankAv.goStop" selected>
-                    {{blankAv?.goStop.name}}
-                  </mat-option>
-                  <mat-option *ngFor="let stop of myStops" [value]="stop">
-                    {{stop?.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col m6">
-              <mat-slide-toggle [checked]="blankAv?.goStop" (change)="toggleChanged($event,-1,'go')">Includi
-                Andata</mat-slide-toggle>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col m6">
-              <mat-form-field class="selectStop">
-                <mat-label>
-                  <mat-icon>room</mat-icon> <b> Stop &#160;</b>
-                </mat-label>
-                <mat-label>Seleziona fermata</mat-label>
-                <mat-select [(value)]="blankAv.backStop">
-                  <mat-option *ngIf="blankAv?.backStop" [value]="blankAv.backStop" selected>
-                    {{blankAv?.backStop.name}}
-                  </mat-option>
-                  <mat-option *ngFor="let stop of myStops" [value]="stop">
-                    {{stop?.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col m6">
-              <mat-slide-toggle [checked]="blankAv?.backStop" (change)="toggleChanged($event,-1,'back')">Includi
-                Ritorno</mat-slide-toggle>
-            </div>
-          </div>
-        </div>
-      </div>
-      <p *ngIf="blankAv?.date" class="date"(dblclick)="blankAv.date = null">{{blankAv?.date| date: 'dd/MM/yyyy'}}</p>
-      <button *ngIf="(blankAv.goStop || blankAv.backStop) && (blankAv.date)" mat-fab color="accent" class="send-avail" (click)="send(i)">
-        <mat-icon >send</mat-icon>
+      <button *ngIf="(!av.isConfirmed) && (av.isModified)" mat-fab color="accent" class="send-avail"
+        (click)="confirm(av)">
+        <mat-icon>done</mat-icon>
       </button>
     </mat-card>
   </div>
+  <mat-card class="availability-item">
+    <div class="row">
+      <div class="col m10">
+        <div *ngIf="!blankAv?.date" class="row">
+          <div class="col m6">
+            <mat-select [(value)]="blankAv.date" placeholder="Seleziona data">
+              <mat-option *ngFor="let d of arrayDate" [value]="d">
+                {{d}}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div class="row waiting">
+          <div class="col m6">
+            <mat-form-field class="selectStop">
+              <mat-label>
+                <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+              </mat-label>
+              <mat-label>Seleziona fermata</mat-label>
+              <mat-select [(value)]="blankAv.goStop">
+                <mat-option *ngIf="blankAv?.goStop" [value]="blankAv.goStop" selected>
+                  {{blankAv?.goStop.name}}
+                </mat-option>
+                <mat-option *ngFor="let stop of myStops" [value]="stop">
+                  {{stop?.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col m6">
+            <mat-slide-toggle [checked]="blankAv?.goStop" (change)="toggleChanged($event,blankAv)">Includi
+              Andata</mat-slide-toggle>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col m6">
+            <mat-form-field class="selectStop">
+              <mat-label>
+                <mat-icon>room</mat-icon> <b> Stop &#160;</b>
+              </mat-label>
+              <mat-label>Seleziona fermata</mat-label>
+              <mat-select [(value)]="blankAv.backStop">
+                <mat-option *ngIf="blankAv?.backStop" [value]="blankAv.backStop" selected>
+                  {{blankAv?.backStop.name}}
+                </mat-option>
+                <mat-option *ngFor="let stop of myStops" [value]="stop">
+                  {{stop?.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col m6">
+            <mat-slide-toggle [checked]="blankAv?.backStop" (change)="toggleChanged($event,blankAv)">Includi
+              Ritorno</mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+      <div class="col m2">
+        <p [ngClass]="{'status': (blankAv.goStop || blankAv.backStop) && (blankAv.date)}">Da inviare</p>
+        <p *ngIf="blankAv?.goStop?.id">Andata: {{blankAv?.goStop.name}}</p>
+        <p *ngIf="blankAv?.backStop?.id">Ritorno: {{blankAv?.backStop.name}}</p>
+      </div>
+    </div>
+    <p *ngIf="blankAv?.date" class="date" (dblclick)="blankAv.date = null">{{blankAv?.date| date: 'dd/MM/yyyy'}}</p>
+    <button *ngIf="(blankAv.goStop || blankAv.backStop) && (blankAv.date)" mat-fab color="accent" class="send-avail"
+      (click)="send(blankAv)">
+      <mat-icon>send</mat-icon>
+    </button>
+  </mat-card>
+
 </div>
 
 

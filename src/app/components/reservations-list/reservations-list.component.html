@@ -30,7 +30,7 @@
                 <mat-icon>room</mat-icon> <b> Stop &#160;</b>
               </mat-label>
               <mat-label>Scegli fermata</mat-label>
-              <mat-select [(ngModel)]="weekReservations[day].goReservation.stop" [compareWith]="compareFn" >
+              <mat-select [(ngModel)]="weekReservations[day].goReservation.stop" [compareWith]="compareFn" (selectionChange)="dirty=true">
                 <mat-option *ngIf="weekReservations[day].goReservation.stop" [value]="weekReservations[day].goReservation.stop" selected>{{weekReservations[day].goReservation.stop?.name}}</mat-option>
                 <mat-option *ngFor="let stop of stops" [value]="stop">
                   {{stop?.name}}
@@ -57,7 +57,7 @@
                 <mat-icon>room</mat-icon> <b> Stop &#160;</b>
               </mat-label>
               <mat-label>Scegli fermata</mat-label>
-              <mat-select [(ngModel)]="weekReservations[day].backReservation.stop" [compareWith]="compareFn">
+              <mat-select [(ngModel)]="weekReservations[day].backReservation.stop" [compareWith]="compareFn" (selectionChange)="dirty=true">
                 <mat-option *ngIf="weekReservations[day].backReservation.stop" [(value)]="weekReservations[day].backReservation.stop" selected>{{weekReservations[day].backReservation.stop?.name}}</mat-option>
                 <mat-option *ngFor="let stop of stops" [value]="stop">
                   {{stop?.name}}

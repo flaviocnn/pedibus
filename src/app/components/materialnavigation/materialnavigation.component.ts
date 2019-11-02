@@ -32,7 +32,6 @@ export class MaterialnavigationComponent implements OnInit, OnDestroy,AfterViewI
     this.sharedService.connectWs();
     this.user$ = this.authenticationService.currentUser;
     this.count$ = this.sharedService.counter$;
-    
   }
   ngOnDestroy(){
     this.logout();

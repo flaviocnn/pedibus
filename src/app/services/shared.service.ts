@@ -3,6 +3,7 @@ import { MatSidenav, MatSnackBar } from '@angular/material';
 import { RxStompService, InjectableRxStompConfig } from '@stomp/ng2-stompjs';
 import { Subscription, BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { Message } from '@stomp/stompjs';
+import { Notification } from '../models/daily-stop';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,10 @@ import { Message } from '@stomp/stompjs';
 export class SharedService {
 
   private init = false;
-  public receivedMessages: string[] = [];
+  public receivedMessages: Notification[];
   private topicSubscription: Subscription;
 
-  public notifications$: Subject<string[]> = new BehaviorSubject([]);
+  public notifications$: Subject<Notification[]> = new BehaviorSubject([]);
   public counter$: Subject<number> = new BehaviorSubject(0);
   public sidenav: MatSidenav;
 
@@ -47,7 +48,7 @@ export class SharedService {
       connectHeaders: {
         login: '',
         passcode: '',
-        Bearer: localStorage.getItem("id_token")
+        Bearer: localStorage.getItem('id_token')
       },
       heartbeatIncoming: 0, // Typical value 0 - disabled
       heartbeatOutgoing: 20000,
@@ -62,9 +63,10 @@ export class SharedService {
 
     this.topicSubscription = this.rxStompService.watch(`/user/${un}/queue`, { Bearer: localStorage.getItem("id_token")})
       .subscribe((message: Message) => {
-        this.receivedMessages.push(message.body);
+        const newNotification = JSON.parse(message.body);
+        this.receivedMessages.push(newNotification);
         this.counter$.next(this.receivedMessages.length);
-        this.openSnackBar(JSON.parse(message.body).text);
+        this.openSnackBar(newNotification.text);
         this.notifications$.next(this.receivedMessages);
       });
   }
@@ -81,6 +83,12 @@ export class SharedService {
 
   clearNotifications() {
     this.receivedMessages = [];
+    this.counter$.next(this.receivedMessages.length);
+  }
+
+  setPastNotifications(n: Notification[]){
+    this.receivedMessages = n;
+    this.notifications$.next(this.receivedMessages);
     this.counter$.next(this.receivedMessages.length);
   }
 }

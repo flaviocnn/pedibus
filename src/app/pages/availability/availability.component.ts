@@ -30,7 +30,6 @@ export interface GUIAvailability {
 
 export class AvailabilityComponent implements OnInit {
   title = 'Disponibilità';
-  availabilities: GUIAvailability[] = [];
   Object = Object;
   myStops: Stop[];
   uid;
@@ -38,7 +37,8 @@ export class AvailabilityComponent implements OnInit {
   arrayDate = [];
   springDate = [];
 
-  blankAv: GUIAvailability;
+  blankAv: GUIAvailability = {};
+  availabilities: Availability[] = [];
 
   constructor(
     private availabilitiesService: AvailabilityService,
@@ -50,8 +50,6 @@ export class AvailabilityComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const a = {};
-    this.initBlankAv();
     this.uid = this.userService.getMyId();
     this.myDefaultStop = this.userService.getMyDefaultStop();
     this.arrayDate = this.dateService.getWeekArray(new Date());
@@ -64,32 +62,18 @@ export class AvailabilityComponent implements OnInit {
   }
 
   getAvails() {
+    this.initBlankAv();
     this.availabilities = [];
     this.springDate.forEach(sdate => {
+      // richiedo l' availability di questo user per questa data
       this.availabilitiesService.getUserAvailabilities(this.uid, sdate)
         .subscribe(
           (data) => {
-          data.forEach(av => {
-            const newAv: GUIAvailability = {
-              id: av.id,
-              date: av.date,
-              isConfirmed: av.isConfirmed,
-              user: av.user,
-              isModified: av.isModified,
-              backStop: null,
-              goStop: null
-            };
-            if (av.isGo) {
-              newAv.goStop = av.requestedStop;
-            } else {
-              newAv.backStop = av.requestedStop;
-            }
-            if (av.isModified && !av.isConfirmed) {
-              this.availabilities.unshift(newAv);
-            } else {
-              this.availabilities.push(newAv);
-            }
-          }); },
+            data.forEach(av => {
+              this.availabilities.push(av);
+            });
+          },
+          (error) => { },
           () => {
             this.availabilities.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
           }
@@ -101,22 +85,15 @@ export class AvailabilityComponent implements OnInit {
     this.stopsService.getStops()
       .subscribe(stops => {
         this.myStops = stops;
-        // console.log(this.myStops);
       });
   }
 
-  onChange(ev: MatSelectChange, av) {
-    // const optionText = (ev.source.selected as MatOption);
-    // console.log(optionText);
-    const idStop = ev.value;
-
+  compareFn(c1: Stop, c2: Stop): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 
   showa() {
     console.log(this.availabilities);
-  }
-  compareItems(i1, i2) {
-    return i1 && i2 && i1.id === i2.id;
   }
 
   myfilter(s: Stop, av: any) {
@@ -126,133 +103,93 @@ export class AvailabilityComponent implements OnInit {
     return true;
   }
 
-  public toggleChanged(event: MatSlideToggleChange, index, run) {
+  public toggleChanged(event: MatSlideToggleChange, av: any) {
     // deseleziono il toggle
     if (!event.checked) {
-      if (run == 'go') {
-        if(index == -1){
-          this.blankAv.goStop = null;
-          return;
-        }
-        this.availabilities[index].goStop = null;
-      } else {
-        if(index == -1){
-          this.blankAv.backStop = null;
-          return;
-        }
-        this.availabilities[index].backStop = null;
-      }
-    } else if (event.checked) { // sto attivando il toggle
-      let selectedStop: Stop;
-      if (this.myDefaultStop) {
-        selectedStop = this.myDefaultStop;
-      } else {
-        selectedStop = this.myStops[0];
-      }
+      //   if (run == 'go') {
+      //     if (index == -1) {
+      //       this.blankAv.goStop = null;
+      //       return;
+      //     }
+      //     this.availabilities[index].goStop = null;
+      //   } else {
+      //     if (index == -1) {
+      //       this.blankAv.backStop = null;
+      //       return;
+      //     }
+      //     this.availabilities[index].backStop = null;
+      //   }
+      // } else if (event.checked) { // sto attivando il toggle
+      //   let selectedStop: Stop;
+      //   if (this.myDefaultStop) {
+      //     selectedStop = this.myDefaultStop;
+      //   } else {
+      //     selectedStop = this.myStops[0];
+      //   }
 
-      if (run == 'go') {
-        if(index == -1){
-          this.blankAv.goStop = selectedStop;
-          return;
-        }
-        this.availabilities[index].goStop = selectedStop;
-      } else if (run == 'back') {
-        if(index == -1){
-          this.blankAv.backStop = selectedStop;
-          return;
-        }
-        this.availabilities[index].backStop = selectedStop;
-      }
+      //   if (run == 'go') {
+      //     if (index == -1) {
+      //       this.blankAv.goStop = selectedStop;
+      //       return;
+      //     }
+      //     this.availabilities[index].goStop = selectedStop;
+      //   } else if (run == 'back') {
+      //     if (index == -1) {
+      //       this.blankAv.backStop = selectedStop;
+      //       return;
+      //     }
+      //     this.availabilities[index].backStop = selectedStop;
+      //   }
     }
   }
-  // sendAv(date) {
-  //   let go;
-  //   let back;
-  //   if (this.availabilities[date].go.id != 0) {
-  //     go = this.availabilities[date].go;
 
-  //     go.reservations = null;
-  //     go.line = null;
-
-  //     const avGo: Availability = {
-  //       date,
-  //       isGo: true,
-  //       requestedStop: go,
-  //       isConfirmed: false,
-  //       isModified: true
-  //     };
-  //     this.availabilitiesService.postAvailability(avGo)
-  //       .subscribe(x => console.log('go done'));
-
-  //   }
-  //   if (this.availabilities[date].back.id != 0) {
-  //     back = this.availabilities[date].back;
-  //     back.reservations = null;
-  //     back.line = null;
-  //     const avBack: Availability = {
-  //       date,
-  //       isGo: false,
-  //       requestedStop: back,
-  //       isModified: true
-  //     };
-  //     this.availabilitiesService.postAvailability(avBack)
-  //       .subscribe(x => console.log('back done'));
-  //   }
-  // }
-  send(index) {
-    if(index == null){
-      index = this.availabilities.length;
-      this.availabilities.push(this.blankAv);
+  confirm(av: Availability) {
+    if (av) {
+      av.isConfirmed = true;
+      this.availabilitiesService.putAvailability(av)
+        .subscribe(() => { this.getAvails(); });
     }
-    if (index != null && this.availabilities[index]) {
-      console.log(this.availabilities[index]);
+  }
 
-      let goStop;
-      let backStop;
-      // c'è una avail di andata
-      if (this.availabilities[index].goStop) {
-        goStop = this.availabilities[index].goStop;
-      }
-      // c'è una avail di ritorno
-      if (this.availabilities[index].backStop) {
-        backStop = this.availabilities[index].backStop;
-      }
-      const newAv: Availability = {
-        id: this.availabilities[index].id,
-        isConfirmed: this.availabilities[index].isConfirmed,
-        isModified: this.availabilities[index].isModified,
-        user: this.availabilities[index].user,
-        isGo: null,
-        date: this.availabilities[index].date,
-        requestedStop: null,
+  update(av: Availability) {
+    if (av) {
+      this.availabilitiesService.putAvailability(av)
+        .subscribe(() => { this.getAvails(); });
+    }
+  }
+
+  send(gav: GUIAvailability) {
+    var myAvails = [];
+    let c = 0;
+    if (gav.goStop) {
+      const goAv = {
+        date: gav.date,
+        isGo: true,
+        requestedStop: gav.goStop,
+        isModified: false
       };
-
-      if (this.availabilities[index].id == 0) {
-        // crea
-        if (goStop) {
-          newAv.requestedStop = goStop;
-          newAv.isGo = true;
-          this.doPost(newAv);
-        }
-        if (backStop) {
-          newAv.requestedStop = backStop;
-          newAv.isGo = false;
-          this.doPost(newAv);
-        }
-      } else {
-        if (goStop) {
-          newAv.requestedStop = goStop;
-          newAv.isGo = true;
-          this.doUpdate(newAv);
-        }
-        if (backStop) {
-          newAv.requestedStop = backStop;
-          newAv.isGo = false;
-          this.doUpdate(newAv);
-        }
-      }
+      myAvails.push(goAv);
     }
+    if (gav.backStop) {
+      const backAv = {
+        date: gav.date,
+        isGo: false,
+        requestedStop: gav.backStop,
+        isModified: false
+      };
+      myAvails.push(backAv);
+    }
+
+    myAvails.forEach(element => {
+      this.availabilitiesService.postAvailability(element)
+        .subscribe(
+          (d) => c++,
+          (error) => null,
+          () => { if (c == myAvails.length) { this.getAvails() } }
+        );
+    });
   }
+
   updateDate(e, index) {
     this.availabilities[index].date = e.value;
   }
@@ -260,15 +197,6 @@ export class AvailabilityComponent implements OnInit {
     this.sidenav.toggle();
   }
 
-  doPost(av) {
-    console.log('posting...');
-    console.log(av);
-    av.id = null;
-    this.availabilitiesService.postAvailability(av).subscribe();
-    this.availabilities = [];
-    this.initBlankAv();
-    this.getAvails();
-  }
   initBlankAv() {
     this.blankAv = {
       id: 0,
@@ -280,10 +208,10 @@ export class AvailabilityComponent implements OnInit {
       goStop: null
     };
   }
-  doUpdate(av) {
-    console.log('updating...');
-    console.log(av);
-    av.isConfirmed = true;
-    this.availabilitiesService.putAvailability(av).subscribe();
+
+  refresh() {
+    this.availabilities = [];
+    this.getAvails();
   }
+
 }

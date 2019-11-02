@@ -190,6 +190,7 @@ export class ReservationsListComponent implements OnInit {
     }
     });
     this.dirty=false;
+    this.stops = [];
     this.getReservations();
   }
 }
