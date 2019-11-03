@@ -48,7 +48,6 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   pageIndex = 0;
   // MatPaginator Output
   pageEvent: PageEvent;
-  websocketQueue = 'user/queue/attendees';
   reservation$: Observable<Reservation>;
 
   constructor(private reservationsService: ReservationsService,
@@ -57,8 +56,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
               private sidenav: SharedService,
               public dialog: MatDialog,
               private childrenService: ChildrenService
-  ) {
-  }
+  ) {}
 
   @Output() openNav = new EventEmitter();
 
