@@ -169,7 +169,7 @@ export class ReservationsListComponent implements OnInit {
         // c'e' qualcosa
         if(this.weekReservations[date].goReservation.id){
           // aggiorna
-          this.reservationsService.putReservation(this.weekReservations[date].goReservation);
+          this.reservationsService.putReservationFromParent(this.weekReservations[date].goReservation);
         } else{
           // crea
           this.reservationsService.postReservation(this.weekReservations[date].goReservation)
@@ -181,7 +181,7 @@ export class ReservationsListComponent implements OnInit {
       // c'e' qualcosa
       if(this.weekReservations[date].backReservation.id){
         // aggiorna
-        this.reservationsService.putReservation(this.weekReservations[date].backReservation);
+        this.reservationsService.putReservationFromParent(this.weekReservations[date].backReservation);
       } else{
         // crea
         this.reservationsService.postReservation(this.weekReservations[date].backReservation)

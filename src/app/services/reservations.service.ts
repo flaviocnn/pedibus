@@ -45,6 +45,13 @@ export class ReservationsService {
       .subscribe();
   }
 
+  putReservationFromParent(res: Reservation) {
+    const url = REST_URL + '-parent';
+    return this.http.put<Reservation[]>(url, res, httpOptions)
+      .subscribe();
+  }
+
+
   postReservation(res: Reservation) {
 
     const url = REST_URL;

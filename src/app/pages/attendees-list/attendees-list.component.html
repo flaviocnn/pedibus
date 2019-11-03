@@ -8,6 +8,7 @@
   </mat-paginator>
 </mat-toolbar>
 
+<p *ngIf="reservation$|async as reservation">{{reservation|json}}</p>
 <mat-tab-group [color]="this.color" [backgroundColor]="this.backgroundColor" (selectedTabChange)="tabChanged($event)" mat-stretch-tabs>
   <mat-tab label="Andata">
     <ng-template matTabContent>
@@ -33,7 +34,6 @@
               </li>
             </ul>
           </div>
-
         </mat-card>
       </div>
       <button class="add-fab" mat-fab color="accent" (click)="openDialog()" matTooltip="Inserisci prenotazione">
@@ -44,31 +44,28 @@
   <mat-tab label="Ritorno" >
     <ng-template matTabContent>
       <div class="container">
-        <mat-card class="mycard">
-          <ul *ngIf="backReservations?.reservations; else noRes">
-            <li>
-              <span>S</span>
-              <div class="verticalLine"></div>
-            </li>
-
-            <li *ngFor="let ds of backReservations;index as i; last as isLast">
-              <span>{{i+1}}</span>
-              <span class="text">{{ds?.name}}</span>
-              <br>
-              <div class="time">{{ds?.timeGo}}</div>
-              <p>
-                <i *ngFor="let res of ds?.reservations;last as isLast" class="passenger"
-                  [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
-                  {{res?.child.firstName}}
-                </i>
-              </p>
-              <div class="verticalLine"></div>
-            </li>
-            <li>
-              <span>F</span>
-            </li>
-          </ul>
-        </mat-card>
+          <mat-card class="mycard">
+              <div *ngIf="backReservations$| async as backReservations; else noRes">
+                <ul>
+                  <li *ngFor="let ds of backReservations;index as i; last as isLast">
+                    <span>{{i+1}}</span>
+                    <span class="text">{{ds?.name}}</span>
+                    <br>
+                    <div class="time">{{ds?.timeGo}}</div>
+                    <p>
+                      <i *ngFor="let res of ds?.reservations;last as isLast" class="passenger"
+                        [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
+                        {{res?.child.firstName}}<div *ngIf="!isLast">,</div>
+                      </i>
+                    </p>
+                    <div class="verticalLine"></div>
+                  </li>
+                  <li>
+                    <span>S</span>
+                  </li>
+                </ul>
+              </div>
+            </mat-card>
       </div>
     </ng-template>
   </mat-tab>

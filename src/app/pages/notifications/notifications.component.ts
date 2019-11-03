@@ -10,7 +10,7 @@ import { NotificationsService } from 'src/app/services/notifications.service';
   styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
-  msgs: Notification[] = [];
+  notifications: Notification[] = [];
   title = 'Notifiche';
   constructor( 
     private sharedService: SharedService,
@@ -19,10 +19,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   ngOnInit(){
     this.sharedService.notifications$.subscribe(
       (data) =>{ 
-        data.forEach(n => this.msgs.push(n))
+        this.notifications = data;
+        //this.sharedService.clearNotifications();
         }
     );
-    this.notificationService.getNotifications();
+    //this.notificationService.getNotifications();
   }
 
   ngOnDestroy(){

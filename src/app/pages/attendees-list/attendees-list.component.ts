@@ -34,7 +34,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   backgroundColor = 'primary';
   color = 'accent';
   goReservations$: Observable<DailyStop[]>;
-  backReservations = [];
+  backReservations$: Observable<DailyStop[]>;
   myLine: Line;
   todayDate: Date;
   currentDate: string;
@@ -48,6 +48,8 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   pageIndex = 0;
   // MatPaginator Output
   pageEvent: PageEvent;
+  websocketQueue = 'user/queue/attendees';
+  reservation$: Observable<Reservation>;
 
   constructor(private reservationsService: ReservationsService,
               private userService: UserService,
@@ -61,6 +63,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   @Output() openNav = new EventEmitter();
 
   ngOnInit() {
+    this.sidenav.watchAttendees();
     this.myLine = this.userService.getMyLine();
     this.todayDate = new Date();
     // server date format ddMMyy
@@ -70,6 +73,16 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     // this.paginator._changePageSize(this.paginator.pageSize);
 
     this.getReservations(this.todayDate, this.myLine.name);
+
+    this.sidenav.attendees$.subscribe(items=>{
+      console.log(items);
+      if(items != null){
+        this.getReservations(new Date(items), this.myLine.name);
+      }
+      
+    });
+
+    //this.reservation$ = this.sidenav.attendees$;
   }
 
   getReservations(date: Date, line: string) {
@@ -79,10 +92,8 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     this.goReservations$ = this.reservationsService.getDailyStopsByLine(this.latestDate, true, line)
       .pipe(share());
 
-    this.reservationsService.getDailyStopsByLine(this.latestDate, false, line)
-      .subscribe((data) => {
-        this.backReservations = data;
-      });
+    this.backReservations$ = this.reservationsService.getDailyStopsByLine(this.latestDate, false, line)
+      .pipe(share());
   }
 
   sort(data): any[] {

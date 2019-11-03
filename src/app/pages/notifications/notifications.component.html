@@ -6,9 +6,9 @@
 </mat-toolbar>
 <div class="container">
     <mat-card>
-        <p *ngIf="msgs.isEmpty">Non ci sono nuove notifiche</p>
-        <mat-list *ngIf="msgs">
-            <mat-list-item *ngFor="let message of msgs"> {{message?.text}} </mat-list-item>
+        <p *ngIf="notifications.isEmpty">Non ci sono nuove notifiche</p>
+        <mat-list *ngIf="notifications.length">
+            <mat-list-item *ngFor="let message of notifications"> {{message?.text}} </mat-list-item>
         </mat-list>
     </mat-card>
 </div>
