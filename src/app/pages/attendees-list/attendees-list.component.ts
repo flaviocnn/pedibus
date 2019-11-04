@@ -29,7 +29,7 @@ export interface DialogDataReservation {
   providers: [DatePipe]
 })
 
-export class AttendeesListComponent implements OnInit, AfterViewChecked {
+export class AttendeesListComponent implements OnInit, AfterViewChecked, OnDestroy {
   title = 'Presenze';
   backgroundColor = 'primary';
   color = 'accent';
@@ -49,6 +49,8 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
   // MatPaginator Output
   pageEvent: PageEvent;
   reservation$: Observable<Reservation>;
+  done = false;
+  backToStart = true;
 
   constructor(private reservationsService: ReservationsService,
               private userService: UserService,
@@ -60,10 +62,15 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
 
   @Output() openNav = new EventEmitter();
 
+  ngOnDestroy(){
+    this.sidenav.closeAttendees();
+  }
+
   ngOnInit() {
     this.sidenav.watchAttendees();
     this.myLine = this.userService.getMyLine();
     this.todayDate = new Date();
+    this.newDate = new Date(this.todayDate.valueOf());
     // server date format ddMMyy
     this.currentDate = this.todayDate.toLocaleDateString();
 
@@ -77,7 +84,6 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
       if(items != null){
         this.getReservations(new Date(items), this.myLine.name);
       }
-      
     });
 
     //this.reservation$ = this.sidenav.attendees$;
@@ -87,11 +93,9 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     this.latestDate = this.datepipe.transform(date, 'ddMMyy');
     console.log(this.latestDate);
 
-    this.goReservations$ = this.reservationsService.getDailyStopsByLine(this.latestDate, true, line)
-      .pipe(share());
+    this.goReservations$ = this.reservationsService.getDailyStopsByLine(this.latestDate, true, line);
 
-    this.backReservations$ = this.reservationsService.getDailyStopsByLine(this.latestDate, false, line)
-      .pipe(share());
+    this.backReservations$ = this.reservationsService.getDailyStopsByLine(this.latestDate, false, line);
   }
 
   sort(data): any[] {
@@ -124,7 +128,7 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
 
   }
 
-  public checkin(res) {
+  public checkin(res, isLast) {
     const myres = res;
     myres.child.authorities = null;
     myres.child.user.authorities = null;
@@ -134,6 +138,9 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
     if (!myres.isConfirmed) {
       myres.isConfirmed = true;
       this.reservationsService.putReservation(myres);
+    }
+    if(isLast){
+      this.done = true;
     }
   }
 
@@ -171,12 +178,22 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked {
 
           dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
+            this.getPaginatorData(null);
           });
         });
       }
       );
+  }
 
-
-
+  postDone(){
+    const date = this.datepipe.transform(this.newDate, 'ddMMyy');
+    const line = this.myLine.name;
+    const isGo = this.isGoActiveTab;
+    this.reservationsService.postEndReservation(date,isGo,line)
+    .subscribe(()=> {
+      if(!this.isGoActiveTab){
+        this.backToStart = false;
+      } else{ this.done = true };
+    });
   }
 }

@@ -12,13 +12,17 @@ export class SharedService implements OnInit {
 
   private init = false;
   private un;
-  public receivedNotifications: Notification[];
+  private receivedNotifications: Notification[] = [];
   private topicSubscription: Subscription;
   private attendeesSubscription: Subscription;
+  private availabilitiesSubscription: Subscription;
+  private schedulingSubscription: Subscription;
 
   public notifications$: Subject<Notification[]> = new BehaviorSubject([]);
   public counter$: Subject<number> = new BehaviorSubject(0);
   public attendees$: Subject<string> = new BehaviorSubject(null);
+  public availabilities$: Subject<string> = new BehaviorSubject(null);
+  public scheduling$: Subject<string> = new BehaviorSubject(null);
 
   public sidenav: MatSidenav;
 
@@ -90,6 +94,31 @@ export class SharedService implements OnInit {
       });
   }
 
+  watchAvailabilities() {
+    this.availabilitiesSubscription = this.rxStompService
+      .watch(`/user/${this.un}/queue/availabilities`, { Bearer: localStorage.getItem('id_token') })
+      .subscribe((msg: Message) => {
+        const date = JSON.parse(msg.body).date;
+        this.availabilities$.next(date);
+      });
+  }
+
+  watchScheduling() {
+    this.schedulingSubscription = this.rxStompService
+      .watch(`/user/${this.un}/queue/scheduling`, { Bearer: localStorage.getItem('id_token') })
+      .subscribe((msg: Message) => {
+        const date = JSON.parse(msg.body).date;
+        this.scheduling$.next(date);
+      });
+  }
+
+  closeScheduling() {
+    this.schedulingSubscription.unsubscribe();
+  }
+
+  closeAvailabilities() {
+    this.availabilitiesSubscription.unsubscribe();
+  }
 
   closeAttendees() {
     this.attendeesSubscription.unsubscribe();

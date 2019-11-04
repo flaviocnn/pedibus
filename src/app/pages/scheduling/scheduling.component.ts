@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DatesService } from 'src/app/services/dates.service';
 import { UserService } from 'src/app/services/user.service';
 import { AvailabilityService } from 'src/app/services/availability.service';
@@ -11,7 +11,7 @@ import { SharedService } from 'src/app/services/shared.service';
   templateUrl: './scheduling.component.html',
   styleUrls: ['./scheduling.component.scss']
 })
-export class SchedulingComponent implements OnInit {
+export class SchedulingComponent implements OnInit, OnDestroy {
   title = 'Turni';
   datesBE = [];
   datesFE = [];
@@ -31,7 +31,12 @@ export class SchedulingComponent implements OnInit {
     private sidenav: SharedService
   ) { }
 
+  ngOnDestroy(){
+    this.sidenav.closeAvailabilities();
+  }
+
   ngOnInit() {
+    this.sidenav.watchAvailabilities();
     // ottenere le date - da oggi in avanti di 6 giorni
     this.datesBE = this.dateservice.getWeekArrayBE(new Date());
     this.datesFE = this.dateservice.getWeekArrayFE(new Date());
@@ -42,6 +47,12 @@ export class SchedulingComponent implements OnInit {
     // ottenere le availabilities di (linea, data) per go e back
     this.selectedDate = this.datesBE[0];
     this.getAvailabilities();
+    this.sidenav.availabilities$.subscribe(items=>{
+      console.log(items);
+      if(items != null){
+        this.getAvailabilities();
+      }
+    });
   }
 
   getStops() {

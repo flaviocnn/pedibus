@@ -61,6 +61,14 @@ export class ReservationsService {
       );
   }
 
+  postEndReservation(date: string, isGo: boolean, linename: string){
+    const url = REST_URL +  `/lines/${linename}/${date}/${isGo}/done`;
+    return this.http.post<Reservation>(url, {}, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getReservation(childId: number, date: string, isGo: boolean) {
     const url = REST_URL + `/children/${childId}/${date}/${isGo}`;
     return this.http.get<Reservation>(url, httpOptions).pipe(

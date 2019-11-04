@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { AvailabilityService } from 'src/app/services/availability.service';
 import { DatePipe } from '@angular/common';
 import { Availability, User } from 'src/app/models/daily-stop';
@@ -28,7 +28,7 @@ export interface GUIAvailability {
   providers: [DatePipe]
 })
 
-export class AvailabilityComponent implements OnInit {
+export class AvailabilityComponent implements OnInit, OnDestroy {
   title = 'Disponibilità';
   Object = Object;
   myStops: Stop[];
@@ -49,7 +49,12 @@ export class AvailabilityComponent implements OnInit {
     private sidenav: SharedService
   ) { }
 
+  ngOnDestroy(){
+    this.sidenav.closeScheduling();
+  }
+
   ngOnInit() {
+    this.sidenav.watchScheduling();
     this.uid = this.userService.getMyId();
     this.myDefaultStop = this.userService.getMyDefaultStop();
     this.arrayDate = this.dateService.getWeekArray(new Date());
@@ -59,6 +64,13 @@ export class AvailabilityComponent implements OnInit {
 
     this.getAvails();
     this.getStops();
+
+    this.sidenav.scheduling$.subscribe(items=>{
+      console.log(items);
+      if(items != null){
+        this.getAvails();
+      }
+    });
   }
 
   getAvails() {

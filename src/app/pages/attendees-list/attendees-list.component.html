@@ -23,7 +23,7 @@
                 <div class="time">{{ds?.timeGo}}</div>
                 <p>
                   <i *ngFor="let res of ds?.reservations;last as isLast" class="passenger"
-                    [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res)">
+                    [ngClass]="{'isReserved':res?.isBooked, 'bold':res?.isConfirmed}" (click)="checkin(res, isLast)">
                     {{res?.child.firstName}}<div *ngIf="!isLast">,</div>
                   </i>
                 </p>
@@ -39,6 +39,9 @@
       <button class="add-fab" mat-fab color="accent" (click)="openDialog()" matTooltip="Inserisci prenotazione">
         <mat-icon>add</mat-icon>
       </button>
+      <button *ngIf="done" class="done-fab" mat-fab color="accent" (click)="postDone()" matTooltip="Segnala l'arrivo a scuola">
+          <mat-icon>done</mat-icon>
+        </button>
     </ng-template>
   </mat-tab>
   <mat-tab label="Ritorno" >
@@ -67,6 +70,12 @@
               </div>
             </mat-card>
       </div>
+      <button class="add-fab" mat-fab color="accent" (click)="openDialog()" matTooltip="Inserisci prenotazione">
+          <mat-icon>add</mat-icon>
+        </button>
+      <button *ngIf="backToStart" class="done-fab" mat-fab color="accent" (click)="postDone()" matTooltip="Segnala la partenza da scuola">
+          <mat-icon>done</mat-icon>
+        </button>
     </ng-template>
   </mat-tab>
 </mat-tab-group>
