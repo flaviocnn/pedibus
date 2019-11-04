@@ -133,6 +133,7 @@ export interface Child {
     lastName?: string;
     defaultStop?: any;
     parent?: User;
+    reservations?: Reservation[];
 }
 
 export interface Availability {
@@ -159,6 +160,7 @@ export interface RequestedStartStop {
 }
 
 export interface JSONLine {
+    name?: string;
     stops: Stop[];
     admins: Admin[];
 }

@@ -1,3 +1,8 @@
+p.updateStatus{
+    margin: 0;
+    font-size: 0.7rem;
+    line-height: 1.3rem;
+}
 
 .add-fab{
     position: fixed;
@@ -11,6 +16,7 @@
     color: var(--primary-color);
     margin: 1em;
     height: 300px;
+    position: relative;
 }
 
 .child-card>p{
@@ -22,21 +28,25 @@ ul{
     display: flex;
 }
 
-.mat-icon{
-    height: 35px;
-    width: 35px;
-}
+// .mat-icon{
+//     height: 35px;
+//     width: 35px;
+// }
 
-.material-icons.big{
-    font-size: 35px;
-}
+// .material-icons.big{
+//     font-size: 35px;
+// }
 
 .mat-form-field{
     display: block;
 }
 
-a.big{
-    line-height: 68px;
-    height: 68px;
-    width: 68px;
+.childBtn{
+    position: absolute;
+    right: 10pt;
 }
+// a.big{
+//     line-height: 68px;
+//     height: 68px;
+//     width: 68px;
+// }

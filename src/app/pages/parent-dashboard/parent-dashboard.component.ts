@@ -88,13 +88,20 @@ export class ParentDashboardComponent implements OnInit {
     this.getAllStops();
   }
 
+  todayReservations(child: Child) {
+    if (child.reservations) {
+      const todayReservations = child.reservations.filter(r => new Date(r.date).toDateString() == new Date().toDateString());
+      return todayReservations;
+    } return [];
+  }
+
   getMyChildren() {
     this.childrenService.getMyChildren()
       .subscribe(
         (data) => {
           this.myChildren = data;
         },
-        (error) => {console.log('error')},
+        (error) => { console.log('error') },
         () => {
           this.myChildren.sort((a, b) => a.firstName.localeCompare(b.firstName));
         }
@@ -118,7 +125,7 @@ export class ParentDashboardComponent implements OnInit {
   }
 
   updateAllStop() {
-    this.myChildren.forEach(child =>{
+    this.myChildren.forEach(child => {
       this.childrenService.updateDefaultStop(child.id, child.defaultStop.id);
     });
   }
@@ -140,5 +147,16 @@ export class ParentDashboardComponent implements OnInit {
     this.sidenav.toggle();
   }
 
+  exportToJsonFile(jsonData) {
+    let dataStr = JSON.stringify(jsonData);
+    let dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    let exportFileDefaultName = 'data.json';
+
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  }
 }
 

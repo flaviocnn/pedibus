@@ -29,6 +29,7 @@ export class InviteUserComponent implements OnInit {
   onSubmit(formData) {
     this.processing = true;
     console.warn(formData);
+    console.log(this.fruits);
     // this.createAccountService.createAccount(f.form.value.email).subscribe(
     //   () => {this.processing = false; this.error = ''; alert('Account created !'); },
     //   (res) => { this.error = res.error; this.processing = false; },

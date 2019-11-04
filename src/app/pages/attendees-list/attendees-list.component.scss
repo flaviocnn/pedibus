@@ -29,7 +29,8 @@
     display: block !important    
 }
 .bold{
-    font-weight: bold
+    font-weight: bold;
+    color: var(--accent-color);
 }
 .passenger{
     cursor: pointer;

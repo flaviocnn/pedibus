@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JSONLine, Admin, Stop } from 'src/app/models/daily-stop';
 import { SharedService } from 'src/app/services/shared.service';
+import { LinesService } from 'src/app/services/lines.service';
 
 
 @Component({
@@ -10,6 +11,7 @@ import { SharedService } from 'src/app/services/shared.service';
 })
 export class LinebuilderComponent implements OnInit {
   title = 'Carica Linea';
+  nomeLinea = 'Nuova Linea';
   lat = 45.0713;
   lng = 7.6661;
   notReady = true;
@@ -20,8 +22,11 @@ export class LinebuilderComponent implements OnInit {
   selectedFile: File;
   admins: Admin[];
   stops: Stop[];
-  lineUploaded: JSONLine;
-  constructor(private sidenav: SharedService) { }
+  lineUploaded: JSONLine = null;
+
+  constructor(
+    private sidenav: SharedService,
+    private lineService: LinesService) { }
 
   ngOnInit() {
   }
@@ -38,8 +43,8 @@ export class LinebuilderComponent implements OnInit {
         this.lineUploaded = JSON.parse(fileReader.result as string) as JSONLine;
         this.stops = this.lineUploaded.stops;
         this.admins = this.lineUploaded.admins;
-        console.log(this.stops);
-        console.log(this.admins);
+        //console.log(this.stops);
+        //console.log(this.admins);
       };
       fileReader.onerror = (error) => {
         console.log(error);
@@ -61,9 +66,15 @@ export class LinebuilderComponent implements OnInit {
     });
     this.notReady = false;
 
-    console.log(this.origin);
-    console.log(this.destination);
-    console.log(this.waypoints);
+    //console.log(this.origin);
+    //console.log(this.destination);
+    //console.log(this.waypoints);
+    console.log(this.stops);
+    console.log(this.admins);
+    this.lineUploaded.name = this.nomeLinea;
+    console.log(this.lineUploaded);
+    this.lineService.postLine(this.lineUploaded)
+    .subscribe();
 
     // TO-DO:
     // postare this.uploadedLine sul server

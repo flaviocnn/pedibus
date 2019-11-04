@@ -10,6 +10,7 @@ import { SharedService } from 'src/app/services/shared.service';
 import { first, share } from 'rxjs/operators';
 import { ReservationDialogComponent } from 'src/app/components/reservation-dialog/reservation-dialog.component';
 import { ChildrenService } from 'src/app/services/children.service';
+import { LinesService } from 'src/app/services/lines.service';
 
 export interface IHash {
   [id: string]: boolean;
@@ -57,7 +58,8 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked, OnDestr
               public datepipe: DatePipe,
               private sidenav: SharedService,
               public dialog: MatDialog,
-              private childrenService: ChildrenService
+              private childrenService: ChildrenService,
+              private linesService: LinesService
   ) {}
 
   @Output() openNav = new EventEmitter();
@@ -163,8 +165,8 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked, OnDestr
       allChildren: null
     };
 
-    this.reservationsService
-      .getDailyStopsByLine(this.latestDate, true, this.myLine.name)
+    this.linesService
+      .getStopsByLine(this.myLine.name)
       .subscribe(el => {
       stopsAndChildren.allStops = el;
       this.childrenService.getAllChildren(this.myLine.id

@@ -22,7 +22,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
   stops: DailyStop[] = [];
   backStops: DailyStop[] = [];
   dirty = false;
-
+  selectedFEDate;
   constructor(
     private dateservice: DatesService,
     private userservice: UserService,
@@ -46,6 +46,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
     this.getStops();
     // ottenere le availabilities di (linea, data) per go e back
     this.selectedDate = this.datesBE[0];
+    this.selectedFEDate = this.datesFE[0];
     this.getAvailabilities();
     this.sidenav.availabilities$.subscribe(items=>{
       console.log(items);
@@ -84,6 +85,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
     this.sidenav.toggle();
   }
   selectDay(index) {
+    this.selectedFEDate = this.datesFE[index];
     this.selectedDate = this.datesBE[index];
     console.log(this.selectedDate);
     this.getStops();
