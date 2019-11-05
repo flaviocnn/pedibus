@@ -3,8 +3,9 @@ import { FormControl, Validators, NgModel, NgForm, FormBuilder, ReactiveFormsMod
 import { CreateAccountService } from 'src/app/services/create-account.service';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { Child } from 'src/app/models/daily-stop';
+import { Child, User } from 'src/app/models/daily-stop';
 import { MatSnackBar } from '@angular/material';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-invite-user',
@@ -26,20 +27,11 @@ export class InviteUserComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   fruits: Child[] = [];
 
-  onSubmit(formData) {
-    this.processing = true;
-    console.warn(formData);
-    console.log(this.fruits);
-    // this.createAccountService.createAccount(f.form.value.email).subscribe(
-    //   () => {this.processing = false; this.error = ''; alert('Account created !'); },
-    //   (res) => { this.error = res.error; this.processing = false; },
-    // );
-    this.openSnackBar();
-  }
-
-  constructor(private ngModel: NgModel, 
+  constructor(
+    private ngModel: NgModel, 
     private formBuilder: FormBuilder,
     private createAccountService: CreateAccountService,
+    private userService: UserService,
     private _snackBar: MatSnackBar) {
       this.userForm = this.formBuilder.group({
         firstName: '',
@@ -51,8 +43,28 @@ export class InviteUserComponent implements OnInit {
   ngOnInit() {
   }
 
+  onSubmit(formData) {
+    this.processing = true;
+    console.warn(formData);
+    console.log(this.fruits);
+    // this.createAccountService.createAccount(f.form.value.email).subscribe(
+    //   () => {this.processing = false; this.error = ''; alert('Account created !'); },
+    //   (res) => { this.error = res.error; this.processing = false; },
+    // );
+    const newUser: User = {
+      firstName: formData.firstName,
+      lastName: formData.surname,
+      username: formData.email,
+      children: this.fruits,
+    };
+    this.userService.postNewUser(newUser).subscribe(
+      () => {this.processing = false; this.error = ''; this.openSnackBar(); },
+      (res) => { this.error = res.error; this.processing = false; },
+    );
+  }
+
   openSnackBar() {
-    this._snackBar.open("L'utente riceverà una email di conferma per validare il suo account.", '', {
+    this._snackBar.open(`L'utente riceverà un'email di conferma per validare il suo account.`, 'Ok', {
       duration: 5000,
     });
   }

@@ -49,6 +49,22 @@ export class UserService {
     );
   }
 
+  postNewUser(user: User){
+    const url = 'http://localhost:8080/invite';
+    return this.http.post<User>(url, user, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  putUser(user: User) {
+    const url = REST_URL;
+    return this.http.put<User>(url, user, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     console.error(error);
     return throwError(error);

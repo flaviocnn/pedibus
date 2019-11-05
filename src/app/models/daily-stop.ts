@@ -82,23 +82,23 @@ export interface Authority3 {
 }
 
 export interface User {
-    id: number;
+    id?: number;
     username: string;
     firstName: string;
     lastName: string;
     status?: any;
     address?: any;
-    defaultStop?: any;
-    administeredLines: any[];
-    availabilities: any[];
+    defaultStop?: Stop;
+    administeredLines?: any[];
+    availabilities?: any[];
     parent?: any;
     children: any[];
-    roles: string[];
-    enabled: boolean;
-    authorities: Authority3[];
-    accountNonExpired: boolean;
-    credentialsNonExpired: boolean;
-    accountNonLocked: boolean;
+    roles?: string[];
+    enabled?: boolean;
+    authorities?: Authority3[];
+    accountNonExpired?: boolean;
+    credentialsNonExpired?: boolean;
+    accountNonLocked?: boolean;
 }
 
 export interface Reservation {
@@ -119,7 +119,7 @@ export interface DailyStop {
     timeGo: string;
     timeBack: string;
     line: Line;
-    reservations: Reservation[];
+    reservations?: Reservation[];
     runs: any[];
     requestedStartAvailabilities: any[];
     requestedFinishAvailabilities: any[];
