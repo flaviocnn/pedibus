@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { MatSidenav, MatSnackBar } from '@angular/material';
+import { MatSidenav, MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { RxStompService, InjectableRxStompConfig } from '@stomp/ng2-stompjs';
 import { Subscription, BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { Message } from '@stomp/stompjs';
@@ -25,6 +25,13 @@ export class SharedService implements OnInit {
   public scheduling$: Subject<string> = new BehaviorSubject(null);
 
   public sidenav: MatSidenav;
+
+  configSuccess: MatSnackBarConfig = {
+    panelClass: 'style-success',
+    duration: 3000,
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom',
+  };
 
   config: InjectableRxStompConfig = {
     brokerURL: 'ws://localhost:8080/ws',
@@ -125,9 +132,7 @@ export class SharedService implements OnInit {
   }
 
   openSnackBar(msg) {
-    this.snackBar.open(msg, 'Ok', {
-      duration: 5000,
-    });
+    this.snackBar.open(msg,'Ok', this.configSuccess);
   }
 
   unsubscribe() {

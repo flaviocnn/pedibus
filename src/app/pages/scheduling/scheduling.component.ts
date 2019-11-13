@@ -5,6 +5,7 @@ import { AvailabilityService } from 'src/app/services/availability.service';
 import { Availability, Stop, DailyStop } from 'src/app/models/daily-stop';
 import { StopsService } from 'src/app/services/stops.service';
 import { SharedService } from 'src/app/services/shared.service';
+import { ReservationsService } from 'src/app/services/reservations.service';
 
 @Component({
   selector: 'app-scheduling',
@@ -28,7 +29,8 @@ export class SchedulingComponent implements OnInit, OnDestroy {
     private userservice: UserService,
     private availService: AvailabilityService,
     private stopsService: StopsService,
-    private sidenav: SharedService
+    private sidenav: SharedService,
+    private reservationsService: ReservationsService
   ) { }
 
   ngOnDestroy(){
@@ -42,11 +44,11 @@ export class SchedulingComponent implements OnInit, OnDestroy {
     this.datesFE = this.dateservice.getWeekArrayFE(new Date());
     // ottenere la linea di competenza
     this.selectedLine = this.userservice.getMyLine().name;
-    // ottenere le stop(con reservations) della linea
-    this.getStops();
     // ottenere le availabilities di (linea, data) per go e back
     this.selectedDate = this.datesBE[0];
     this.selectedFEDate = this.datesFE[0];
+    // ottenere le stop(con reservations) della linea
+    this.getStops();
     this.getAvailabilities();
     this.sidenav.availabilities$.subscribe(items=>{
       console.log(items);
@@ -57,14 +59,20 @@ export class SchedulingComponent implements OnInit, OnDestroy {
   }
 
   getStops() {
-    this.stopsService.getSortedLineStops(this.selectedLine, true)
-      .subscribe(data => {
-        this.stops = data;
-      });
-    this.stopsService.getSortedLineStops(this.selectedLine, false)
-      .subscribe(data => {
-        this.backStops = data;
-      });
+    this.reservationsService.getAllDailyStopsByLine(this.selectedDate, true, this.selectedLine).subscribe( (data) =>{
+      this.stops = data;
+    });
+    this.reservationsService.getAllDailyStopsByLine(this.selectedDate, false, this.selectedLine).subscribe( (data) =>{
+      this.backStops = data;
+    });
+    // this.stopsService.getSortedLineStops(this.selectedLine, true)
+    //   .subscribe(data => {
+    //     this.stops = data;
+    //   });
+    // this.stopsService.getSortedLineStops(this.selectedLine, false)
+    //   .subscribe(data => {
+    //     this.backStops = data;
+    //   });
   }
   getAvailabilities() {
     this.availService.getLinesAvailabilities(this.selectedLine, this.selectedDate, true)

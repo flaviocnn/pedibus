@@ -37,3 +37,11 @@ body{
   font-family: raleway;
   src: url('assets/font/Raleway/Raleway-Medium.ttf');
 }
+
+.style-success{
+  background: #4CAF50;
+  color: white;
+  .mat-simple-snackbar-action  {
+  color: rgb(0, 29, 124);
+  }
+}

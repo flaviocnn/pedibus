@@ -3,7 +3,7 @@ import { Stop, Child, Reservation } from '../../models/daily-stop';
 import { StopsService } from '../../services/stops.service';
 import { ReservationsService } from '../../services/reservations.service';
 import { SharedService } from 'src/app/services/shared.service';
-import { Observable } from 'rxjs';
+import { Observable, concat, forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { MatSlideToggleChange } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -135,6 +135,7 @@ export class ReservationsListComponent implements OnInit {
   }
 
   public toggle(event: MatSlideToggleChange, run, day) {
+    this.dirty = true;
     if (!event.checked) {
       if (run == 'go') {
         this.weekReservations[day].goReservation.stop = null;
@@ -142,55 +143,68 @@ export class ReservationsListComponent implements OnInit {
         this.weekReservations[day].backReservation.stop = null;
       }
     } else {
-        this.dirty = true;
-        if (event.checked && run == 'go') {
-          // creo nuova reservation con default stop
-          if (this.c.defaultStop != null) {
-            this.weekReservations[day].goReservation = this.blankRes(day, true, this.c.defaultStop);
-          } else {
-            this.weekReservations[day].goReservation = this.blankRes(day, true, this.stops[0]);
-          }
-        } else if (event.checked && run == 'back') {
-          if (this.c.defaultStop != null) {
-            this.weekReservations[day].backReservation = this.blankRes(day, false, this.c.defaultStop);
-          } else {
-            this.weekReservations[day].backReservation = this.blankRes(day, false, this.stops[0]);
-          }
+      if (event.checked && run == 'go') {
+        // creo nuova reservation con default stop
+        if (this.c.defaultStop != null) {
+          this.weekReservations[day].goReservation = this.blankRes(day, true, this.c.defaultStop);
+        } else {
+          this.weekReservations[day].goReservation = this.blankRes(day, true, this.stops[0]);
         }
+      } else if (event.checked && run == 'back') {
+        if (this.c.defaultStop != null) {
+          this.weekReservations[day].backReservation = this.blankRes(day, false, this.c.defaultStop);
+        } else {
+          this.weekReservations[day].backReservation = this.blankRes(day, false, this.stops[0]);
+        }
+      }
     }
 
   }
 
   updateAllStop() {
+    let updatesList: Observable<any>[] = [];
     console.log(Object.keys(this.weekReservations));
     Object.keys(this.weekReservations).forEach(date => {
-      if (this.weekReservations[date].goReservation && 
-          this.weekReservations[date].goReservation.stop){
+      if (this.weekReservations[date].goReservation.id) {
         // c'e' qualcosa
-        if(this.weekReservations[date].goReservation.id){
+        if (this.weekReservations[date].goReservation.stop) {
           // aggiorna
-          this.reservationsService.putReservationFromParent(this.weekReservations[date].goReservation);
-        } else{
-          // crea
-          this.reservationsService.postReservation(this.weekReservations[date].goReservation)
-          .subscribe();
+          const aggiornamento = this.reservationsService.putReservationFromParent(this.weekReservations[date].goReservation);
+          updatesList.push(aggiornamento);
+        } else {
+          // cancella
+          const cancellazione = this.reservationsService.deleteReservation(this.weekReservations[date].goReservation.id);
+          updatesList.push(cancellazione);
         }
+      } else if (this.weekReservations[date].goReservation.stop) {
+        // crea
+        const inserimento = this.reservationsService.postReservation(this.weekReservations[date].goReservation);
+        updatesList.push(inserimento);
       }
-      if (this.weekReservations[date].backReservation && 
-        this.weekReservations[date].backReservation.stop){
-      // c'e' qualcosa
-      if(this.weekReservations[date].backReservation.id){
-        // aggiorna
-        this.reservationsService.putReservationFromParent(this.weekReservations[date].backReservation);
-      } else{
+
+      if (this.weekReservations[date].backReservation.id) {
+        // c'e' qualcosa
+        if (this.weekReservations[date].backReservation.stop) {
+          // aggiorna
+          this.reservationsService.putReservationFromParent(this.weekReservations[date].backReservation);
+        } else {
+          // cancella
+          this.reservationsService.deleteReservation(this.weekReservations[date].backReservation.id)
+            .subscribe(s => { console.log('delete ok') });
+        }
+      } else if (this.weekReservations[date].backReservation.stop) {
         // crea
         this.reservationsService.postReservation(this.weekReservations[date].backReservation)
-        .subscribe();
       }
-    }
     });
-    this.dirty=false;
-    this.stops = [];
-    this.getReservations();
+    forkJoin(updatesList).subscribe(next => console.log(next), error => console.error(error), () => {
+      this.dirty = false;
+      this.stops = [];
+      this.getReservations();
+    });
   }
+}
+
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

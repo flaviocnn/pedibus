@@ -26,43 +26,43 @@ const routes: Routes = [
         path: 'parent_dashboard',
         component: ParentDashboardComponent,
         canActivate: [RoleGuardService],
-        data: { role: 'ROLE_USER' }
+        data: { role: ['ROLE_USER'] }
       },
       {
         path: 'mychild/:id',
         component: MyChildComponent,
         canActivate: [RoleGuardService],
-        data: { role: 'ROLE_USER' }
+        data: { role: ['ROLE_USER'] }
       },
       {
         path: 'attendees',
         component: AttendeesListComponent,
         canActivate: [RoleGuardService],
-        data: { role: 'ROLE_USER' }
+        data: { role: ['ROLE_USER'] }
       },
       {
         path: 'users',
         component: UsersComponent,
         canActivate: [RoleGuardService],
-        data: { role: 'ROLE_ADMIN' }
+        data: { role: ['ROLE_ADMIN','ROLE_LINEADMIN'] }
       },
       {
         path: 'availabilities',
         component: AvailabilityComponent,
         canActivate: [RoleGuardService],
-        data: { role: 'ROLE_USER' }
+        data: { role: ['ROLE_USER'] }
       },
       {
         path: 'scheduling',
         component: SchedulingComponent,
         canActivate: [RoleGuardService],
-        data: { role: 'ROLE_LINEADMIN' }
+        data: { role: ['ROLE_LINEADMIN'] }
       },
       {
         path: 'linebuilder',
         component: LinebuilderComponent,
         canActivate: [RoleGuardService],
-        data: { role: 'ROLE_ADMIN' }
+        data: { role: ['ROLE_ADMIN'] }
       },
       {
         path: 'notifications',

@@ -39,6 +39,16 @@ export class ReservationsService {
       );
   }
 
+  getAllDailyStopsByLine(date: string, isGo: boolean, line: string): Observable<DailyStop[]> {
+    console.log('getting daily stops');
+    const url = REST_URL + `/lines/${line}/${date}/${isGo}/all`;
+
+    return this.http.get<DailyStop[]>(url, httpOptions)
+      .pipe(
+        map(res => this.sortStops(res, isGo))
+      );
+  }
+
   putReservation(res: Reservation) {
     const url = REST_URL;
     return this.http.put<Reservation[]>(url, res, httpOptions)
@@ -48,12 +58,17 @@ export class ReservationsService {
   putReservationFromParent(res: Reservation) {
     const url = REST_URL + '-parent';
     return this.http.put<Reservation[]>(url, res, httpOptions)
-      .subscribe();
   }
 
+  deleteReservation(id){
+    const url = REST_URL + '/' + id;
+    return this.http.delete<Reservation[]>(url)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
 
   postReservation(res: Reservation) {
-
     const url = REST_URL;
     return this.http.post<Reservation>(url, res, httpOptions)
       .pipe(
@@ -92,6 +107,18 @@ export class ReservationsService {
       });
     }
 
+    return data;
+  }
+
+  sortStops(data, isGo): any[] {
+    if (data) {
+      if (isGo) {
+        data.sort((a, b) => a.timeGo !== b.timeGo ? a.timeGo < b.timeGo ? -1 : 1 : 0);
+      }
+      else {
+        data.sort((a, b) => a.timeBack !== b.timeBack ? a.timeBack < b.timeBack ? -1 : 1 : 0);
+      }
+    }
     return data;
   }
 }

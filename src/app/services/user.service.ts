@@ -65,6 +65,14 @@ export class UserService {
       );
   }
 
+  setLineAdmin(userid, line: Line, isPromotion: boolean ) {
+    const url = REST_URL + `/${userid}/${isPromotion}`;
+    return this.http.put<User>(url, line, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     console.error(error);
     return throwError(error);

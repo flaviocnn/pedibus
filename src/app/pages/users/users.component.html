@@ -12,7 +12,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Invita Utenti">
+      <mat-tab *ngIf="u?.roles.includes('ROLE_ADMIN')" label="Invita Utenti">
           <ng-template matTabContent>
               <app-invite-user></app-invite-user>
           </ng-template>

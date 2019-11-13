@@ -21,7 +21,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { UsersComponent } from './pages/users/users.component';
-import { ListUsersComponent } from './components/list-users/list-users.component';
+import { ListUsersComponent, PromotionDialog } from './components/list-users/list-users.component';
 import { InviteUserComponent } from './components/invite-user/invite-user.component';
 import { ParentDashboardComponent, DialogOverviewExampleDialog } from './pages/parent-dashboard/parent-dashboard.component';
 import { ReservationsListComponent } from './components/reservations-list/reservations-list.component';
@@ -65,6 +65,7 @@ import { ReservationDialogComponent } from './components/reservation-dialog/rese
     LandpageComponent,
     SettingsComponent,
     ReservationDialogComponent,
+    PromotionDialog
   ],
   imports: [
     HttpClientModule,
@@ -81,7 +82,7 @@ import { ReservationDialogComponent } from './components/reservation-dialog/rese
     AgmDirectionModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [ DialogOverviewExampleDialog, ReservationDialogComponent],
+  entryComponents: [ DialogOverviewExampleDialog, ReservationDialogComponent, PromotionDialog],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ReservationsService,

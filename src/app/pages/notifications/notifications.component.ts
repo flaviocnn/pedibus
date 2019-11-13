@@ -12,21 +12,38 @@ import { NotificationsService } from 'src/app/services/notifications.service';
 export class NotificationsComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   title = 'Notifiche';
+  notNew = false;
   constructor( 
     private sharedService: SharedService,
-    private notificationService: NotificationsService) { }
+    private notificationService: NotificationsService
+    ) { }
 
   ngOnInit(){
+    
     this.sharedService.notifications$.subscribe(
       (data) =>{ 
-        this.notifications = data;
+        this.getNotifications();
         //this.sharedService.clearNotifications();
-        }
+        //console.log(this.notifications);
+        this.notNew = true;
+      }
     );
-    //this.notificationService.getNotifications();
+    if(!this.notNew){
+      this.getNotifications();
+    }
+    
   }
 
+  getNotifications(){
+    this.notifications = [];
+    this.notificationService.getNotifications().subscribe(
+      (data) => {
+        this.notifications = data;
+      }
+    );
+  }
   ngOnDestroy(){
+    this.notifications = [];
     this.sharedService.clearNotifications();
   }
   toggleRightSidenav() {

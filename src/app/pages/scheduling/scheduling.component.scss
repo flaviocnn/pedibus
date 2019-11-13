@@ -2,7 +2,7 @@
   pointer-events: none;
 }
 .modified{
-  pointer-events: none;
+  // pointer-events: none;
 }
 
 .date-btn.selected {
@@ -135,7 +135,7 @@ span {
 p.chaperon {
   border: solid 2px #3f51b5;
   padding: 5px;
-  width: 88px;
+  max-width: 250px;
   border-radius: 19px;
   color: #3f51b5;
   text-align: center;

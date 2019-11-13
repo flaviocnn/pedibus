@@ -19,7 +19,6 @@ export class NotificationsService {
 
   getNotifications(): any {
     const url = REST_URL;
-    return this.http
-      .get<any>(url, httpOptions).subscribe();
+    return this.http.get<any>(url, httpOptions);
   }
 }

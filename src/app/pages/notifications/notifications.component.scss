@@ -1,3 +1,25 @@
 mat-card{
     text-align: center;
 }
+.toRead{
+    font-weight: bold;
+}
+p.date {
+    color: var(--accent-color);
+    padding: 0px 5px;
+    border-radius: 11px;
+    margin-right: 10px;
+    border: solid 1px;
+    display: inline-table;
+}
+li{
+    display: flex;
+    text-align: left;
+}
+p.message {
+    background: var(--primary-color);
+    color: white;
+    padding: 1px 9px;
+    border-radius: 9px;
+    box-shadow: 0px 0 4px 1px #0000003d;
+}

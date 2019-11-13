@@ -15,7 +15,7 @@
   <h2 class="center">Corsa di andata</h2>
   <mat-card class="mycard mat-elevation-z4">
     <div class="row">
-      <div class="col s8 offset-s2">
+      <div class="col m6 offset-m3 s12 ">
         <ul>
           <li *ngFor="let stop of stops" matTooltip="Bambini prenotati">
             {{stop.reservations.length}}<span>{{stop.name}}</span></li>
@@ -28,10 +28,11 @@
     <div *ngFor="let av of availabilities; index as i;" [matTooltip]="tipFor(av)">
     <div class="row" 
     [ngClass]="{'confirmed': av.isConfirmed, 'modified': av.isModified}" >
-      <div class="col s2">
-        <p class="chaperon">{{av.user.username}}</p>
+      <div class="col m3 s6 offset-s3">
+        <p *ngIf="av.user.firstName"class="chaperon">{{av.user.firstName}}</p>
+        <p *ngIf="!av.user.firstName"class="chaperon">Sconosciuto</p>
       </div>
-      <div *ngIf="av.requestedStop" class="col s8">
+      <div *ngIf="av.requestedStop" class="col s12 m6">
         <ul class="availabilities_ul">
           <li *ngFor="let stop of stops" (click)="toggleClass(stop, i)"
             [ngClass]="{'active': av.requestedStop.id == stop.id}" > &#10140;
@@ -39,7 +40,7 @@
           <li matTooltip="Scuola">S</li>
         </ul>
       </div>
-      <div class="col s2">
+      <div class="col m3 s6 offset-s3">
         <mat-slide-toggle [(ngModel)]="av.isModified" (change)="enableSaving()" class="confirm-toggle">Richiesta</mat-slide-toggle>
       </div>
     </div>

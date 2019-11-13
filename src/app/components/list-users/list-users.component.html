@@ -16,6 +16,8 @@
               <td>{{user.lastName}}</td>
               <td>{{user.username}}</td>
               <td>{{user.defaultStop?.name}}</td>
+              <td><button mat-raised-button color="primary" (click)="promuovi(user)">Promuovi</button></td>
+              <td><button mat-raised-button (click)="declassa(user)">Declassa</button></td>
           </tr>
           </tbody>
       </table>

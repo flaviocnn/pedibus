@@ -10,7 +10,7 @@
       <a *ngIf="u?.roles.includes('ROLE_ADMIN')" mat-list-item [routerLink]="['linebuilder']">Nuova Linea</a>
       <a *ngIf="u?.children.length" mat-list-item [routerLink]="['parent_dashboard']">Dashboard genitori</a>
       <a *ngIf="u?.roles.includes('ROLE_LINEADMIN')" mat-list-item [routerLink]="['scheduling']">Gestione turni</a>
-      <a *ngIf="u?.roles.includes('ROLE_ADMIN')"  mat-list-item [routerLink]="['users']">Utenti</a>
+      <a *ngIf="u?.roles.includes('ROLE_ADMIN') || u?.roles.includes('ROLE_LINEADMIN')"  mat-list-item [routerLink]="['users']">Utenti</a>
       <a mat-list-item [routerLink]="['notifications']">
         <span [matBadge]="count$|async" matBadgeOverlap="false">Notifiche</span>
       </a>
