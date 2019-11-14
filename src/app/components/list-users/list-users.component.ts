@@ -72,9 +72,15 @@ export class ListUsersComponent implements OnInit {
     });
   }
   myFilter(user: User) {
-    if (user.administeredLines.map(x => x.name).includes(this.activeLine.name)) {
-      return true;
-    } else {
+    if (user && this.activeLine) {
+      if (user.administeredLines) {
+        if (user.administeredLines.length > 0) {
+          if (user.administeredLines.map(x => x.name).includes(this.activeLine.name)) {
+            return true;
+          }
+        }
+      }
+    } else{
       return false;
     }
 

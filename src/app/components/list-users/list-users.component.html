@@ -12,13 +12,13 @@
           </thead>
           <tbody>
           <tr *ngFor="let user of users">
-              <td>{{user.firstName}}</td>
-              <td>{{user.lastName}}</td>
-              <td>{{user.username}}</td>
+              <td>{{user?.firstName}}</td>
+              <td>{{user?.lastName}}</td>
+              <td>{{user?.username}}</td>
               <td>{{user?.address}}</td>
-              <td><button mat-raised-button color="primary" (click)="promuovi(user)"
+              <td *ngIf="activeLine"><button mat-raised-button color="primary" (click)="promuovi(user)"
                 *ngIf="!myFilter(user)">Promuovi</button></td>
-              <td><button mat-raised-button (click)="declassa(user)" 
+              <td *ngIf="activeLine"><button mat-raised-button (click)="declassa(user)" 
                 *ngIf="myFilter(user)">Declassa</button></td>
           </tr>
           </tbody>

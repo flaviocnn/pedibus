@@ -89,7 +89,7 @@ export interface User {
     status?: any;
     address?: any;
     defaultStop?: Stop;
-    administeredLines?: any[];
+    administeredLines?: Line[];
     availabilities?: any[];
     parent?: any;
     children: any[];

@@ -77,7 +77,7 @@ import { ReservationDialogComponent } from './components/reservation-dialog/rese
     FormsModule,
     MatDialogModule,
     AgmCoreModule.forRoot({ // @agm/core
-      apiKey: 'AIzaSyDFTKbcSXEN22pUx3zfaabEOGyy7oOZtmI',
+      apiKey: 'AIzaSyA4yaIqF0mxwALtuUXKl_KujhNAIM_3fYc',
     }),
     AgmDirectionModule,
     ReactiveFormsModule,
