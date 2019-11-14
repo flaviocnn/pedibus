@@ -4,10 +4,10 @@
       <table class="table table-striped">
           <thead>
             <tr>          
-                <th><span>First Name</span></th>
-                <th><span>Last Name</span></th>
-                <th><span>Username</span></th>
-                <th><span>Default Stop</span></th>
+                <th><span>Nome</span></th>
+                <th><span>Cognome</span></th>
+                <th><span>Email</span></th>
+                <th><span>Indirizzo</span></th>
             </tr>
           </thead>
           <tbody>
@@ -15,9 +15,11 @@
               <td>{{user.firstName}}</td>
               <td>{{user.lastName}}</td>
               <td>{{user.username}}</td>
-              <td>{{user.defaultStop?.name}}</td>
-              <td><button mat-raised-button color="primary" (click)="promuovi(user)">Promuovi</button></td>
-              <td><button mat-raised-button (click)="declassa(user)">Declassa</button></td>
+              <td>{{user?.address}}</td>
+              <td><button mat-raised-button color="primary" (click)="promuovi(user)"
+                *ngIf="!myFilter(user)">Promuovi</button></td>
+              <td><button mat-raised-button (click)="declassa(user)" 
+                *ngIf="myFilter(user)">Declassa</button></td>
           </tr>
           </tbody>
       </table>

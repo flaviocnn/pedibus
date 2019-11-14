@@ -34,6 +34,7 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
   myStops: Stop[];
   uid;
   myDefaultStop;
+  myLine;
   arrayDate = [];
   springDate = [];
 
@@ -49,13 +50,13 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
     private sidenav: SharedService
   ) { }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.sidenav.closeScheduling();
   }
 
   ngOnInit() {
     this.sidenav.watchScheduling();
-    this.uid = this.userService.getMyId();
+    this.uid = JSON.parse(localStorage.getItem('currentUser')).id;
     this.myDefaultStop = this.userService.getMyDefaultStop();
     this.arrayDate = this.dateService.getWeekArray(new Date());
     this.arrayDate.forEach(mydate => {
@@ -65,9 +66,9 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
     this.getAvails();
     this.getStops();
 
-    this.sidenav.scheduling$.subscribe(items=>{
+    this.sidenav.scheduling$.subscribe(items => {
       console.log(items);
-      if(items != null){
+      if (items != null) {
         this.getAvails();
       }
     });
@@ -94,7 +95,12 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
   }
 
   getStops() {
-    this.stopsService.getStops()
+    if(localStorage.getItem('activeLine')){
+      this.myLine = JSON.parse(localStorage.getItem('activeLine'));
+    } else {
+      this.myLine = this.userService.getMyLine();
+    }
+    this.stopsService.getLineStops(this.myLine.name)
       .subscribe(stops => {
         this.myStops = stops;
       });
@@ -159,14 +165,20 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
     if (av) {
       av.isConfirmed = true;
       this.availabilitiesService.putAvailability(av)
-        .subscribe(() => { this.getAvails(); });
+        .subscribe(() => {
+          this.sidenav.openSnackBar('Disponibilità confermata');
+          this.getAvails();
+        });
     }
   }
 
   update(av: Availability) {
     if (av) {
       this.availabilitiesService.putAvailability(av)
-        .subscribe(() => { this.getAvails(); });
+        .subscribe(() => {
+          this.sidenav.openSnackBar('Disponibilità aggiornata');
+          this.getAvails();
+        });
     }
   }
 
@@ -210,15 +222,19 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
   }
 
   initBlankAv() {
-    this.blankAv = {
-      id: 0,
-      date: null,
-      isConfirmed: false,
-      user: this.userService.mySelf,
-      isModified: false,
-      backStop: null,
-      goStop: null
-    };
+    let us: User;
+    this.userService.getMySelf().subscribe(u => {
+      us = u;
+      this.blankAv = {
+        id: 0,
+        date: null,
+        isConfirmed: false,
+        user: us,
+        isModified: false,
+        backStop: null,
+        goStop: null
+      };
+    });
   }
 
   refresh() {

@@ -186,15 +186,17 @@ export class ReservationsListComponent implements OnInit {
         // c'e' qualcosa
         if (this.weekReservations[date].backReservation.stop) {
           // aggiorna
-          this.reservationsService.putReservationFromParent(this.weekReservations[date].backReservation);
+          const aggiornamento = this.reservationsService.putReservationFromParent(this.weekReservations[date].backReservation);
+          updatesList.push(aggiornamento);
         } else {
           // cancella
-          this.reservationsService.deleteReservation(this.weekReservations[date].backReservation.id)
-            .subscribe(s => { console.log('delete ok') });
+          const cancellazione = this.reservationsService.deleteReservation(this.weekReservations[date].backReservation.id);
+          updatesList.push(cancellazione);
         }
       } else if (this.weekReservations[date].backReservation.stop) {
         // crea
-        this.reservationsService.postReservation(this.weekReservations[date].backReservation)
+        const inserimento = this.reservationsService.postReservation(this.weekReservations[date].backReservation);
+        updatesList.push(inserimento);
       }
     });
     forkJoin(updatesList).subscribe(next => console.log(next), error => console.error(error), () => {

@@ -10,71 +10,53 @@
         <div class="col offset-l2 l8 s12">
             <mat-card>
                 <div class="row">
-                    <div class="col m6">
+                    <div class="col m6 s6">
                         <p>Il tuo nome: </p>
                     </div>
-                    <div class="col m6">
+                    <div class="col m6 s6">
                         <mat-form-field class="example-full-width">
                             <input matInput placeholder="Il tuo nome" type="text" [(ngModel)]="user.firstName">
                         </mat-form-field>
                     </div>
-                    <div class="col m6">
+                    <div class="col m6 s6">
                         <p>Il tuo cognome: </p>
                     </div>
-                    <div class="col m6">
+                    <div class="col m6 s6">
                         <mat-form-field class="example-full-width">
                             <input matInput placeholder="Il tuo cognome" type="text" [(ngModel)]="user.lastName">
                         </mat-form-field>
                     </div>
-                    <div class="col m6">
+                    <div class="col m6 s6">
                         <p>La tua email: </p>
                     </div>
-                    <div class="col m6">
+                    <div class="col m6 s6">
                         <mat-form-field class="example-full-width">
                             <input matInput placeholder="La tua email" type="email" [(ngModel)]="user.username">
                         </mat-form-field>
                     </div>
-                    <div class="col m6">
+                    <div class="col m6 s6">
                         <p>Il tuo indirizzo: </p>
                     </div>
-                    <div class="col m6">
+                    <div class="col m6 s6">
                         <mat-form-field class="example-full-width">
                             <input matInput placeholder="indirizzo" [(ngModel)]="user.address">
                         </mat-form-field>
                     </div>
 
                     <div *ngIf="lines.length">
-                        <div class="col m6">
+                        <div class="col m6 s12">
                             <p>La tua linea: </p>
                         </div>
-                        <div class="col m6 s12">
+                        <div class="col m6 s12" *ngIf="lines">
                             <mat-form-field>
-                                <mat-label>Linea Predefinita</mat-label>
-                                <mat-select [(value)]="line" (selectionChange)="updateStops($event)">
-                                    <mat-option value="null">None</mat-option>
-                                    <mat-option *ngFor="let line of lines" [value]="line">{{line.name}}</mat-option>
+                                <mat-label>Linee Amministrabili</mat-label>
+                                <mat-select [(ngModel)]="activeline" [compareWith]="compareFn2">
+                                    <!-- <mat-option [value] = "activeline">{{activeline.name}}</mat-option> -->
+                                    <mat-option *ngFor="let line of lines" [value]="line">{{line?.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
                     </div>
-
-
-                    <div *ngIf="showedStops.length">
-                        <div class="col m6">
-                            <p>La tua fermata predefinita: </p>
-                        </div>
-                        <div class="col m6 s12">
-                            <mat-form-field>
-                                <mat-label>Fermata Predefinita</mat-label>
-                                <mat-select [(value)]="user.defaultStop" [compareWith]="compareFn">
-                                    <mat-option value="null">None</mat-option>
-                                    <mat-option *ngFor="let stop of showedStops" [value]="stop">{{stop.name}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-
 
                 </div>
             </mat-card>

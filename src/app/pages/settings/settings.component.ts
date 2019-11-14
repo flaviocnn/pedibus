@@ -15,26 +15,23 @@ export class SettingsComponent implements OnInit {
   user: User;
   lines: Line[] = [];
   showedStops: Stop[] = [];
+  activeline = null;
 
   constructor(private sidenav: SharedService,
               private userService: UserService,
               private lineService: LinesService
 
-    ) { }
+  ) { }
 
   ngOnInit() {
-    this.user = this.userService.mySelf;
-    // se l'utente ha una default stop prendi la linea e le stop associate
-    if (this.user.defaultStop) {
-      this.lineService.getStopsByLine(this.user.defaultStop.line.name)
-      .subscribe(
-        stops => {this.showedStops = stops; }
-      );
-    } else {
+    this.user = JSON.parse(localStorage.getItem('currentUser'));
+    this.userService.getMySelf().subscribe(u => {
+      this.user = u;
       // visualizza le linee disponibili
-      this.lineService.getLines().subscribe( l => {
-        this.lines = l;
-      });
+      this.lines = this.user.administeredLines;
+    });
+    if(localStorage.getItem('activeLine')){
+      this.activeline = JSON.parse(localStorage.getItem('activeLine'));
     }
   }
 
@@ -42,17 +39,22 @@ export class SettingsComponent implements OnInit {
     return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 
+  compareFn2(c1: Line, c2: Line): boolean {
+    return c1 && c2 ? c1.name === c2.name : c1 === c2;
+  }
+
   updateStops(event: MatSelectChange) {
     console.log(event);
     this.lineService.getStopsByLine(event.value.name)
       .subscribe(
-        stops => {this.showedStops = stops; }
+        stops => { this.showedStops = stops; }
       );
   }
 
   updateUser() {
     console.log(this.user);
-    this.userService.putUser(this.user).subscribe();
+    localStorage.setItem("activeLine",JSON.stringify(this.activeline));
+    this.userService.putUser(this.user).subscribe(() => this.sidenav.openSnackBar('Modifiche salvate'));
   }
 
   toggleRightSidenav() {

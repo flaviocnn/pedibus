@@ -70,7 +70,11 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked, OnDestr
 
   ngOnInit() {
     this.sidenav.watchAttendees();
-    this.myLine = this.userService.getMyLine();
+    if(localStorage.getItem('activeLine')){
+      this.myLine = JSON.parse(localStorage.getItem('activeLine'));
+    } else {
+      this.myLine = this.userService.getMyLine();
+    }
     this.todayDate = new Date();
     this.newDate = new Date(this.todayDate.valueOf());
     // server date format ddMMyy
@@ -180,7 +184,9 @@ export class AttendeesListComponent implements OnInit, AfterViewChecked, OnDestr
 
           dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
-            this.getPaginatorData(null);
+            if (result){
+              this.getPaginatorData(null);
+            }
           });
         });
       }

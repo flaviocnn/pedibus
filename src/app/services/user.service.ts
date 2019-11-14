@@ -17,9 +17,17 @@ const httpOptions = {
 })
 export class UserService {
 
-  constructor(private http: HttpClient) { this.mySelf = JSON.parse(localStorage.getItem('currentUser')); }
+  constructor(private http: HttpClient) { 
+    // this.mySelf = JSON.parse(localStorage.getItem('currentUser'));
+    this.getMySelf().subscribe(u=>this.mySelf = u);
+  }
 
   public mySelf: User;
+
+  getMySelf(): Observable<User> {
+    const url = 'http://localhost:8080/user';
+    return this.http.get<User>(url, httpOptions);
+  }
 
   getMyId(): number {
     return this.mySelf.id;
@@ -50,7 +58,7 @@ export class UserService {
   }
 
   postNewUser(user: User){
-    const url = 'http://localhost:8080/invite';
+    const url = 'http://localhost:8080/auth/invite';
     return this.http.post<User>(url, user, httpOptions)
       .pipe(
         catchError(this.handleError)

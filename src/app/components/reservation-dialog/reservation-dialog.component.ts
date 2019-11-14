@@ -60,9 +60,10 @@ export class ReservationDialogComponent {
     };
     console.log(newRes);
     this.reservationService.postReservation(newRes).subscribe(
-      (res) => {
+      res => {
         this.processing = false;
         alert('Prenotazione inserita!');
+        this.dialogRef.close(true);
       },
       (res) => { this.error = res.message; this.processing = false; }
     );
@@ -80,7 +81,7 @@ export class ReservationDialogComponent {
 
   onNoClick(): void {
     // dentro close posso mettere un parametro da portare al padre
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
 }

@@ -6,6 +6,7 @@ import { Availability, Stop, DailyStop } from 'src/app/models/daily-stop';
 import { StopsService } from 'src/app/services/stops.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ReservationsService } from 'src/app/services/reservations.service';
+import { Observable, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-scheduling',
@@ -17,6 +18,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
   datesBE = [];
   datesFE = [];
   selectedDate;
+  myLine;
   selectedLine;
   availabilities: Availability[] = [];
   backAvailabilities: Availability[] = [];
@@ -26,7 +28,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
   selectedFEDate;
   constructor(
     private dateservice: DatesService,
-    private userservice: UserService,
+    private userService: UserService,
     private availService: AvailabilityService,
     private stopsService: StopsService,
     private sidenav: SharedService,
@@ -43,7 +45,12 @@ export class SchedulingComponent implements OnInit, OnDestroy {
     this.datesBE = this.dateservice.getWeekArrayBE(new Date());
     this.datesFE = this.dateservice.getWeekArrayFE(new Date());
     // ottenere la linea di competenza
-    this.selectedLine = this.userservice.getMyLine().name;
+    if(localStorage.getItem('activeLine')){
+      this.myLine = JSON.parse(localStorage.getItem('activeLine'));
+    } else {
+      this.myLine = this.userService.getMyLine();
+    }
+    this.selectedLine = this.myLine.name;
     // ottenere le availabilities di (linea, data) per go e back
     this.selectedDate = this.datesBE[0];
     this.selectedFEDate = this.datesFE[0];
@@ -65,14 +72,6 @@ export class SchedulingComponent implements OnInit, OnDestroy {
     this.reservationsService.getAllDailyStopsByLine(this.selectedDate, false, this.selectedLine).subscribe( (data) =>{
       this.backStops = data;
     });
-    // this.stopsService.getSortedLineStops(this.selectedLine, true)
-    //   .subscribe(data => {
-    //     this.stops = data;
-    //   });
-    // this.stopsService.getSortedLineStops(this.selectedLine, false)
-    //   .subscribe(data => {
-    //     this.backStops = data;
-    //   });
   }
   getAvailabilities() {
     this.availService.getLinesAvailabilities(this.selectedLine, this.selectedDate, true)
@@ -107,20 +106,25 @@ export class SchedulingComponent implements OnInit, OnDestroy {
   updateAll(){
     console.log(this.availabilities);
     console.log(this.backAvailabilities);
+    let updatesList: Observable<any>[] = [];
     this.availabilities.forEach( av =>{
-      if (av.isModified && !av.isConfirmed){
+      if (!av.isConfirmed){
         // invia
         console.log(av);
-        this.availService.putAvailability(av).subscribe();
+        updatesList.push(this.availService.putAvailability(av));
       }
     });
 
     this.backAvailabilities.forEach( av =>{
-      if (av.isModified && !av.isConfirmed){
+      if (!av.isConfirmed){
         // invia
         console.log(av);
-        this.availService.putAvailability(av).subscribe();
+        updatesList.push(this.availService.putAvailability(av));
       }
+    });
+
+    forkJoin(updatesList).subscribe((ok)=>{
+      this.sidenav.openSnackBar('Modifiche salvate');
     });
   }
 
