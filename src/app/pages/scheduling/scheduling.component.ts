@@ -108,7 +108,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
     console.log(this.backAvailabilities);
     let updatesList: Observable<any>[] = [];
     this.availabilities.forEach( av =>{
-      if (!av.isConfirmed){
+      if (!av.isConfirmed && av.isModified){
         // invia
         console.log(av);
         updatesList.push(this.availService.putAvailability(av));
@@ -116,7 +116,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
     });
 
     this.backAvailabilities.forEach( av =>{
-      if (!av.isConfirmed){
+      if (!av.isConfirmed && av.isModified){
         // invia
         console.log(av);
         updatesList.push(this.availService.putAvailability(av));
