@@ -53,4 +53,9 @@ export class AuthenticationService {
     localStorage.clear();
     this.currentUserSubject.next(null);
   }
+
+  confirm(token:string){
+    const url = 'http://localhost:8080/auth/confirm/'+ token;
+    return this.http.post<any>(url, token).subscribe();
+  }
 }

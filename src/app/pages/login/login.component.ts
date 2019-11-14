@@ -23,6 +23,14 @@ export class LoginComponent implements OnInit {
     ) {}
 
   ngOnInit() {
+    let token;
+    try {
+      token = this.route.snapshot.paramMap.get('token');
+      console.log(token);
+      this.authenticationService.confirm(token);
+    } catch (error) {
+      console.log('no token');
+    }
     this.authenticationService.logout();
     this.username = '';
     this.password = '';
